@@ -29,6 +29,7 @@
 #include <sstream>
 #include <string>
 #include <map>
+#include <stdexcept>
 
 // set default loglevel to output on construction of logger (needed for logging during construction of global/static variables)
 #ifndef DEFAULT_LOGLEVEL
