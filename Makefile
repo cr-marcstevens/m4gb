@@ -1,6 +1,6 @@
 include Makefile.local
 
-all: check
+all:
 
 V=0
 CXXMSG_0 = @echo "  CXX    $@"; 
