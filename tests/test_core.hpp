@@ -1,3 +1,5 @@
+#include "../lib/logger.hpp"
+
 #include <iostream>
 
 #undef CHECK
@@ -7,5 +9,6 @@ int test();
 
 int main(int argc, char** argv)
 {
+	gb::get_logger().set_log_level(gb::lg_verbose4);
 	return test();
 }

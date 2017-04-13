@@ -13,7 +13,7 @@ LDMSG=$(LDMSG_$(V))
 %.o: %.cpp $(DEP)
 	$(CXXMSG) $(CXX) $(CXXFLAGS) -c -o $(basename $<).o $<
 
-DEP=$(wildcard lib/*.hpp lib/*.cpp solver/*.hpp solver/*.cpp)
+DEP=$(wildcard lib/*.hpp lib/*.cpp solver/*.hpp solver/*.cpp tests/*.hpp)
 TESTS=$(subst tests/,tests/test_,$(basename $(wildcard tests/*.cpp)))
 RUNTESTS=$(addsuffix .TEST,$(TESTS))
 
@@ -21,6 +21,7 @@ RUNTESTS=$(addsuffix .TEST,$(TESTS))
 
 clean:
 	find -name "*.o" -delete
+	find tests -name "*.log" -delete
 	rm -f $(TESTS)
 
 check: $(TESTS) $(RUNTESTS)
@@ -29,5 +30,5 @@ tests/test_%: tests/%.o $(DEP)
 	$(LDMSG) $(CXX) $(LDFLAGS) -o $@ $<
 
 %.TEST: %
-	@if ./$<; then echo "PASS: $<"; else echo "FAIL: $<"; fi
+	@if (./$< > $<.log 2>&1 ); then echo "PASS: $<"; else echo "FAIL: $<"; fi
 
