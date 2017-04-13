@@ -1,0 +1,7 @@
+#these settings are machine and *nix distribution dependent
+#INCLUDEPATHS	  = -I ${GCCLOCAL}/include
+#LIBRARYPATHS	  = -L ${GCCLOCAL}/lib
+
+CXX               ?= g++
+CXXFLAGS          = -pthread -march=native -std=c++11 -O3 $(INCLUDEPATHS) -Wall
+LDFLAGS           = -pthread -lpthread $(LIBRARYPATHS)
