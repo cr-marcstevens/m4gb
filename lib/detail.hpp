@@ -123,7 +123,7 @@ namespace gb
 		template<std::size_t K>
 		struct binomial_coefficient<0, K>
 		{
-			static const std::size_t value = 0;
+			static const std::size_t value = K==0 ? 1 : 0;
 		};
 
 		template<std::size_t N, std::size_t K>
