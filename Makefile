@@ -16,6 +16,7 @@ LDMSG=$(LDMSG_$(V))
 DEP=$(wildcard lib/*.hpp lib/*.cpp solver/*.hpp solver/*.cpp tests/*.hpp)
 TESTS=$(subst tests/,tests/test_,$(basename $(wildcard tests/*.cpp)))
 RUNTESTS=$(addsuffix .TEST,$(TESTS))
+LIBS=-lrt
 
 .PHONY: all clean check
 
@@ -27,7 +28,7 @@ clean:
 check: $(TESTS) $(RUNTESTS)
 
 tests/test_%: tests/%.o $(DEP)
-	$(LDMSG) $(CXX) $(LDFLAGS) -o $@ $<
+	$(LDMSG) $(CXX) $(LDFLAGS) -o $@ $< $(LIBS)
 
 %.TEST: %
 	@if (./$< > $<.log 2>&1 ); then echo "PASS: $<"; else echo "FAIL: $<"; fi
