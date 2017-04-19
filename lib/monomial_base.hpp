@@ -91,7 +91,7 @@ namespace gb
 			{ return l < r; } 
 
 			template<typename T>
-			inline bool operator()(varinttype l, std::pair<varinttype, T>& r) const 
+			inline bool operator()(varinttype l, const std::pair<varinttype, T>& r) const 
 			{ return l < r.first; }
 
 			template<typename T>
@@ -99,7 +99,7 @@ namespace gb
 			{ return l.first < r; }
 
 			template<typename T>
-			inline bool operator()(const std::pair<varinttype, T>& l, std::pair<varinttype, T>& r) const 
+			inline bool operator()(const std::pair<varinttype, T>& l, const std::pair<varinttype, T>& r) const 
 			{ return l.first < r.first; }
 		};
 
@@ -109,7 +109,7 @@ namespace gb
 			{ return l > r; }
 			
 			template<typename T>
-			inline bool operator()(varinttype l, std::pair<varinttype, T>& r) const 
+			inline bool operator()(varinttype l, const std::pair<varinttype, T>& r) const 
 			{ return l > r.first; }
 
 			template<typename T>
@@ -117,7 +117,7 @@ namespace gb
 			{ return l.first > r; }
 
 			template<typename T>
-			inline bool operator()(const std::pair<varinttype, T>& l, std::pair<varinttype, T>& r) const 
+			inline bool operator()(const std::pair<varinttype, T>& l, const std::pair<varinttype, T>& r) const 
 			{ return l.first > r.first; }
 		};
 
