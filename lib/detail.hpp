@@ -38,7 +38,7 @@ namespace gb
 		Int binomial_coefficient(std::size_t N, std::size_t K)
 		{
 			static std::vector< std::vector<Int> > table(1, std::vector<Int>(1, Int(1)));
-			if ((N < 0) || (K < 0) || (K > N))
+			if (K > N)
 				return Int(0);
 			if (N >= table.size())
 			{
