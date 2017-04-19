@@ -26,6 +26,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <stdexcept>
 
 namespace gb
 {
@@ -50,6 +51,8 @@ namespace gb
 						table[i][j] = table[i-1][j-1] + table[i-1][j];
 				}
 			}
+			if (N>0 && K>0 && table[N][K] < table[N-1][K-1])
+				throw std::runtime_error("binomial_coefficient(): integer addition overflow");
 			return table[N][K];
 		}
 
