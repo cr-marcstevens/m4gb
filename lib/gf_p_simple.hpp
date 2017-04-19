@@ -107,6 +107,8 @@ namespace gb
 		typedef typename gf_elem_types<gfsize>::multelem_t multelem_t;
 		typedef typename gf_elem_types<gfsize>::nonchar_elem_t nonchar_elem_t;
 
+		typedef gfelm< gf_p_simple<P> > gfelm_t;
+
 		struct static_data_t
 		{
 			elem_t prim_elem;

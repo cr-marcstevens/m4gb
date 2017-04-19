@@ -3,7 +3,7 @@
 #include <iostream>
 
 #undef CHECK
-#define CHECK(s) if (!(s)) { std::cerr << "Check FAILED in " __FILE__ " at line " << __LINE__ << "!" << std::endl; return 1; }
+#define CHECK(s) { bool res = false; try { res = (s); } catch (std::exception& e) { res = false; }; if (!res) { std::cerr << "Check FAILED in " __FILE__ " at line " << __LINE__ << "!" << std::endl; return 1; } }
 
 int test();
 

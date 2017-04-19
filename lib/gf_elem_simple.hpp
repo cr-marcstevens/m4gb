@@ -48,8 +48,6 @@ namespace gb
 	public:
 		typedef _GF GF;
 		typedef typename GF::elem_t elem_t;
-		typedef typename GF::dblelem_t dblelem_t;
-		typedef typename GF::multelem_t multelem_t;
 		typedef typename GF::nonchar_elem_t nonchar_elem_t;
 
 		elem_t v;

@@ -178,6 +178,11 @@ namespace gb
 			return ret;
 		}
 
+		void hash_combine(std::size_t& x, const std::size_t in)
+		{
+			x ^= in + 0x9e3779b9 + (x << 6) + (x >> 2);
+		}
+
 	} // namespace detail
 
 } // namespace gb

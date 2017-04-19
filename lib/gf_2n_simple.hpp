@@ -116,6 +116,8 @@ namespace gb
 		typedef typename gf_elem_types<gfsize>::multelem_t multelem_t;
 		typedef typename gf_elem_types<gfsize>::nonchar_elem_t nonchar_elem_t;
 
+		typedef gfelm< gf_2n_simple<N,Poly> > gfelm_t;
+
 		static const dblelem_t gfpoly = Poly;
 
 		struct static_data_t {
