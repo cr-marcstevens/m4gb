@@ -842,8 +842,7 @@ namespace gb
 	struct monomial_degrevlex_traits_int
 		: monomial_degrevlex_traits < N, D >
 	{
-		using typename monomial_degrevlex_traits < N, D >::less_t;
-		typedef monomial_int_t<N, D, typename less_t::var_greater, less_t, Int> int_monomial_t;
+		typedef monomial_int_t<N, D, typename monomial_traits<N, D>::var_greater, monomial_degrevlex_less<N, D>, Int> int_monomial_t;
 	};
 
 	template<std::size_t N, std::size_t D>
