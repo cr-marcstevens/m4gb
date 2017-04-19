@@ -51,7 +51,7 @@ namespace gb
 		typedef typename monomial_t::order_tag_t     order_tag_t;
 
 		static const std::size_t max_vars = traits_t::max_vars;
-		static const std::size_t max_deg = traits_t::exponent_order;
+		static const std::size_t max_deg = traits_t::max_deg;
 		static const std::size_t fieldsize = GF::gfsize;
 		static const std::size_t fieldchar = GF::gfchar;
 
