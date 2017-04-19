@@ -142,7 +142,7 @@ namespace gb {
 			if (nrvars > max_vars)
 				throw std::runtime_error("parser::parse_polynomial(coefficients,nrvars): nrvars > max_vars");
 
-			typedef typename monomial_degrevlex_traits<monomial_t::max_vars, monomial_t::exponent_order>::monomial_t monomial_degrevlex_t;
+			typedef typename monomial_degrevlex_traits<monomial_t::max_vars, monomial_t::max_deg>::monomial_t monomial_degrevlex_t;
 			std::vector<monomial_degrevlex_t> monomials = _generate_monomials<monomial_degrevlex_t>(coefficients.size(), nrvars);
 
 			std::vector<term_t> terms;
@@ -337,7 +337,7 @@ namespace gb {
 		{
 			std::string tmp = str;
 			while (!tmp.empty() && std::isspace(tmp.back()))
-				tmp.pop_back();
+				tmp.erase(tmp.size()-1, 1);
 			while (!tmp.empty() && std::isspace(tmp[0]))
 				tmp.erase(0, 1);
 			return tmp;
