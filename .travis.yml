@@ -50,6 +50,7 @@ install:
   - export CXX="$COMPILER"
   - $CXX --version
   - autoconf --version
+  - git clone https://github.com/nauotit/openf4 && cd openf4 && autoreconf --install && ./configure --prefix=$HOME/local && make && make install && export OPENF4DIR=$HOME/local
 
 before_script:
   - autoreconf --install
