@@ -30,6 +30,7 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 
+OPENF4DIR=${OPENF4DIR:-`pwd`/local}
 AC_ARG_WITH([openf4], AS_HELP_STRING([--without-openf4],[Disable OpenF4]))
 if test "x$with_openf4" != "xno"; then
 	if test -d "${with_openf4}/include" ; then
