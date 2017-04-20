@@ -50,12 +50,11 @@ install:
   - $CXX --version
   - autoconf --version
 
-#before_script:
-#  - "./autogen.sh"
-#  - "./configure"
+before_script:
+  - autoreconf --install
+  - ./configure
 
 script:
-  - make install-openf4
   - make
   - make check
 
