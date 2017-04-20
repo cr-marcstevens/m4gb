@@ -1,27 +1,23 @@
 language: cpp
 dist: trusty
 
-addons:
-  apt:
-    packages: [ 'autoconf-archive', 'libgmp-dev' ]
-
 addons_shortcuts:
   addons_gcc48: &gcc48
     apt:
       sources: ['ubuntu-toolchain-r-test']
-      packages: [ 'g++-4.8' ]
+      packages: [ 'g++-4.8', 'autoconf-archive', 'libgmp-dev' ]
   addons_gcc49: &gcc49
     apt:
       sources: ['ubuntu-toolchain-r-test']
-      packages: [ 'g++-4.9' ]
+      packages: [ 'g++-4.9', 'autoconf-archive', 'libgmp-dev' ]
   addons_gcc5: &gcc5
     apt:
       sources: ['ubuntu-toolchain-r-test']
-      packages: [ 'g++-5' ]
+      packages: [ 'g++-5', 'autoconf-archive', 'libgmp-dev' ]
   addons_gcc6: &gcc6
     apt:
       sources: ['ubuntu-toolchain-r-test']
-      packages: [ 'g++-6' ]
+      packages: [ 'g++-6', 'autoconf-archive', 'libgmp-dev' ]
 
 matrix:
   include:
