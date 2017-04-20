@@ -1,5 +1,9 @@
 language: cpp
 
+addons:
+  apt:
+    packages: [ 'libgmp-dev' ]
+
 addons_shortcuts:
   addons_gcc48: &gcc48
     apt:
@@ -49,6 +53,7 @@ install:
 #  - "./configure"
 
 script:
+  - make install-openf4
   - make
   - make check
 
