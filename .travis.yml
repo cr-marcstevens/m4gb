@@ -3,7 +3,7 @@ dist: trusty
 
 addons:
   apt:
-    packages: [ 'libgmp-dev' ]
+    packages: [ 'autoconf-archive', 'libgmp-dev' ]
 
 addons_shortcuts:
   addons_gcc48: &gcc48
