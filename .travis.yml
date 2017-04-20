@@ -2,6 +2,10 @@ language: cpp
 dist: trusty
 
 addons_shortcuts:
+  addons_clang: &clangdef
+    apt:
+      sources:
+      packages: [ 'autoconf-archive', 'libgmp-dev' ]
   addons_gcc48: &gcc48
     apt:
       sources: ['ubuntu-toolchain-r-test']
@@ -24,6 +28,7 @@ matrix:
   - os: linux
     compiler: clang
     env: COMPILER=clang++
+    addons: *clangdef
   - os: linux
     compiler: "gcc-4.8"
     env: COMPILER=g++-4.8
