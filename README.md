@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cr-marcstevens/m4gb.svg?branch=master)](https://travis-ci.org/cr-marcstevens/m4gb)
+
 # M4GB - Efficient Groebner Basis algorithm #
 
 ## Project is still being cleaned-up and commited here in phases. ##
