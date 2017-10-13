@@ -96,6 +96,7 @@ namespace gb
 	template<std::size_t P>
 	class gf_p_simple
 	{
+		static_assert(detail::is_prime<P>::value, "template parameter for gf_p_simple must be a prime number");
 	public:
 		static const std::size_t gfchar = P;
 		static const std::size_t gfsize = P;

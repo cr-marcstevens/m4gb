@@ -186,6 +186,27 @@ namespace gb
 			x ^= in + 0x9e3779b9 + (x << 6) + (x >> 2);
 		}
 
+		// helper for gb::detail::is_prime
+		template<std::size_t V, std::size_t i>
+		struct is_prime_helper
+		{
+			static const bool value = ((i*i) > V ? true :
+				((V % i) == 0 ? false :
+					is_prime_helper<V, ((i*i) > V ? 0 : i + 1)>::value));
+		};
+		template<std::size_t V>
+		struct is_prime_helper<V, 0>
+		{
+			static const bool value = false;
+		};
+
+		// compile-time check if a given number is prime.
+		template<std::size_t V>
+		struct is_prime
+		{
+			static const bool value = (V < 2) ? false : is_prime_helper<V, 2>::value;
+		};
+
 	} // namespace detail
 
 } // namespace gb
