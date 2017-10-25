@@ -84,6 +84,23 @@ int test()
 
 	std::vector<std::size_t> v1 = gb::detail::factor_int(521*601*2);
 	CHECK(v1.size() == 3 && v1[0] == 2 && v1[1] == 521 && v1[2] == 601);
+
+	CHECK(gb::detail::is_prime<2>::value == true);
+	CHECK(gb::detail::is_prime<3>::value == true);
+	CHECK(gb::detail::is_prime<4>::value == false);
+	CHECK(gb::detail::is_prime<5>::value == true);
+	CHECK(gb::detail::is_prime<6>::value == false);
+	CHECK(gb::detail::is_prime<7>::value == true);
+	CHECK(gb::detail::is_prime<8>::value == false);
+	CHECK(gb::detail::is_prime<9>::value == false);
+	CHECK(gb::detail::is_prime<10>::value == false);
+	CHECK(gb::detail::is_prime<11>::value == true);
+	CHECK(gb::detail::is_prime<12>::value == false);
+	CHECK(gb::detail::is_prime<13>::value == true);
+	CHECK(gb::detail::is_prime<16129>::value == false);
+	CHECK(gb::detail::is_prime<16777257>::value == false);
+	CHECK(gb::detail::is_prime<16777258>::value == false);
+	CHECK(gb::detail::is_prime<16777259>::value == true);
 	
 	return 0;
 }

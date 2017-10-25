@@ -187,24 +187,29 @@ namespace gb
 		}
 
 		// helper for gb::detail::is_prime
-		template<std::size_t V, std::size_t i>
-		struct is_prime_helper
+		template<std::size_t P, std::size_t B, std::size_t E, bool validrange>
+		struct has_divisor_in_range
 		{
-			static const bool value = ((i*i) > V ? true :
-				((V % i) == 0 ? false :
-					is_prime_helper<V, ((i*i) > V ? 0 : i + 1)>::value));
+			static const std::size_t mid = (B+E)/2;
+			static const bool value = 
+				  has_divisor_in_range<P, B, mid, (B<=mid) & ((B*B)<=P) >::value 
+				| has_divisor_in_range<P, mid+1, E, (mid+1<=E) & ((mid+1)*(mid+1)<=P) >::value;
 		};
-		template<std::size_t V>
-		struct is_prime_helper<V, 0>
+		template<std::size_t P, std::size_t B, std::size_t E>
+		struct has_divisor_in_range<P,B,E,false>
 		{
 			static const bool value = false;
 		};
-
+		template<std::size_t P, std::size_t B>
+		struct has_divisor_in_range<P,B,B,true>
+		{
+			static const bool value = ((P % B) == 0);
+		};
 		// compile-time check if a given number is prime.
-		template<std::size_t V>
+		template<std::size_t P>
 		struct is_prime
 		{
-			static const bool value = (V < 2) ? false : is_prime_helper<V, 2>::value;
+			static const bool value = ! has_divisor_in_range<P, 2, P-1, (2<=P-1)>::value; 
 		};
 
 	} // namespace detail
