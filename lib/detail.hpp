@@ -209,7 +209,7 @@ namespace gb
 		template<std::size_t P>
 		struct is_prime
 		{
-			static const bool value = ! has_divisor_in_range<P, 2, P-1, (2<=P-1)>::value; 
+			static const bool value = (P >= 2) & ! has_divisor_in_range<P, 2, P-1, (2<=P-1)>::value;
 		};
 
 	} // namespace detail
