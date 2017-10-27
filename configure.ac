@@ -32,54 +32,29 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 
+
 AS_IF([test "x$cross_compiling" != "xyes" && test "x$usedefaultcxxflags" = "xyes" ],
       [AX_CHECK_COMPILE_FLAG([-march=native], [CXXFLAGS="$CXXFLAGS -march=native"], [])])
+
 
 AX_PTHREAD()
 LIBS="$PTHREAD_LIBS $LIBS"
 CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
 
+AX_BOOST_BASE([1.57],,AC_MSG_ERROR([boost c++ library required]))
+AX_BOOST_PROGRAM_OPTIONS
+AX_BOOST_SYSTEM
+AX_BOOST_THREAD
+CPPFLAGS="$BOOST_CPPFLAGS $CPPFLAGS"
+LDFLAGS="$BOOST_LDFLAGS $LDFLAGS"
+LIBS="$BOOST_PROGRAM_OPTIONS_LIB $BOOST_SYSTEM_LIB $BOOST_THREAD_LIB $LIBS"
 
 
+AX_OPENF4
 
-OPENF4DIR=${OPENF4DIR:-$(pwd)/local}
-AC_ARG_WITH([openf4], AS_HELP_STRING([--with-openf4@<:@=yes|no|DIR@:>@],[prefix where openf4 is installed (default=yes)]),
-[
-	if test "$withval" = "no"; then
-		want_openf4="no"
-	elif test "$withval" = "yes"; then
-		want_openf4="yes"
-	else
-		want_openf4="yes"
-		OPENF4DIR=$withval
-	fi
-],[
-	want_openf4="yes"
-]
-)
-if test "x$want_openf4" != "xno"; then
-	if test "x$OPENF4DIR" != "x" && test -d $OPENF4DIR/include; then
-		CPPFLAGS="-I$OPENF4DIR/include $CPPFLAGS"
-		LDFLAGS="-L$OPENF4DIR/lib"
-	fi
-	AC_DEFINE(OPENF4_GLOBAL_H,1,[Force exclusion of openf4/include/config.h])
-	AC_CHECK_HEADER([libopenf4.h],[],[AC_MSG_ERROR(error: libopenf4.h not found)])
-	AC_MSG_CHECKING(for usability of OpenF4)
-	LIBS="-lopenf4 $LIBS"
-	AC_LINK_IFELSE([AC_LANG_SOURCE([
-		#include <libopenf4.h>
-		int main() {
-			std::vector<std::string> tmp;
-			groebnerBasisF4 (0,0,tmp,tmp,0,0);
-		}
-		])],
-		[AC_MSG_RESULT(yes)
-		AC_DEFINE(HAVE_OPENF4,1,[Define if OpenF4 is installed])
-		],[AC_MSG_ERROR(error: see log)
-		])
-fi
 
+AM_CONDITIONAL(HAVE_FGBLIB, false)
 
 
 AC_CONFIG_FILES([
@@ -87,3 +62,4 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
+
