@@ -31,7 +31,7 @@ Run tests:
 
 	make check
   
-Compiling a specialized solver (with m4gb, openf4 or fgb backend) for a system of MAXVARS variables and finite field of size FIELDSIZE:
+Compiling a specialized solver `bin/solver_BACKEND_MAXVARS_FIELDSIZE` with `BACKEND` equal to `m4gb`, `openf4` or `fgb` for a system of `MAXVARS` variables and finite field of size `FIELDSIZE`:
 
 	make MAXVARS=20 FIELDSIZE=31 m4gb
 

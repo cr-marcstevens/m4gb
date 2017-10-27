@@ -55,8 +55,9 @@ script:
   - ./install_openf4.sh 
   - autoreconf --install
   - ./configure
-  - make
   - make check
+  - make FIELDSIZE=256 openf4
+  - make FIELDSIZE=31 openf4
 
 notifications:
   on_success: change
