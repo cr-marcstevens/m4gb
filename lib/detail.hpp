@@ -137,6 +137,31 @@ namespace gb
 		template<>                    struct least_nonchar_unsigned_integer_t < 7 > { typedef std::uint64_t type; };
 		template<>                    struct least_nonchar_unsigned_integer_t < 8 > { typedef std::uint64_t type; };
 
+		template<typename Int>
+		inline unsigned bitscanreverse(Int x)
+		{
+			unsigned i = 0;
+			while (x != 0)
+			{
+				x >>= 1;
+				++i;
+			}
+			return i-1;
+		}
+		template<typename Int>
+		inline unsigned bitscanforward(Int x)
+		{
+			if (x == 0)
+				return ~unsigned(0);
+			unsigned i = 0;
+			while ((x&1) == 0)
+			{
+				x >>= 1;
+				++i;
+			}
+			return i;
+		}
+
 		// assumes n > 1, i > 2, try to find factors of n starting with i, i+2, ...
 		inline std::vector<std::size_t> factor_int(std::size_t n, std::size_t i)
 		{

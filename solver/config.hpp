@@ -41,13 +41,16 @@ namespace gb
 		template<std::size_t fieldsize, std::size_t parity>
 		struct getfield
 		{
+			static_assert( is_prime<fieldsize>::value, "An odd fieldsize must be a prime");
 			typedef ::gb::gf_p_simple<fieldsize> type;
 		};
 
 		template<std::size_t fieldsize>
 		struct getfield<fieldsize,0>
 		{
-			typedef ::gb::gf_2n_simple< nrbits_t<fieldsize>::value - 1> type;
+			static const std::size_t extension = nrbits_t<fieldsize>::value - 1;
+			static_assert( fieldsize == std::size_t(1) << extension, "An even fieldsize must be a power of 2" );
+			typedef ::gb::gf_2n_simple<extension> type;
 		};
 
 		template<>

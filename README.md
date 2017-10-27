@@ -14,24 +14,28 @@
 
 ## Building ##
 
-Optional: install boost locally
+Optional: install boost locally:
 
 	./install_boost.sh
 
-Optional: install openf4 locally
+Optional: install openf4 locally:
 
 	./install_openf4.sh
 
-Configuring
+Configuring:
 
 	autoreconf --install
 	./configure
-  
-Compiling
 
-	make
-
-Run tests
+Run tests:
 
 	make check
   
+Compiling a specialized solver (with m4gb, openf4 or fgb backend) for a system of MAXVARS variables and finite field of size FIELDSIZE:
+
+	make MAXVARS=20 FIELDSIZE=31 m4gb
+
+	make MAXVARS=20 FIELDSIZE=31 openf4
+
+	make MAXVARS=20 FIELDSIZE=31 fgb
+
