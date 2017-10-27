@@ -8,9 +8,15 @@
 
 - autotools
 - C++11 compatible compiler
+- Boost C++ libraries (program_options, thread, system)
 - Optional: OpenF4 (can be used as another backend instead of the M4GB algorithm, facilitating benchmarking)
+- Optional: FGbLib (can also be used as another backend)
 
 ## Building ##
+
+Optional: install boost locally
+
+	./install_boost.sh
 
 Optional: install openf4 locally
 
