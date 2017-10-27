@@ -22,6 +22,10 @@ addons_shortcuts:
     apt:
       sources: ['ubuntu-toolchain-r-test']
       packages: [ 'g++-6', 'autoconf-archive', 'libgmp-dev', 'libboost-all-dev' ]
+  addons_gcc7: &gcc7
+    apt:
+      sources: ['ubuntu-toolchain-r-test']
+      packages: [ 'g++-7', 'autoconf-archive', 'libgmp-dev', 'libboost-all-dev' ]
 
 matrix:
   include:
@@ -45,6 +49,10 @@ matrix:
     compiler: "gcc-6"
     env: COMPILER=g++-6
     addons: *gcc6
+  - os: linux
+    compiler: "gcc-7"
+    env: COMPILER=g++-7
+    addons: *gcc7
 
 install:
   - export CXX="$COMPILER"
