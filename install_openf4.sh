@@ -1,6 +1,6 @@
 #/bin/bash
 
-git clone https://github.com/nauotit/openf4 || exit 1
+git clone https://github.com/cr-marcstevens/openf4 || exit 1
 export OPENF4DIR=$(pwd)/local
 
 cd openf4

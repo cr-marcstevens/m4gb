@@ -44,3 +44,6 @@ bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31):
 	$(MAKE) bin/solver_openf4
 	rm $(bin_solver_openf4_OBJECTS)
 	mv bin/solver_openf4 bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
+
+clean-local:
+	-rm bin/solver*
