@@ -14,18 +14,18 @@
 
 ## Building ##
 
-Optional: install boost locally:
+Optional: install boost locally (e.g., in your home directory, default prefix: $(pwd)/boost-VERSION):
 
-	./install_boost.sh
+	BOOST_VERSION=1.65.1 BOOST_INSTALL_PREFIX=$HOME/boost/boost-1.65.1 ./install_boost.sh
 
-Optional: install openf4 locally:
+Optional: install openf4 locally (default prefix: $(pwd)/openf4):
 
 	./install_openf4.sh
 
 Configuring:
 
 	autoreconf --install
-	./configure
+	./configure [--with-boost=$HOME/boost/boost-1.65.1] [--with-openf4=$(pwd)/openf4]
 
 Run tests:
 

@@ -1,3 +1,5 @@
+#include "../lib/config.h"
+
 #define PRINT_PROCESS_STATISTICS
 
 #ifndef MAXVARS

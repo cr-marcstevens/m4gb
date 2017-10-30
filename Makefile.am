@@ -25,6 +25,14 @@ bin_solver_openf4_SOURCES=solver/openf4.cpp contrib/runtime_stats.cpp
 bin_solver_openf4_CPPFLAGS=${OPENF4_CPPFLAGS} ${EXTRA_CPPFLAGS}
 bin_solver_openf4_LDFLAGS=${OPENF4_LDFLAGS}
 bin_solver_openf4_LDADD=${OPENF4_LIB}
+
+openf4: bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
+	@echo "Executable: bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)"
+
+bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31):
+	$(MAKE) bin/solver_openf4
+	-rm -f $(bin_solver_openf4_OBJECTS)
+	mv bin/solver_openf4 bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
 endif
 
 
@@ -37,13 +45,5 @@ bin_solver_fgb_LDADD=${FGB_LIB}
 endif
 
 
-openf4: bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
-	@echo "Executable: bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)"
-
-bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31):
-	$(MAKE) bin/solver_openf4
-	rm $(bin_solver_openf4_OBJECTS)
-	mv bin/solver_openf4 bin/solver_openf4_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
-
 clean-local:
-	-rm bin/solver*
+	-rm -f bin/solver_m4gb* bin/solver_openf4* bin/solver_fgb*

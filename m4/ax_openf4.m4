@@ -40,7 +40,7 @@
 #
 AC_DEFUN([AX_OPENF4],
 [
-OPENF4DIR=${OPENF4DIR:-$(pwd)/local}
+OPENF4DIR=${OPENF4DIR:-$(pwd)/openf4}
 AC_ARG_WITH([openf4], AS_HELP_STRING([--with-openf4@<:@=yes|no|DIR@:>@],[prefix where openf4 is installed (default=yes)]),
 [
 	if test "$withval" = "no"; then
@@ -52,7 +52,7 @@ AC_ARG_WITH([openf4], AS_HELP_STRING([--with-openf4@<:@=yes|no|DIR@:>@],[prefix 
 		OPENF4DIR=$withval
 	fi
 ],[
-	want_openf4="yes"
+	want_openf4="maybe"
 ]
 )
 
@@ -74,8 +74,9 @@ if test "x$want_openf4" != "xno"; then
 	LDFLAGS="$OPENF4_LDFLAGS $LDFLAGS"
 	LIBS="$OPENF4_LIB $LIBS"
 
+	have_openf4=yes
 	AC_DEFINE(OPENF4_GLOBAL_H,1,[Force exclusion of openf4/include/config.h])
-	AC_CHECK_HEADER([libopenf4.h],[],[AC_MSG_ERROR(error: libopenf4.h not found)])
+	AC_CHECK_HEADER([libopenf4.h],[],[have_openf4=no])
 	AC_MSG_CHECKING(for usability of OpenF4)
 	AC_LINK_IFELSE([AC_LANG_SOURCE([
 		#include <libopenf4.h>
@@ -84,12 +85,13 @@ if test "x$want_openf4" != "xno"; then
 			groebnerBasisF4 (0,0,tmp,tmp,0,0);
 		}
 		])],
-		[AC_MSG_RESULT(yes)
-		AC_DEFINE(HAVE_OPENF4,1,[Define if OpenF4 is installed])
-		have_openf4=yes
-		],[AC_MSG_ERROR(error: see log)
-		])
+		[AC_MSG_RESULT(yes)],
+		[AC_MSG_RESULT(no)
+		have_openf4=no])
 
+	AS_IF([test "x$have_openf4" = "yes"],
+		[AC_DEFINE(HAVE_OPENF4,1,[Define if OpenF4 is installed])],
+		[AS_IF([test "x$want_openf4" = "yes"],[AC_MSG_ERROR(error: see log)],[])])
 	CPPFLAGS="$CPPFLAGS_SAVED"
 	LDFLAGS="$LDFLAGS_SAVED"
 	LIBS="$LIBS_SAVED"
