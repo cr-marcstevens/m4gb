@@ -77,9 +77,21 @@ bin/solver_fgb${SOLVERSUFFIX}:
 endif
 
 
-
 bin/solver_m4gb_% bin/solver_openf4_% bin/solver_fgb_%:
 	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
 
+EXTRA_PROGRAMS+=bin/generator
+bin_generator_SOURCES=solver/generator.cpp
+bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
+
+generator: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
+	@echo "Executable: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)"
+
+bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31):
+	$(MAKE) bin/generator
+	rm $(bin_generator_OBJECTS)
+	mv bin/generator bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
+
 clean-local:
 	-rm -f bin/solver_m4gb* bin/solver_openf4* bin/solver_fgb*
+	-rm bin/generator*
