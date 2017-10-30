@@ -5,7 +5,7 @@
 #include <string>
 #include "config.hpp"
 
-typedef gb::getfield<FIELDSIZE>::type field_t;
+typedef gb::myfield_t field_t;
 typedef field_t::gfelm_t coefficient_t;
 typedef gb::monomial_degrevlex_traits_uint64<MAXVARS, DEG> monomial_int_traits_t;
 
