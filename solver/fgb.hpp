@@ -41,10 +41,8 @@ extern "C" {
 #define MAX_MATRIX_ROW 10000000
 #define VERBOSE 1
 
-namespace mq
+namespace gb
 {
-	typedef getfield<FIELDSIZE>::type myfield_t;
-	typedef polynomial_stream_t<monomial_degrevlex_traits<MAXVARS, FIELDSIZE>, myfield_t> mypolynomial_t; 
 
 	template<typename polynomial_t>
 	class fgbsolver : public solver_base_t<polynomial_t>
@@ -171,7 +169,7 @@ namespace mq
 		public:
 			mysolver_t()
 			{
-				this->_solvername = "fgbsolver";
+				this->_solvername = "fgb";
 			}
 	};
 }

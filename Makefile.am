@@ -17,7 +17,18 @@ check_PROGRAMS = $(TESTS)
 EXTRA_CPPFLAGS=-DMAXVARS=$(firstword $(MAXVARS) 20) -DFIELDSIZE=$(firstword $(FIELDSIZE) 31)
 
 
-EXTRA_PROGRAMS=
+EXTRA_PROGRAMS=bin/solver_m4gb
+bin_solver_m4gb_SOURCES=solver/m4gb.cpp contrib/runtime_stats.cpp
+bin_solver_m4gb_CPPFLAGS=${M4GB_CPPFLAGS} ${EXTRA_CPPFLAGS}
+
+m4gb: bin/solver_m4gb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
+	@echo "Executable: bin/solver_m4gb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)"
+
+bin/solver_m4gb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31):
+	$(MAKE) bin/solver_m4gb
+	-rm -f $(bin_solver_m4gb_OBJECTS)
+	mv bin/solver_m4gb bin/solver_m4gb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
+
 
 if HAVE_OPENF4
 EXTRA_PROGRAMS+=bin/solver_openf4
@@ -42,6 +53,14 @@ bin_solver_fgb_SOURCES=solver/fgb.cpp contrib/runtime_stats.cpp
 bin_solver_fgb_CPPFLAGS=${FGB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 bin_solver_fgb_LDFLAGS=${FGB_LDFLAGS}
 bin_solver_fgb_LDADD=${FGB_LIB}
+
+fgb: bin/solver_fgb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
+	@echo "Executable: bin/solver_fgb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)"
+
+bin/solver_fgb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31):
+	$(MAKE) bin/solver_fgb
+	-rm -f $(bin_solver_fgb_OBJECTS)
+	mv bin/solver_fgb bin/solver_fgb_$(firstword $(MAXVARS) 20)_$(firstword $(FIELDSIZE) 31)
 endif
 
 

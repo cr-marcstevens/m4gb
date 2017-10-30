@@ -7,7 +7,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
-DEFAULT_CXXFLAGS="-O3 -Wall"
+DEFAULT_CXXFLAGS="-O3 -Wall -Wfatal-errors"
 AS_IF([test "x$CXXFLAGS" = "x"],
 	[CXXFLAGS="$DEFAULT_CXXFLAGS"]
 	[usedefaultcxxflags=yes],

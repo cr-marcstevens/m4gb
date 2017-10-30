@@ -240,7 +240,7 @@ namespace gb
 		public:
 			mysolver_t()
 			{
-				this->_solvername = "openf4solver";
+				this->_solvername = "openf4";
 			}
 	};
 }
