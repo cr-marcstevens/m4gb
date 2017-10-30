@@ -16,8 +16,13 @@ typedef gb::polynomial_simple_t<monomial_int_traits_t, field_t> polynomial_t;
 
 const auto NMONOMIALS = gb::detail::multiset_coefficient_t<MAXVARS + 1, DEG>::value;
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc > 2)
+    {
+        std::cout << "Usage : " << argv[0] << " <output filename>" << std::endl;
+        return 1;
+    }
     std::array<monomial_static_t, NMONOMIALS> monomials;
     std::array<std::array<coefficient_t, NMONOMIALS>, NPOLYS> coeff_matrix;
     std::array<coefficient_t, MAXVARS> solution;
@@ -70,11 +75,22 @@ int main()
     }
 
     /* print file */
-    const std::string outputname = std::to_string(FIELDSIZE) + "_" + \
-        "n" + std::to_string(MAXVARS) + "_" + \
-        "m" + std::to_string(NPOLYS);
-    std::ofstream in_os(outputname + ".in");
-    std::ofstream ans_os(outputname + ".ans");
+    std::string outputname;
+    if (argc < 2)
+    {
+        outputname = std::to_string(FIELDSIZE) + "_" +  \
+            "n" + std::to_string(MAXVARS) + "_" + \
+            "m" + std::to_string(NPOLYS);
+    }
+    else if (argc == 2)
+    {
+        outputname = argv[1];
+    }
+    std::string infilename = outputname + ".in";
+    std::string ansfilename = outputname + ".ans";
+
+    std::ofstream in_os(infilename);
+    std::ofstream ans_os(ansfilename);
 
     /* write input file */
     in_os << "$fieldsize " << std::to_string(FIELDSIZE) << std::endl;
@@ -109,8 +125,8 @@ int main()
     ans_os.close();
 
     std::cout << std::endl;
-    std::cout << "Input file               : " << outputname + ".in" << std::endl;
-    std::cout << "Answer file              : " << outputname + ".ans" << std::endl;
+    std::cout << "Input file               : " << infilename << std::endl;
+    std::cout << "Answer file              : " << ansfilename << std::endl;
 
     return 0;
 }

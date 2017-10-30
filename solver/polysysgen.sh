@@ -1,12 +1,11 @@
 #!/bin/bash
 
-CPPFILENAME="generator.cpp"
-DEG=2 #default degree is quadratic
+NAME="generator"
 
 cleanup()
 {
-    if [ -f "a.out" ]; then
-        rm -f a.out
+    if [ `ls ../bin|grep ${NAME}|wc -l` -gt 0 ]; then
+        rm -f ../bin/${NAME}*
     fi
 }
 
@@ -20,11 +19,12 @@ display_help()
     echo "  -n <no. of variables> : set the number of variables"
     echo "  -m <no. of equations> : set the number of equations"
     echo "  -d <degree>           : (optional) set the degree (default=2)"
+    echo "  -o <output filename>  : (optional) set the name for output file"
     exit 0
 }
 
 cleanup
-while getopts :hf:n:m:d: option
+while getopts :hf:n:m:d:o: option
 do
     case "$option" in
         h)
@@ -41,6 +41,9 @@ do
             ;;
         d)
             DEG=$OPTARG
+            ;;
+        o)
+            OUTPUTFILENAME=$OPTARG
             ;;
         \?)
             echo "Invalid options: -$OPTARG" >&2
@@ -65,6 +68,13 @@ if [ -z "$N" ]; then
     echo "The number of variables is not set (use -n)"
     exit 1
 fi
+if [ -z "$DEG" ]; then
+    DEG=2 #default degree is quadratic
+fi
+if [ -z "$OUTPUTFILENAME" ]; then
+    OUTPUTFILENAME=${FIELDSIZE}_n${N}_m${M}
+fi
+
 
 re='^[0-9]+$'
 if ! [[ $FIELDSIZE =~ $re ]] || [ $FIELDSIZE -lt 2 ]; then
@@ -93,11 +103,12 @@ echo "size of the finite field : $FIELDSIZE"
 echo "number of variables      : $N"
 echo "number of equations      : $M"
 echo "degree                   : $DEG"
+echo "output filename format   : $OUTPUTFILENAME"
 
 pushd ../ && \
-    make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} NPOLYS=${M} DEG=${DEG} generator &&\
+    make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} NPOLYS=${M} DEG=${DEG} ${NAME} &&\
     popd
 
 pushd ../bin && \
-    ./generator_n${N}_m${M}_${FIELDSIZE} && \
+    ./${NAME}_n${N}_m${M}_${FIELDSIZE} ${OUTPUTFILENAME} && \
     popd
