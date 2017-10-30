@@ -1,3 +1,29 @@
+/*****************************************************************************\
+*                                                                             *
+*   M4GB - an efficient Groebner-basis algorithm                              *
+*   Copyright (C) 2017  Rusydi Makarim, Marc Stevens,                         *
+*   Cryptology Group, Centrum Wiskunde & Informatica (CWI), The Netherlands   *
+*                                                                             *
+*   This file is part of M4GB.                                                *
+*                                                                             *
+*   M4GB is free software: you can redistribute it and/or modify              *
+*   it under the terms of the GNU General Public License as published by      *
+*   the Free Software Foundation, either version 3 of the License, or         *
+*   (at your option) any later version.                                       *
+*                                                                             *
+*   M4GB is distributed in the hope that it will be useful,                   *
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+*   GNU General Public License for more details.                              *
+*                                                                             *
+*   You should have received a copy of the GNU General Public License         *
+*   along with M4GB.  If not, see <http://www.gnu.org/licenses/>.             *
+*                                                                             *
+\*****************************************************************************/
+
+#ifndef M4GB_SOLVER_COMMON_HPP
+#define M4GB_SOLVER_COMMON_HPP
+
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -6,44 +32,7 @@
 #include <boost/program_options.hpp>
 #include <boost/thread.hpp>
 
-#define PRINT_PROCESS_STATISTICS
-
-
-#ifndef MAXVARS
-#define MAXVARS   20
-#endif
-
-#ifndef FIELDSIZE
-#define FIELDSIZE 31
-#endif
-
-#ifndef SOLVERNAME
-#define SOLVERNAME "m4gb"
-#endif
-
-#ifndef SOLVERHPP
-#define SOLVERHPP "m4gb.hpp"
-#endif 
-
-#if FIELDSIZE <= 256
-#define GF_USE_MUL_TABLE
-#endif
-
-#if FIELDSIZE <= 64
-#define GF_USE_ADD_MUL_TABLE
-#endif
-
-#if FIELDSIZE == 2
-#define MONOMIAL_ALLOW_FIELDEQUATIONS
-#define GB_ADD_FIELDEQUATIONS
-#define MONOMIAL_NO_WRAPCHECK
-#endif
-
-#if FIELDSIZE >= 31
-#define MONOMIAL_NO_WRAPCHECK
-#endif
-
-#define MQ_NO_TRY_CATCH
+#include "config.hpp"
 
 #ifdef PRINT_PROCESS_STATISTICS
 #include "../contrib/runtime_stats.hpp"
@@ -172,3 +161,4 @@ int main(int argc, char** argv)
 	return 0;
 }
 
+#endif
