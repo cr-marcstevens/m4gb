@@ -1,6 +1,7 @@
 #!/bin/bash
 
 NAME="m4gb"
+INFORMAT=""
 
 display_help()
 {
@@ -43,26 +44,56 @@ shift $((OPTIND-1))
 INPUTFILENAME="$1"
 OUTPUTFILENAME="$2"
 
+echo "Inputfile: $INPUTFILENAME"
+if [ ! -f "$INPUTFILENAME" ] || [ ! -r "$INPUTFILENAME" ]; then
+    echo "Cannot read inputfile: $INPUTFILENAME"
+    exit 1
+fi
 if [ -z "$FIELDSIZE" ]; then
     FIELDSIZE=`grep -i "[$].*fieldsize.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
+fi
+if [ -z "$FIELDSIZE" ]; then
+    #Galois Field : GF(251)
+    #Galois Field : GF(2)[x] / x^8 + x^4 + x^3 + x^2 + 1
+    GFTEXT=`grep -i "Galois Field.*:" $INPUTFILENAME | cut -d: -f2 | head -n1`
+    if [ ! -z "$GFTEXT" ]; then
+        FIELDCHAR=`echo $GFTEXT | cut -d'(' -f2 | cut -d')' -f1`
+        FIELDEXT=`echo $GFTEXT | grep -o "\\^[1-9]\+" | tr -d '\\^' | head -n1`
+	FIELDSIZE=$FIELDCHAR
+        if [ ! -z "$FIELDEXT" ]; then
+	    for ((i=1;i<FIELDEXT; ++i)); do
+		FIELDSIZE=$(($FIELDSIZE * $FIELDCHAR))
+	    done
+	fi
+	INFORMAT="mqchallenge"
+    fi
 fi
 if [ -z "$FIELDSIZE" ]; then
     echo "The field size could not be detected: use -f #"
     exit 1
 fi
+echo "Fieldsize: $FIELDSIZE"
 if [ -z "$MAXVARS" ]; then
     MAXVARS=`grep -i "[$].*vars.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
+fi
+if [ -z "$MAXVARS" ]; then
+    MAXVARS=`grep -i "Number of variables.*:.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
+    INFORMAT="mqchallenge"
 fi
 if [ -z "$MAXVARS" ]; then
     echo "The number of variables could not be detected: use -n #"
     exit 1
 fi
+echo "Variables: $MAXVARS"
+if [ ! -z "$OUTPUTFILENAME" ]; then
+    OPTIONS="$OPTIONS -o $OUTPUTFILENAME"
+fi
+if [ ! -z "$INFORMAT" ]; then
+    OPTIONS="$OPTIONS --$INFORMAT"
+fi
 
 SOLVERBIN=bin/solver_${NAME}_n${MAXVARS}_gf${FIELDSIZE}
 
-echo "Inputfile: $INPUTFILENAME"
-echo "Fieldsize: $FIELDSIZE"
-echo "Variables: $MAXVARS"
 echo "Options  : $OPTIONS"
 echo "Solver   : $SOLVERBIN"
 

@@ -154,8 +154,9 @@ int main(int argc, char** argv)
 #endif
 
 #ifdef PRINT_PROCESS_STATISTICS
-	std::cout << "Total CPU time : " << getCPUTime() << "s" << std::endl;
-	std::cout << "Peak memory    : " << (getPeakRSS() >> 20) << "MiB" << std::endl;
+	std::cout << "Total CPU time : " << getCPUTime() << " s" << std::endl;
+	std::cout << "Peak memory    : " << (getPeakRSS() >> 20) << " MiB" << std::endl;
+	std::cout << "Resource index : " << double(getCPUTime())*double(getPeakRSS()>>20) << " s*MiB" << std::endl;
 #endif
 
 	return 0;
