@@ -1,0 +1,27 @@
+Galois Field : GF(2)[x] / x^8 + x^4 + x^3 + x^2 + 1
+Number of variables (n) : 10
+Number of polynomials (m) : 20
+Seed : 1
+Order : graded reverse lex order
+
+*********************
+1a 8e 6d 47 e7 12 ab 6e 3f 7a 2d 1f 82 ea f7 58 53 7c 08 f5 18 22 53 a9 72 d4 6d bc c8 ff a7 da 29 3e 8d e3 76 19 81 ee df e9 73 8a e5 14 e6 c8 ec d9 c9 bc 79 11 0b b2 05 a4 09 5c 0f a5 db ea 09 e8 ;
+6c ea 2c e0 8d ad 42 55 35 8c 9b c4 47 42 17 52 e9 54 a6 ee f6 1b 7d 44 6b a9 91 c2 4b 9c 86 2e fa bb 60 10 ba 66 4d 94 16 68 74 c6 a2 10 e2 46 99 a9 20 7f be d0 07 81 d8 1c 46 83 6d 70 59 29 84 d8 ;
+a4 15 11 d4 7f c2 60 9c 65 6f 97 b4 22 16 ed f9 3d ba ba 24 42 d9 31 9e 21 de 95 5c df b6 66 86 19 ce 5f 80 fb ca 68 41 f0 98 87 c1 24 03 e4 73 1d e7 66 bf d2 65 04 d6 0a 36 31 3f 9a 4b 51 1a ec a1 ;
+11 ee 4f 29 f4 99 b7 04 00 1a 16 8d 1c 0a 5d 65 05 ee 29 e8 2f da f6 85 cc 03 c8 18 32 43 75 72 3c c7 81 69 25 9a 5a b2 ae c9 5c 29 87 36 50 44 b8 c1 ec 5c cf 90 02 6c 63 18 6b e5 3d bd 41 fd 65 f8 ;
+88 19 7f a1 c2 8b d2 5c 81 a4 86 a9 37 15 aa 1d 1a 59 61 65 8f ff 29 87 89 ac 0f 54 8a ad e0 23 b8 fb 9c d4 e0 fa 96 f8 2d a8 50 8a b5 42 6c 3b 61 df 32 a9 fe 30 b1 ce ad 1a 47 85 45 29 0e 42 2e 30 ;
+1d 8a d0 8b 89 46 9a 47 20 e4 dd 17 71 0c 07 7f ef 72 6b 55 d5 9d 66 60 54 24 99 c5 a5 23 cb cf b5 a0 80 c2 0f 91 55 de 2a f8 93 93 4d 6e ed dd 87 d7 e8 5b ae 64 46 c7 a7 b9 73 40 3b 79 7d e5 95 cc ;
+d8 40 62 d9 c0 29 61 06 22 90 d8 27 5e 2f 21 40 38 c7 b5 59 85 4c 15 62 3d 25 09 19 60 ed 57 d9 42 f3 18 1c 0e 45 a5 a9 43 2f d7 50 af 20 3b 21 7e 7f bd b5 01 b1 b4 3a 69 01 c5 b5 b3 32 b5 bc a2 7b ;
+44 9b e2 9d ec c1 ec 59 a2 40 5d d9 6f 29 75 75 37 d6 5c 31 4c b9 86 4a 2e b1 78 1a 1f 06 ab 4e 8f 93 00 7d 57 92 72 fc 6e 9c 0e a4 c3 56 13 87 0a 12 6e 52 0f 32 71 16 57 ce 6a b9 e7 b4 13 0d 8c bf ;
+62 32 53 1d 54 a1 51 48 e7 8f 84 ac 47 a4 60 b2 00 c0 c7 68 19 63 eb ee 16 0c d1 ca 7b 2d 96 9b d9 f2 a3 1f cd 9b 73 73 cf 96 9d ba 74 ca de 10 e8 6d 4f 22 84 f7 da e1 df f1 b1 04 09 8d 1f be fe df ;
+be d1 34 e2 a4 9c db 0b 3f 79 29 91 60 1d 1f 91 97 7e fa f0 41 a5 62 fe f7 3c 52 7b f7 f9 ce 75 41 09 c9 d6 b4 ea dd 9a 2e 29 75 76 9e cf c0 2f 28 a4 c6 a1 21 c1 a3 c5 b6 00 e9 18 77 2f 38 9b 98 72 ;
+48 e5 41 75 c2 45 67 39 e7 3a 63 79 32 fd a1 81 97 82 e4 3b 48 79 7d eb 08 45 84 1c ff 95 5c 61 f9 4f 4c d8 63 bf 4c ba 48 ec a4 5c ff 85 d4 82 31 3a 6b b2 53 d8 66 97 0d fa ed ec 0f b4 f2 a5 64 8f ;
+e5 82 e1 9d 9f b9 48 cc 9a f4 43 11 f4 d9 8f cf 1f f3 3a 92 30 19 6b c7 0f b5 54 44 ae 59 76 bc 7d 1f 57 72 fe 16 17 66 38 9e b3 00 25 c3 49 60 36 23 d7 a7 ba 61 30 aa ce e6 da a8 9a be 19 ad fa af ;
+44 ef 7a e1 bc 5d 94 de 20 0c 13 4a 43 07 7a b1 01 52 12 c2 26 65 21 32 2d c4 1f 7d 8f 5e 92 ee f7 d5 4f d8 42 0a af 12 e3 ee 63 37 70 7e 42 bb 86 88 bc 30 87 46 a4 21 8a 0b 06 64 7d a9 c2 82 c0 2d ;
+e4 2f 1d 18 ba 9d 86 14 e0 62 0f 3a f6 a4 41 22 c1 db 18 ec 02 36 f8 6e ee 86 e6 b7 4c f3 9c 82 54 16 a0 88 46 01 eb dc d3 83 c6 64 12 60 d8 be a2 12 6c 97 d6 85 d6 db b3 95 08 4f ef 2d 84 f9 af 5e ;
+49 3c 1e c5 1d 39 34 8e 29 c7 6b ae 38 ec f2 e9 03 35 53 d0 4c 17 6f 6a 7e 54 e7 97 02 d1 b6 57 33 82 41 61 01 13 5c b6 df b2 19 15 26 59 b7 ab ae 9b dd 21 70 c9 88 4b bc f8 3a 4f b2 55 fa bb 83 50 ;
+17 c2 79 c9 75 a4 e6 76 26 f4 9a 97 57 6e a8 23 af e8 82 28 72 9e 29 1f 0e b7 bf 5e 80 68 e8 7f d6 c0 6c 95 54 2a ab 1d 20 6c d5 b6 28 b0 eb e9 8a 9a 4b 1f 89 ae cf c7 ad 88 d4 b2 5f 4f e0 35 ab b3 ;
+b7 4e bc 08 d0 c5 2d e2 26 d1 49 a3 bb 5e e5 8b 96 80 5b 7d 44 dc 41 3d cc 01 30 7c ff 0c 2e 19 d1 39 1d 2e 4f 3e 64 bc 07 38 5c a0 31 45 20 ce be 73 0b d5 f2 5a 8d 63 3f 96 27 3f 87 2a 68 a0 db 2b ;
+75 f5 03 88 77 1c ae 28 bb 13 70 3c 8f de b7 03 dd 36 92 48 74 f6 14 ab b0 59 ad 0a 1d c5 5f 50 a2 6c 13 a2 c8 7f eb c7 ac 62 e8 66 0c b3 64 b6 63 36 34 26 36 ef e1 a0 1d 1b 21 15 0e 50 63 72 22 2b ;
+d1 48 04 3b f0 fc e4 ee dc 37 be f8 a0 5c fe 4f db 3b e4 b7 5e 97 b9 ef be 39 e9 a1 24 7a 0f 71 a1 82 73 4c 78 97 24 57 99 ee 2b 49 e4 c4 2d 49 44 2d 5c cb d1 f3 9a a3 eb 10 5f 98 b0 48 36 ed b8 22 ;
+d0 bb ac 40 08 c3 c5 92 d7 72 a0 3e fe 87 35 3f 64 28 b2 47 d8 c5 59 be 02 67 ae d9 4b 58 a8 27 ae 71 01 9d a2 76 fe 26 29 e3 7d 4a 14 8b ec 52 74 20 a1 99 cc 88 9d e8 cf 4e 02 56 49 49 2f 13 cd 5d ;

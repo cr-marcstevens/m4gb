@@ -24,7 +24,7 @@ SOLVERSUFFIX=_n${MAXVARS}_gf${FIELDSIZE}
 
 EXTRA_PROGRAMS=bin/solver_m4gb
 
-bin_solver_m4gb_SOURCES=solver/m4gb.cpp contrib/runtime_stats.cpp
+bin_solver_m4gb_SOURCES=src/m4gb.cpp contrib/runtime_stats.cpp
 bin_solver_m4gb_CPPFLAGS=${M4GB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 
 m4gb: bin/solver_m4gb${SOLVERSUFFIX}
@@ -41,7 +41,7 @@ bin/solver_m4gb${SOLVERSUFFIX}:
 if HAVE_OPENF4
 EXTRA_PROGRAMS+=bin/solver_openf4
 
-bin_solver_openf4_SOURCES=solver/openf4.cpp contrib/runtime_stats.cpp
+bin_solver_openf4_SOURCES=src/openf4.cpp contrib/runtime_stats.cpp
 bin_solver_openf4_CPPFLAGS=${OPENF4_CPPFLAGS} ${EXTRA_CPPFLAGS}
 bin_solver_openf4_LDFLAGS=${OPENF4_LDFLAGS}
 bin_solver_openf4_LDADD=${OPENF4_LIB}
@@ -61,7 +61,7 @@ endif
 if HAVE_FGBLIB
 EXTRA_PROGRAMS+=bin/solver_fgb
 
-bin_solver_fgb_SOURCES=solver/fgb.cpp contrib/runtime_stats.cpp
+bin_solver_fgb_SOURCES=src/fgb.cpp contrib/runtime_stats.cpp
 bin_solver_fgb_CPPFLAGS=${FGB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 bin_solver_fgb_LDFLAGS=${FGB_LDFLAGS}
 bin_solver_fgb_LDADD=${FGB_LIB}

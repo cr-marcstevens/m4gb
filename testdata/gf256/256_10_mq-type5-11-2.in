@@ -1,0 +1,18 @@
+Galois Field : GF(2)[x] / x^8 + x^4 + x^3 + x^2 + 1
+Number of variables (n) : 10
+Number of equations (m) : 11
+Seed : 2
+Order : graded reverse lex order
+
+*********************
+b3 83 7 9b 78 b 27 29 b6 be 23 2c a2 6c 5d 5f 7b 5 9a 86 e3 e7 7e 17 1e 91 d5 56 df cf a7 c8 b5 28 e6 15 2b db e0 74 b6 7f 1a 67 e7 63 c1 bd 9b 3a a7 5c ec 63 28 c5 17 1e 96 76 da d0 cd ca 16 7d ;
+8 3f 44 8e 1d 29 81 5d c1 63 ac 8b ec 5b ff 18 7e 9a 48 fd 9c 8b 5a d0 ee 6b e1 96 20 f4 d6 c6 34 5d 7d 13 ba 8a 71 4 79 5e d1 42 f2 2d c5 54 6f c0 37 61 51 10 2d 6b 1f c5 30 1e bf d 33 ce e 1b ;
+d8 c3 41 1f 7b 23 77 da 2e cf 8c a4 32 4f d9 33 e2 74 1c 52 63 fe 8e 70 cf a5 b2 29 84 77 e 18 fe 2b 24 60 11 f1 9f 25 2c 5f 6c 91 30 31 71 5a 16 b2 9f 7c a2 c 63 ef 5 67 94 44 4e 41 7e d1 32 e7 ;
+9c cf f1 52 e6 5d f6 87 69 4 c6 90 9e a1 a1 33 10 64 f3 32 2 aa 76 ac c 81 cd 83 62 ad 96 9b 79 fa d8 c9 98 f7 90 dc 4b 65 f5 7f 1e 8e 5e ba e2 24 3d 24 38 66 c2 9e cd e2 7e ee 3a 33 bf 42 54 b7 ;
+82 9d 13 9 c1 87 46 95 9c c3 3c 26 cd 5d c8 83 e5 f0 5c 68 a0 ab e9 b7 8c 3d ee a3 20 9d aa 62 67 6f c1 b0 75 d3 54 76 ba 92 e7 a6 fc ca 6b bc 24 53 e6 c0 a6 53 b8 ec 4e 5f db 20 43 51 61 41 35 a6 ;
+1f a7 57 c e5 1e c8 6 a6 3f 4a 48 bf 6a 37 40 66 f6 2d be f5 cf a9 3e 64 43 f5 5f c 47 7e 94 9b e6 cd fa d6 6f 2f 66 df 54 ff eb 43 c5 3e d3 d5 45 31 bb 82 77 12 7b 79 c3 17 1f 35 1c 6b e0 d0 60 ;
+43 a3 83 9e d9 b2 34 8a 85 75 40 52 55 d2 3a de bf 37 56 c8 12 53 7c 15 ec 45 2 9f 48 b4 93 b7 32 e6 d9 ab fe d4 21 f5 f2 5d 8a 34 dd 65 79 38 bd e8 7b 45 71 de 67 a4 72 3c ac 51 49 89 6f dd 89 67 ;
+39 aa e3 51 d3 cc c3 e6 7d 98 8e 38 ac d5 d4 7f 58 d7 ee 4f ae 66 fa ad 3c 4f a3 e7 12 fc 4d 44 ae be 12 44 b6 11 f8 f2 79 28 c6 f8 7c 98 7a ee 86 6d 51 23 d3 f8 17 a 62 46 68 71 41 89 92 ea 29 9a ;
+c5 9e 69 6 a3 ec 8c c3 d8 5c 4b 3e e8 81 fa 52 1c 16 fd 9f 63 57 3e ac 8a 2d de d6 69 43 1f 7 f6 23 5e 81 f0 e3 d4 8d 7b ad c4 43 12 5e 60 92 0 c1 e0 3e b0 f2 6c 63 ba c1 dc 39 71 51 fc a0 76 c1 ;
+d6 dd 6 3e 3f 27 a7 ab 7a 37 30 24 75 77 17 92 bd 82 fa 18 cf a4 6 57 cd 2a 60 9 ef a3 e0 b2 5 59 9b 87 99 bf df 61 65 43 3c f1 b0 a 2d 8e b0 4a ad 37 a9 81 20 76 a db 1e fc d9 3d aa 14 a5 b ;
+40 9f 7e 36 d8 48 68 a7 16 97 e8 e0 85 4b c3 81 97 86 5 db cf 13 49 38 ac 64 e9 ab c0 67 fb 24 c4 25 77 2b 39 52 68 e8 d6 8c 7e 6c 29 f4 2a 73 3 cb 6f ec 9e 1 f 9b 5d d4 4f 88 bf f0 78 f1 5b ce ;

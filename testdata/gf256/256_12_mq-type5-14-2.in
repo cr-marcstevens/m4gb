@@ -1,0 +1,21 @@
+Galois Field : GF(2)[x] / x^8 + x^4 + x^3 + x^2 + 1
+Number of variables (n) : 12
+Number of equations (m) : 14
+Seed : 2
+Order : graded reverse lex order
+
+*********************
+d6 c7 8d 6b 52 75 a2 65 da 68 5c 14 64 b6 7e ae d8 ac 2e 89 1b c0 e8 2b a3 2f 38 25 ca 17 25 8f 89 4 47 22 7f 1d a1 bb 56 17 52 e8 3 72 76 52 64 1d 13 64 2 8f 1d 98 a0 2e 11 59 db e 47 cb 18 65 d6 c4 b6 2e 81 7b 9d 17 8e 6f df 27 32 97 cc 75 34 15 9a 3d 26 18 74 18 10 ;
+0 df 9d bf 93 96 73 61 6b ec ae 5a cb e9 ac 35 e5 27 1d 18 e f4 5b 80 33 5d 4a 33 cb 1c da a5 8c 7f 14 b3 6d 9e b4 4c d9 42 3c 4c d4 40 88 77 86 f2 82 4b 35 cf a3 4b 72 ea 80 1b 91 42 a 11 28 bf aa 5c 1 92 7d c9 93 3c 9c 32 50 2b bd 30 59 a1 6b d 24 5e db 13 fa 14 ab ;
+f4 97 f9 1a 74 c6 71 8e a4 ae 7b a6 51 ca e4 6b 16 c0 b5 5e f 1a e6 7f 39 4b e1 a5 b3 dd 51 a0 4f bf d9 17 1a c6 32 b 40 3f d3 c 3a c5 d6 86 e a7 db aa 44 0 f0 26 17 50 5 51 1d 49 1c 74 a2 c1 6c 67 30 6f 30 5e ea 20 25 8 7c 2a 7a 6c ac 11 18 97 5c e 54 34 6a f4 53 ;
+f7 5a 52 42 f8 ab b1 37 89 62 1f 6f b0 a8 30 c6 80 f2 4f f2 6d dd c7 56 68 f1 4f 3b 32 35 1 51 5d c1 4f 41 e8 b9 7b c 85 d4 d5 d0 3a 1c 35 19 ce a5 65 e1 d0 65 cc 46 bf 5f 41 c7 37 15 1e 4a 61 c9 a0 bc 35 9 73 69 a0 32 3 b8 4c 90 8f 2a a0 4d 4e b d9 bb dd be d5 f3 32 ;
+1e fc 9d 64 80 18 32 b0 34 4a 8 e8 e6 2e 0 2e 30 df 96 1d 91 9a 3 89 89 ae e9 6c 68 d 66 6c ea c9 35 87 ab 59 25 c4 da 2 9a 6f ce d0 ab 91 1e 22 d7 8c 94 38 53 5e 34 7c ca 1 9d 48 4 b 2a 44 fa 29 18 4a 20 69 c3 d7 71 47 5d 0 fd e ff e7 4d 7f d8 5e 4a 4d 1c 1b f8 ;
+b9 76 a5 b9 e8 52 fa ab e4 66 4b d0 33 1c 86 a0 e1 c6 c5 c2 40 b4 52 2b e3 ff 8b 8e e2 e 42 3d 47 be 56 4b 54 95 f4 8d f1 68 3b dc 84 7c 8a b8 9c ad 75 2c 55 ab 82 4c 69 a3 c0 a1 ad fa b5 d3 56 a0 4f b1 d6 4d 5e 3a f1 af 68 5f 1d 2b 21 e5 80 ff be 1 c7 ea af 12 fe 74 dd ;
+1e ba 14 b1 45 e7 cf 4b b4 b6 84 78 f5 8a d6 23 c0 8b 27 90 45 d5 d9 ad a2 96 1e 2d 6e 9f c3 12 d0 a3 1 8a ad 31 51 b7 f7 fa 4a df ff 2a 47 6d df 62 1c 82 68 d5 1c 6f d7 a0 99 8c 70 b8 b8 29 7e 7b 83 92 15 13 a 50 62 f4 79 3f e9 86 7 48 51 d9 be 4b 9c e0 12 9f e3 d8 67 ;
+f7 b7 b7 48 56 64 90 92 33 63 c6 4a 65 5e 2 a6 86 67 ed fd c4 64 10 47 63 24 85 dc e7 10 10 c3 99 25 25 da ea 6d a6 ee 21 7 ad e8 55 67 4f b8 56 f5 a3 20 89 c8 fd 35 8b 95 cd af 9c 6 97 21 cc db a c6 d1 b1 af f1 b2 a6 4f 83 34 cc 5 fa b9 e8 d0 31 a2 93 63 d1 e9 f8 4c ;
+c9 64 3 17 d6 68 7f 41 f5 15 4e 85 f5 7d a5 fa b4 10 64 7f d9 27 99 32 3d 31 f5 38 43 b 76 30 d1 b8 1a 92 31 d7 e4 f8 e7 f6 a3 63 8f 6a dc ee 41 9c 27 91 d6 ff 3e f0 bc 81 e4 a4 d4 2b a0 ba 47 0 3f 2e e1 74 a7 c8 15 63 33 4b c 99 db 8 e1 49 12 4 92 47 9f a0 cd 7e 12 ;
+4f fd ee 42 49 af 94 7c d5 a df bc e7 9 70 95 62 45 13 65 32 ba 29 1 7c ae e4 40 46 32 4e e4 9a ab 1b 42 ff 7 97 30 40 95 6a d7 b6 9d 92 df a2 a5 dd 4d 1c d3 fa 66 97 f0 c8 f6 e5 ac 78 9f 10 42 c5 30 c5 53 58 d7 21 a0 e5 f5 d6 d8 88 9 35 98 1d 65 dd 32 9 4 e9 b2 89 ;
+8a da ce 3d c4 5a f9 d9 74 24 7f 37 23 92 3 f1 28 3e 97 1b 3b a5 be dd 2b 6c 88 43 a4 88 d0 53 77 35 14 a2 9d 5d 3d 9e 7b ac ba 65 ea 2f 46 13 e2 e2 ed 3a c 9a 4d 43 f7 dc 30 d ea b2 e4 1 95 ef 78 39 35 d9 b7 3d b5 4 14 c0 e8 e8 79 f3 ca e3 90 d af 8 5 10 ff 1f f6 ;
+d5 b4 af 64 50 4c 85 80 fa df 28 4c 73 1d 46 14 5d d8 53 6e bc f1 e7 3c c8 bd 6 79 9e f9 e7 96 a8 b5 ba 67 18 5d 5b 37 44 4b 2a 8b f3 15 c3 bc 90 4e 9d 5f 17 64 5a 67 a4 eb a7 ec 6f e2 55 26 6c 78 66 7f 1e b1 ff 5 ef 90 f8 c7 39 92 0 3b d6 80 6e 9e ea d5 27 50 6e bd a9 ;
+bd a0 86 14 49 ea b 65 98 91 79 c 5c cd 5c eb 91 b5 85 f0 36 64 52 5e 3a d8 f9 e2 a0 42 41 7e a7 cc 99 9b 5e c6 a fb 1e d4 33 f3 b3 7e 44 4 81 c3 14 69 a4 1c f0 7 f2 49 43 53 5d 5 9 78 fd f4 50 2f 5d ae 29 a8 b3 88 e7 8b d9 d7 87 4e 7a 97 d5 5e 37 ce b6 9e 17 fb b9 ;
+fe 8f 56 70 40 89 dc 20 5c 59 cb d6 97 d8 62 5b 69 5e c1 16 bb 79 ce d8 31 8e e2 25 1c 7d 87 ba b6 8d 43 da ab ad c4 18 ac 81 77 7f ea 73 c7 8f bb fa 24 e6 a2 e9 f7 6c b9 92 2f d9 66 56 e7 d 11 13 9e dd 6c 19 b8 15 4f 95 b9 e6 f6 37 cf 7a 90 aa ac 6f 6f d6 b1 67 ac b0 c3 ;
