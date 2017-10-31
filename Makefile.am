@@ -84,7 +84,7 @@ generator: generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
 
 bin/generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}:
 	-rm -f $(bin_generator_OBJECTS) bin/generator
-  $(MAKE) bin/generator
+	$(MAKE) bin/generator
 	mv bin/generator $@
 	-rm -f $(bin_generator_OBJECTS)
 
