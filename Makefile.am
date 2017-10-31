@@ -65,17 +65,16 @@ endif
 
 
 EXTRA_PROGRAMS+=bin/generator
-DEG ?= 2
 bin_generator_SOURCES=solver/generator.cpp
-bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG} -DNPOLYS=${NPOLYS}
+bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
 
-generator: bin/generator_n$(firstword $(MAXVARS) 20)_m$(NPOLYS)_$(firstword $(FIELDSIZE) 31)
-	@echo "Executable: bin/generator_n$(firstword $(MAXVARS) 20)_m$(NPOLYS)_$(firstword $(FIELDSIZE) 31)"
+generator: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
+	@echo "Executable: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)"
 
-bin/generator_n$(firstword $(MAXVARS) 20)_m$(NPOLYS)_$(firstword $(FIELDSIZE) 31):
+bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31):
 	$(MAKE) bin/generator
 	rm $(bin_generator_OBJECTS)
-	mv bin/generator bin/generator_n$(firstword $(MAXVARS) 20)_m$(NPOLYS)_$(firstword $(FIELDSIZE) 31)
+	mv bin/generator bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
 
 clean-local:
 	-rm -f bin/solver_m4gb* bin/solver_openf4* bin/solver_fgb*
