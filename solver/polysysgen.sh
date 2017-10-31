@@ -106,9 +106,9 @@ echo "degree                   : $DEG"
 echo "output filename format   : $OUTPUTFILENAME"
 
 pushd ../ && \
-    make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} NPOLYS=${M} DEG=${DEG} ${NAME} &&\
+    make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} DEG=${DEG} ${NAME} &&\
     popd
 
 pushd ../bin && \
-    ./${NAME}_n${N}_m${M}_${FIELDSIZE} ${OUTPUTFILENAME} && \
+    ./${NAME}_n${N}_d${DEG}_${FIELDSIZE} -m ${M} -o ${OUTPUTFILENAME} && \
     popd
