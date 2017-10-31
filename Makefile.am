@@ -101,6 +101,6 @@ if HAVE_OPENF4
 TESTS += tests/gf31.16.openf4.sh tests/gf256.16.openf4.sh
 endif
 
-if HAVE_FGB
+if HAVE_FGBLIB
 TESTS += tests/gf31.16.fgb.sh tests/gf256.16.fgb.sh
 endif
