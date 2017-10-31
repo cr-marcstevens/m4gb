@@ -16,12 +16,12 @@ bin_solver_m4gb_SOURCES=src/m4gb.cpp contrib/runtime_stats.cpp
 bin_solver_m4gb_CPPFLAGS=${M4GB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 
 m4gb: bin/solver_m4gb${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_m4gb${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_m4gb${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_m4gb_OBJECTS) bin/solver_m4gb
 	$(MAKE) bin/solver_m4gb
-	mv bin/solver_m4gb bin/solver_m4gb${SOLVERSUFFIX}
+	mv bin/solver_m4gb $@
 	-rm -f $(bin_solver_m4gb_OBJECTS)
 
 
@@ -35,12 +35,12 @@ bin_solver_openf4_LDFLAGS=${OPENF4_LDFLAGS}
 bin_solver_openf4_LDADD=${OPENF4_LIB}
 
 openf4: bin/solver_openf4${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_openf4${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_openf4${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_openf4_OBJECTS) bin/solver_openf4
 	$(MAKE) bin/solver_openf4
-	mv bin/solver_openf4 bin/solver_openf4${SOLVERSUFFIX}
+	mv bin/solver_openf4 $@
 	-rm -f $(bin_solver_openf4_OBJECTS)
 endif
 
@@ -55,12 +55,12 @@ bin_solver_fgb_LDFLAGS=${FGB_LDFLAGS}
 bin_solver_fgb_LDADD=${FGB_LIB}
 
 fgb: bin/solver_fgb${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_fgb${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_fgb${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_fgb_OBJECTS) bin/solver_fgb
 	$(MAKE) bin/solver_fgb
-	mv bin/solver_fgb bin/solver_fgb${SOLVERSUFFIX}
+	mv bin/solver_fgb $@
 	-rm -f $(bin_solver_fgb_OBJECTS)
 endif
 
@@ -73,8 +73,26 @@ bin/solver_openf4_%:
 bin/solver_fgb_%:
 	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
 
+
+
+EXTRA_PROGRAMS+=bin/generator
+bin_generator_SOURCES=solver/generator.cpp
+bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
+
+generator: generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
+	@echo "Executable: $<"
+
+bin/generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}:
+	-rm -f $(bin_generator_OBJECTS) bin/generator
+  $(MAKE) bin/generator
+	mv bin/generator $@
+	-rm -f $(bin_generator_OBJECTS)
+
+
+
 clean-local:
 	-rm -f bin/solver_m4gb* bin/solver_openf4* bin/solver_fgb*
+	-rm -f bin/generator*
 
 
 
