@@ -121,7 +121,7 @@
 namespace gb
 {
 
-	typedef polynomial_int_t<monomial_degrevlex_traits_int<MAXVARS, FIELDSIZE, INT_MONOMIAL_SIZE>, myfield_t> myintpolynomial_t;
+	typedef polynomial_int_t<monomial_degrevlex_traits_int<MAXVARS, INT_MONOMIAL_SIZE>, myfield_t> myintpolynomial_t;
 
 	template<typename Container, typename Iterator>
 	void container_extract(Container& c, Iterator& it, typename std::remove_const< typename std::add_lvalue_reference<typename Iterator::value_type>::type >::type v)

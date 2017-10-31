@@ -837,34 +837,43 @@ namespace gb
 
 	};
 
-	template<std::size_t N, std::size_t D, std::size_t IntSize>
+	template<std::size_t N, std::size_t IntSize>
+	struct monomial_degrevlex_traits_int_helper
+	{
+		typedef typename detail::least_unsigned_integer_t<IntSize>::type int_type;
+		static const std::size_t D = detail::max_degree_fits_int_t<N,int_type>::value;
+		typedef monomial_degrevlex_traits<N, D> base_traits;
+		typedef monomial_int_t<N, D, typename monomial_traits<N, D>::var_greater, monomial_degrevlex_less<N, D>,  int_type> int_monomial_t;
+	};
+
+	template<std::size_t N, std::size_t IntSize>
 	struct monomial_degrevlex_traits_int
-		: monomial_degrevlex_traits < N, D >
+		: monomial_degrevlex_traits_int_helper<N,IntSize>::base_traits
 	{
-		typedef monomial_int_t<N, D, typename monomial_traits<N, D>::var_greater, monomial_degrevlex_less<N, D>, typename detail::least_unsigned_integer_t<IntSize>::type > int_monomial_t;
+		typedef typename monomial_degrevlex_traits_int_helper<N,IntSize>::int_monomial_t int_monomial_t;
 	};
 
-	template<std::size_t N, std::size_t D>
+	template<std::size_t N>
 	struct monomial_degrevlex_traits_uint8
-		: monomial_degrevlex_traits_int<N, D, 1>
+		: monomial_degrevlex_traits_int<N, 1>
 	{
 	};
 
-	template<std::size_t N, std::size_t D>
+	template<std::size_t N>
 	struct monomial_degrevlex_traits_uint16
-		: monomial_degrevlex_traits_int<N, D, 2>
+		: monomial_degrevlex_traits_int<N, 2>
 	{
 	};
 
-	template<std::size_t N, std::size_t D>
+	template<std::size_t N>
 	struct monomial_degrevlex_traits_uint32
-		: monomial_degrevlex_traits_int<N, D, 4>
+		: monomial_degrevlex_traits_int<N, 4>
 	{
 	};
 
-	template<std::size_t N, std::size_t D>
+	template<std::size_t N>
 	struct monomial_degrevlex_traits_uint64
-		: monomial_degrevlex_traits_int<N, D, 8>
+		: monomial_degrevlex_traits_int<N, 8>
 	{
 	};
 
