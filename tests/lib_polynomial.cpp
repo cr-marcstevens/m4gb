@@ -69,7 +69,7 @@ int test_poly()
 int test()
 {
 	typedef gb::gf_p_simple<521> gf_t;
-	typedef gb::monomial_degrevlex_traits_uint64<20,20> traits_t;
+	typedef gb::monomial_degrevlex_traits_uint64<20> traits_t;
 	typedef gb::polynomial_simple_t<traits_t, gf_t> polynomial_t;
 	typedef gb::polynomial_int_t<traits_t, gf_t> polynomial_int_t;
 
