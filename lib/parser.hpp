@@ -168,7 +168,7 @@ namespace gb {
 			for (auto c : str)
 			{
 				if (c == '+' || c == '-' || isalnum(c) || c == '^' || c == '_' || c == ' ')
-					polynomial_str.push_back( std::tolower(c) );
+					polynomial_str.push_back( c ); //std::tolower(c) );
 				else
 					if (c == '*')
 						polynomial_str.push_back(' ');

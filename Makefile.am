@@ -79,7 +79,7 @@ EXTRA_PROGRAMS+=bin/generator
 bin_generator_SOURCES=src/generator.cpp
 bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
 
-generator: generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
+generator: bin/generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
 	@echo "Executable: $<"
 
 bin/generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}:

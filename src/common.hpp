@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 			std::cout << ordering_name<gb::mysolver_t::monomial_t::order_tag_t>::name() << std::endl;
 			return 0;
 		}
-		if (vm.count("help") || vm.count("solve") == 0 || inputfile.empty())
+		if (vm.count("help") || vm.count("solve")+vm.count("showinput") == 0 || inputfile.empty())
 		{
 			std::cout << opt_cmds << opt_opts << std::endl;
 			return 0;
