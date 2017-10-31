@@ -2,13 +2,6 @@
 
 NAME="generator"
 
-cleanup()
-{
-    if [ `ls ../bin|grep ${NAME}|wc -l` -gt 0 ]; then
-        rm -f ../bin/${NAME}*
-    fi
-}
-
 display_help()
 {
     echo "Random overdefined polyomial equations' generator over a finite field"
@@ -23,7 +16,6 @@ display_help()
     exit 0
 }
 
-cleanup
 while getopts :hf:n:m:d:o: option
 do
     case "$option" in
@@ -105,10 +97,10 @@ echo "number of equations      : $M"
 echo "degree                   : $DEG"
 echo "output filename format   : $OUTPUTFILENAME"
 
-pushd ../ && \
-    make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} DEG=${DEG} ${NAME} &&\
-    popd
+echo ""
+echo "=== Building generator binary ==="
+make FIELDSIZE=${FIELDSIZE} MAXVARS=${N} DEG=${DEG} ${NAME} || exit 1
 
-pushd ../bin && \
-    ./${NAME}_n${N}_d${DEG}_${FIELDSIZE} -m ${M} -o ${OUTPUTFILENAME} && \
-    popd
+echo ""
+echo "=== Running generator binary ==="
+bin/${NAME}_n${N}_d${DEG}_gf${FIELDSIZE} -m ${M} -o ${OUTPUTFILENAME}

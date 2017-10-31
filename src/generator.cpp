@@ -10,14 +10,14 @@ namespace po = boost::program_options;
 
 typedef gb::myfield_t field_t;
 typedef field_t::gfelm_t coefficient_t;
-typedef gb::monomial_degrevlex_traits_uint64<MAXVARS, DEG> monomial_int_traits_t;
+typedef gb::monomial_degrevlex_traits_uint64<MAXVARS> monomial_int_traits_t;
 
 typedef monomial_int_traits_t::int_monomial_t monomial_int_t;
 typedef monomial_int_traits_t::static_monomial_t monomial_static_t;
 
 typedef gb::polynomial_simple_t<monomial_int_traits_t, field_t> polynomial_t;
 
-const auto NMONOMIALS = gb::detail::multiset_coefficient_t<MAXVARS + 1, DEG>::value;
+const std::size_t NMONOMIALS = gb::detail::multiset_coefficient_t<MAXVARS + 1, DEG>::value;
 
 int main(int argc, char **argv)
 {

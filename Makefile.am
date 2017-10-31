@@ -76,7 +76,7 @@ bin/solver_fgb_%:
 
 
 EXTRA_PROGRAMS+=bin/generator
-bin_generator_SOURCES=solver/generator.cpp
+bin_generator_SOURCES=src/generator.cpp
 bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
 
 generator: generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
