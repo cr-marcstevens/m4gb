@@ -1,17 +1,5 @@
-EXTRA_DIST       = README.md
+EXTRA_DIST       = README.md LICENSE.txt
 ACLOCAL_AMFLAGS  = -I m4
-
-TESTS = tests/test_detail tests/test_gf_p_simple tests/test_gf_2n_simple tests/test_monomial_degrevlex tests/test_polynomial tests/test_parser tests/test_runtime_stats
-
-tests_test_detail_SOURCES               = tests/lib_detail.cpp
-tests_test_gf_p_simple_SOURCES          = tests/lib_gf_p_simple.cpp
-tests_test_gf_2n_simple_SOURCES         = tests/lib_gf_2n_simple.cpp
-tests_test_monomial_degrevlex_SOURCES   = tests/lib_monomial_degrevlex.cpp
-tests_test_polynomial_SOURCES           = tests/lib_polynomial.cpp
-tests_test_parser_SOURCES               = tests/lib_parser.cpp
-tests_test_runtime_stats_SOURCES        = tests/contrib_runtime_stats.cpp
-
-check_PROGRAMS = $(TESTS)
 
 
 
@@ -28,13 +16,13 @@ bin_solver_m4gb_SOURCES=src/m4gb.cpp contrib/runtime_stats.cpp
 bin_solver_m4gb_CPPFLAGS=${M4GB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 
 m4gb: bin/solver_m4gb${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_m4gb${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_m4gb${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_m4gb_OBJECTS) bin/solver_m4gb
 	$(MAKE) bin/solver_m4gb
+	mv bin/solver_m4gb $@
 	-rm -f $(bin_solver_m4gb_OBJECTS)
-	mv bin/solver_m4gb bin/solver_m4gb${SOLVERSUFFIX}
 
 
 
@@ -47,13 +35,13 @@ bin_solver_openf4_LDFLAGS=${OPENF4_LDFLAGS}
 bin_solver_openf4_LDADD=${OPENF4_LIB}
 
 openf4: bin/solver_openf4${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_openf4${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_openf4${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_openf4_OBJECTS) bin/solver_openf4
 	$(MAKE) bin/solver_openf4
+	mv bin/solver_openf4 $@
 	-rm -f $(bin_solver_openf4_OBJECTS)
-	mv bin/solver_openf4 bin/solver_openf4${SOLVERSUFFIX}
 endif
 
 
@@ -67,31 +55,70 @@ bin_solver_fgb_LDFLAGS=${FGB_LDFLAGS}
 bin_solver_fgb_LDADD=${FGB_LIB}
 
 fgb: bin/solver_fgb${SOLVERSUFFIX}
-	@echo "Executable: bin/solver_fgb${SOLVERSUFFIX}"
+	@echo "Executable: $<"
 
 bin/solver_fgb${SOLVERSUFFIX}:
 	-rm -f $(bin_solver_fgb_OBJECTS) bin/solver_fgb
 	$(MAKE) bin/solver_fgb
+	mv bin/solver_fgb $@
 	-rm -f $(bin_solver_fgb_OBJECTS)
-	mv bin/solver_fgb bin/solver_fgb${SOLVERSUFFIX}
 endif
 
 
-bin/solver_m4gb_% bin/solver_openf4_% bin/solver_fgb_%:
+
+bin/solver_m4gb_%:
 	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
+bin/solver_openf4_%:
+	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
+bin/solver_fgb_%:
+	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
+
+
 
 EXTRA_PROGRAMS+=bin/generator
 bin_generator_SOURCES=solver/generator.cpp
 bin_generator_CPPFLAGS=${EXTRA_CPPFLAGS} -DDEG=${DEG}
 
-generator: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
-	@echo "Executable: bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)"
+generator: generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}
+	@echo "Executable: $<"
 
-bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31):
-	$(MAKE) bin/generator
-	rm $(bin_generator_OBJECTS)
-	mv bin/generator bin/generator_n$(firstword $(MAXVARS) 20)_d$(DEG)_$(firstword $(FIELDSIZE) 31)
+bin/generator_n${MAXVARS}_d${DEG}_gf${FIELDSIZE}:
+	-rm -f $(bin_generator_OBJECTS) bin/generator
+  $(MAKE) bin/generator
+	mv bin/generator $@
+	-rm -f $(bin_generator_OBJECTS)
+
+
 
 clean-local:
 	-rm -f bin/solver_m4gb* bin/solver_openf4* bin/solver_fgb*
-	-rm bin/generator*
+	-rm -f bin/generator*
+
+
+
+check_PROGRAMS = tests/test_detail tests/test_gf_p_simple tests/test_gf_2n_simple tests/test_monomial_degrevlex tests/test_polynomial tests/test_parser tests/test_runtime_stats
+
+tests_test_detail_SOURCES               = tests/lib_detail.cpp
+tests_test_gf_p_simple_SOURCES          = tests/lib_gf_p_simple.cpp
+tests_test_gf_2n_simple_SOURCES         = tests/lib_gf_2n_simple.cpp
+tests_test_monomial_degrevlex_SOURCES   = tests/lib_monomial_degrevlex.cpp
+tests_test_polynomial_SOURCES           = tests/lib_polynomial.cpp
+tests_test_parser_SOURCES               = tests/lib_parser.cpp
+tests_test_runtime_stats_SOURCES        = tests/contrib_runtime_stats.cpp
+
+tests/gf%.sh:
+	cd tests && $(LN_S) solver_test.sh $(notdir $@)
+
+
+
+TESTS = $(check_PROGRAMS)
+
+TESTS += tests/gf31.16.m4gb.sh tests/gf256.16.m4gb.sh
+
+if HAVE_OPENF4
+TESTS += tests/gf31.16.openf4.sh tests/gf256.16.openf4.sh
+endif
+
+if HAVE_FGBLIB
+TESTS += tests/gf31.16.fgb.sh tests/gf256.16.fgb.sh
+endif

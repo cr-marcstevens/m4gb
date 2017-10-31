@@ -29,7 +29,7 @@
 
 int test()
 {
-	typedef gb::monomial_degrevlex_traits_uint64<20,16> monomial_traits;
+	typedef gb::monomial_degrevlex_traits_uint64<20> monomial_traits;
 	typedef typename monomial_traits::int_monomial_t int_monomial_t;
 	typedef typename monomial_traits::static_monomial_t static_monomial_t;
 	typedef typename monomial_traits::dynamic_monomial_t dynamic_monomial_t;
