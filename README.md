@@ -2,8 +2,6 @@
 
 # M4GB - Efficient Groebner Basis algorithm #
 
-## Project is still being cleaned-up and commited here in phases. ##
-
 ## Requirements ##
 
 - autotools
@@ -31,7 +29,7 @@ Run tests:
 
 	make check
   
-Compiling a specialized solver `bin/solver_BACKEND_MAXVARS_FIELDSIZE` with `BACKEND` equal to `m4gb`, `openf4` or `fgb` for a system of `MAXVARS` variables and finite field of size `FIELDSIZE`:
+Compiling a specialized groebner-basis solver `bin/solver_BACKEND_MAXVARS_FIELDSIZE` with `BACKEND` equal to `m4gb`, `openf4` or `fgb` for a polynomial system of `MAXVARS` variables over a finite field of size `FIELDSIZE`:
 
 	make MAXVARS=20 FIELDSIZE=31 m4gb
 
@@ -39,3 +37,27 @@ Compiling a specialized solver `bin/solver_BACKEND_MAXVARS_FIELDSIZE` with `BACK
 
 	make MAXVARS=20 FIELDSIZE=31 fgb
 
+## Generating a random dense polynomial system ##
+
+To generate a system of random polynomials over a (small) finitefield (prime, or 2^e):
+
+	./generator.sh -f <fieldsize> -n <#vars> -m <#eqs> [-d <#maxdeg=2>] -o <filebasename>
+	
+## Finding roots of polynomial systems ##
+
+To find the Groebner-basis of a polynomial system, or in particular a root for an **overdefined** system if any:
+
+	./solve.sh [-f <fieldsize>] [-n <#vars>] [-s m4gb|openf4|fgb] <inputfile>
+
+If `fieldsize` or `#vars` are not given then it will try to detect these from the inputfile.
+Then `solve.sh` will compile the corresponding solver and run it.
+The default inputformat is the following:
+
+	$fieldsize 31          # Optional: specify finite field: GF(31)
+	$vars 5 X              # Optional: type 1: specify variable name sequence: X0, X1, X2, X3, X4
+	$vars X0 X1 X2 Y0 Y1   # Optional: type 2: specify variable names explicitly
+	<polynomial1 in GF[varlist]>
+	<polynomial2 in GF[varlist]>
+	...
+	
+If `fieldsize` or number of variables are not declared in inputfile then these need to be specified to `solver.sh` via `-f <fieldsize>` and `-n <#vars>`.
