@@ -100,12 +100,7 @@ namespace gb {
 			if (i >= max_vars)
 				return std::string();
 			if (i >= _var_names.size())
-			{
-				std::string ret = std::string("x") + std::to_string(i);
-				if (std::find(_var_names.begin(), _var_names.end(), ret) != _var_names.end())
-					_log(lg_abort) << "variable name '" << ret << "' has two indexes: " << (std::find(_var_names.begin(), _var_names.end(), ret)-_var_names.begin()) << " " << i << std::endl;
-				return ret;
-			}
+				return std::string();
 			return _var_names[i];
 		}
 
@@ -193,12 +188,27 @@ namespace gb {
 				pos = polynomial_str.find("^ ");
 			}
 
-			//insert "+" before the "-".
+			//replace double '--' with '+'
+			pos = polynomial_str.find("--");
+			while (pos != std::string::npos)
+			{
+				polynomial_str.erase(pos+1, 1);
+				polynomial_str[pos]='+';
+				pos = polynomial_str.find("--");
+			}
+			//insert "+" before the "-"
 			pos = polynomial_str.find("-");
 			while (pos != std::string::npos)
 			{
 				polynomial_str.insert(pos, "+");
 				pos = polynomial_str.find("-", pos+2);
+			}
+			//remove double '++'
+			pos = polynomial_str.find("++");
+			while (pos != std::string::npos)
+			{
+				polynomial_str.erase(pos+1, 1);
+				pos = polynomial_str.find("++");
 			}
 
 			_log(lg_verbose4) << "polynomial_str = '" << polynomial_str << "'" << std::endl;
@@ -516,6 +526,8 @@ namespace gb {
 						_log(lg_error) << "mqchallenge: nrvars > max_vars" << std::endl;
 						return;
 					}
+					for(std::size_t i=0; i < nrvars; ++i)
+						add_var_name("x" + std::to_string(i));
 				}
 				else if (left == "Number of polynomials (m)")
 				{
