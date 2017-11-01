@@ -292,8 +292,9 @@ namespace gb {
 
 			std::stringstream o;
 			bool firstterm = true;
-			for (auto term : poly)
+			for (auto it = poly.begin_largest(); it != poly.end_largest(); ++it)
 			{
+				auto& term = *it;
 				if (term.first == 0)
 					continue;
 

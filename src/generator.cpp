@@ -23,6 +23,9 @@ int main(int argc, char **argv)
 {
 	std::string outputname;
 	unsigned nrequations = 0;
+	bool forcesolution = false;
+	std::random_device rd;
+	std::uint32_t seed = rd();
 
 	po::options_description
 		opt_cmds("Allowed commands"),
@@ -36,7 +39,10 @@ int main(int argc, char **argv)
 
 	opt_opts.add_options()
 		("nrequations,m", po::value<unsigned>(&nrequations), "Number of equations")
-		("outputfile,o", po::value<std::string>(&outputname), "Output file");
+		("outputfile,o", po::value<std::string>(&outputname), "Output file")
+		("forceroot,r", po::bool_switch(&forcesolution), "Force one root for system")
+		("seed", po::value<std::uint32_t>(&seed), "Set pseudo random generator seed")
+		;
 	all.add(opt_cmds).add(opt_opts);
 	po::variables_map vm;
 	po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
@@ -68,8 +74,7 @@ int main(int argc, char **argv)
 		monomials[i] = monomial_int_t(i);
 
 	/* random number generator */
-	std::random_device rd;
-	std::mt19937 gen(rd());
+	std::mt19937 gen(seed);
 	std::uniform_int_distribution<> dist(0, FIELDSIZE - 1);
 
 	/* generate random coefficients */
@@ -82,76 +87,80 @@ int main(int argc, char **argv)
 		s = dist(gen);
 
 	/* substitute polynomials */
-	for (auto & row : coeff_matrix)
+	if (forcesolution)
 	{
-		coefficient_t sum_val = 0;
-		for (std::size_t idx = 0; idx < NMONOMIALS; ++idx)
+		for (auto & row : coeff_matrix)
 		{
-			if (row[idx] == 0)
-				continue;
-
-			coefficient_t term_val = row[idx];
-			const monomial_static_t & m = monomials[idx];
-
-			for (const auto & ie : m)
+			coefficient_t sum_val = 0;
+			for (std::size_t idx = 0; idx < NMONOMIALS; ++idx)
 			{
-				unsigned i = ie.first;
-				unsigned e = ie.second;
-				do
-				{
-					term_val *= solution[i];
-					--e;
-				} while (e);
-			}
-			sum_val += term_val;
-		}
+				if (row[idx] == 0)
+					continue;
 
-		/* adjust constant term */
-		row[0] -= sum_val;
+				coefficient_t term_val = row[idx];
+				const monomial_static_t & m = monomials[idx];
+
+				for (const auto & ie : m)
+				{
+					unsigned i = ie.first;
+					unsigned e = ie.second;
+					do
+					{
+						term_val *= solution[i];
+						--e;
+					} while (e);
+				}
+				sum_val += term_val;
+			}
+
+			/* adjust constant term */
+			row[0] -= sum_val;
+		}
 	}
 
 	/* print file */
 	std::string infilename = outputname + ".in";
 	std::string ansfilename = outputname + ".ans";
 
-	std::ofstream in_os(infilename);
-	std::ofstream ans_os(ansfilename);
 
 	/* write input file */
-	in_os << "$fieldsize " << std::to_string(FIELDSIZE) << std::endl;
-	in_os << "$vars " << std::to_string(MAXVARS) << " X" << std::endl;
-	for (const auto & row : coeff_matrix)
 	{
-		std::vector<std::pair<coefficient_t, monomial_static_t>> v;
-		for (std::size_t i = 0; i < NMONOMIALS; ++i)
+		std::cout << std::endl;
+		std::cout << "Input file               : " << infilename << std::endl;
+		std::ofstream in_os(infilename);
+		in_os << "$fieldsize " << std::to_string(FIELDSIZE) << std::endl;
+		in_os << "$vars " << std::to_string(MAXVARS) << " X" << std::endl;
+		for (const auto & row : coeff_matrix)
 		{
-			if (row[i] == 0)
-				continue;
-			v.emplace_back(std::make_pair(row[i], monomials[i]));
+			std::vector<std::pair<coefficient_t, monomial_static_t>> v;
+			for (std::size_t i = 0; i < NMONOMIALS; ++i)
+			{
+				if (row[i] == 0)
+					continue;
+				v.emplace_back(std::make_pair(row[i], monomials[i]));
+			}
+			polynomial_t f(v.begin(), v.end());
+			in_os << f << std::endl;
 		}
-		polynomial_t f(v.begin(), v.end());
-		in_os << f << std::endl;
 	}
 
 	/* write answer file */
-	std::vector<polynomial_t> gb(nrequations);
-
-	std::reverse(solution.begin(), solution.end());
-	for (std::size_t i = 1; i <= MAXVARS; ++i)
+	if (forcesolution)
 	{
-		std::vector<std::pair<coefficient_t, monomial_static_t>> v;
-		v.emplace_back(std::make_pair(1, monomials[i]));
-		v.emplace_back(std::make_pair(-solution[i - 1], monomials[0]));
-		polynomial_t f(v.begin(), v.end());
-		ans_os << f << std::endl;
+		std::cout << "Answer file              : " << ansfilename << std::endl;
+		std::ofstream ans_os(ansfilename);
+		std::vector<polynomial_t> gb(nrequations);
+
+		std::reverse(solution.begin(), solution.end());
+		for (std::size_t i = 1; i <= MAXVARS; ++i)
+		{
+			std::vector<std::pair<coefficient_t, monomial_static_t>> v;
+			v.emplace_back(std::make_pair(1, monomials[i]));
+			v.emplace_back(std::make_pair(-solution[i - 1], monomials[0]));
+			polynomial_t f(v.begin(), v.end());
+			ans_os << f << std::endl;
+		}
 	}
-
-	in_os.close();
-	ans_os.close();
-
-	std::cout << std::endl;
-	std::cout << "Input file               : " << infilename << std::endl;
-	std::cout << "Answer file              : " << ansfilename << std::endl;
 
 	return 0;
 }

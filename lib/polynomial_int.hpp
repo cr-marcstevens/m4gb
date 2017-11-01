@@ -642,11 +642,18 @@ namespace gb
 
 		static void print(std::ostream& o, const term_t& t)
 		{
-			if (t.first == 0)
-				return;
-			if (t.first > 1)
-				o << t.first << "*";
-			o << t.second;
+                        if (t.first == 0)
+                        {
+                                o << "0";
+                        }
+                        else if (t.first != 1)
+                        {
+                                o << t.first;
+                                if (!t.second.empty())
+                                        o << "*" << t.second;
+                        }
+                        else
+                                o << t.second;
 		}
 	};
 

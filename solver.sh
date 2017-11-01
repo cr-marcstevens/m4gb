@@ -94,8 +94,8 @@ fi
 
 SOLVERBIN=bin/solver_${NAME}_n${MAXVARS}_gf${FIELDSIZE}
 
-echo "Options  : $OPTIONS"
 echo "Solver   : $SOLVERBIN"
+echo "Options  : $OPTIONS"
 
 re='^[0-9]+$'
 if ! [[ $FIELDSIZE =~ $re ]] || [ $FIELDSIZE -lt 2 ]; then
