@@ -41,11 +41,14 @@ Compiling a specialized groebner-basis solver `bin/solver_BACKEND_MAXVARS_FIELDS
 
 To generate a system of random polynomials over a (small) finitefield (prime, or 2^e):
 
-	./generator.sh -f <fieldsize> -n <#vars> -m <#eqs> [-d <#maxdeg=2>] -o <filebasename>
-	
-## Finding roots of polynomial systems ##
+	./generator.sh -f <fieldsize> -n <#vars> -m <#eqs> [-d <#maxdeg=2>] [-s <seed>] [-r] -o <filebasename>
 
-To find the Groebner-basis of a polynomial system, or in particular a root for an **overdefined** system if any:
+To force a random root for a system use `-r`, this will rewrite the contant terms of the polynomials.
+It will output the chosen root into a `.ans` file.
+	
+## Finding Groebner basis or roots of polynomial systems ##
+
+To find the Groebner basis of a polynomial system, or in particular a root for an **overdefined** system if any:
 
 	./solve.sh [-f <fieldsize>] [-n <#vars>] [-s m4gb|openf4|fgb] <inputfile>
 
@@ -53,6 +56,7 @@ If `fieldsize` or `#vars` are not given then it will try to detect these from th
 Then `solve.sh` will compile the corresponding solver and run it.
 The default inputformat is the following:
 
+	# Comments: everything after a '#' symbol is ignored
 	$fieldsize 31          # Optional: specify finite field: GF(31)
 	$vars 5 X              # Optional: type 1: specify variable name sequence: X0, X1, X2, X3, X4
 	$vars X0 X1 X2 Y0 Y1   # Optional: type 2: specify variable names explicitly

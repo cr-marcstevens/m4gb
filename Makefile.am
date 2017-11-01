@@ -24,6 +24,9 @@ bin/solver_m4gb${SOLVERSUFFIX}:
 	mv bin/solver_m4gb $@
 	-rm -f $(bin_solver_m4gb_OBJECTS)
 
+bin/solver_m4gb_%:
+	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
+
 
 
 if HAVE_OPENF4
@@ -42,6 +45,9 @@ bin/solver_openf4${SOLVERSUFFIX}:
 	$(MAKE) bin/solver_openf4
 	mv bin/solver_openf4 $@
 	-rm -f $(bin_solver_openf4_OBJECTS)
+
+bin/solver_openf4_%:
+	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
 endif
 
 
@@ -62,16 +68,10 @@ bin/solver_fgb${SOLVERSUFFIX}:
 	$(MAKE) bin/solver_fgb
 	mv bin/solver_fgb $@
 	-rm -f $(bin_solver_fgb_OBJECTS)
-endif
 
-
-
-bin/solver_m4gb_%:
-	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
-bin/solver_openf4_%:
-	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
 bin/solver_fgb_%:
 	$(MAKE) $@ MAXVARS=`echo $@ | cut -d'_' -f3 | tr -d n` FIELDSIZE=`echo $@ | cut -d'_' -f4 | tr -d gf`
+endif
 
 
 

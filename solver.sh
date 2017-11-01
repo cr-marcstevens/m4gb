@@ -49,6 +49,8 @@ if [ ! -f "$INPUTFILENAME" ] || [ ! -r "$INPUTFILENAME" ]; then
     echo "Cannot read inputfile: $INPUTFILENAME"
     exit 1
 fi
+
+# autodetect FIELDSIZE: first for 'default' format, then for 'mqchallenge' format
 if [ -z "$FIELDSIZE" ]; then
     FIELDSIZE=`grep -i "[$].*fieldsize.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
 fi
@@ -65,7 +67,6 @@ if [ -z "$FIELDSIZE" ]; then
 		FIELDSIZE=$(($FIELDSIZE * $FIELDCHAR))
 	    done
 	fi
-	INFORMAT="mqchallenge"
     fi
 fi
 if [ -z "$FIELDSIZE" ]; then
@@ -73,12 +74,13 @@ if [ -z "$FIELDSIZE" ]; then
     exit 1
 fi
 echo "Fieldsize: $FIELDSIZE"
+
+# autodetect MAXVARS: first for 'default' format, then for 'mqchallenge' format
 if [ -z "$MAXVARS" ]; then
     MAXVARS=`grep -i "[$].*vars.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
 fi
 if [ -z "$MAXVARS" ]; then
     MAXVARS=`grep -i "Number of variables.*:.*[0-9]\+" $INPUTFILENAME | grep -o "[0-9]\+" | head -n 1`
-    INFORMAT="mqchallenge"
 fi
 if [ -z "$MAXVARS" ]; then
     echo "The number of variables could not be detected: use -n #"
@@ -88,8 +90,10 @@ echo "Variables: $MAXVARS"
 if [ ! -z "$OUTPUTFILENAME" ]; then
     OPTIONS="$OPTIONS -o $OUTPUTFILENAME"
 fi
-if [ ! -z "$INFORMAT" ]; then
-    OPTIONS="$OPTIONS --$INFORMAT"
+
+# autodetect 'mqchallenge' format
+if grep -i "^[^#]*Galois Field.*:.*[0-9]" "$INPUTFILENAME" >/dev/null && grep -i "^[^#]*Number of variables.*:.*[0-9]" "$INPUTFILENAME" >/dev/null; then
+    OPTIONS="$OPTIONS --mqchallenge"
 fi
 
 SOLVERBIN=bin/solver_${NAME}_n${MAXVARS}_gf${FIELDSIZE}
