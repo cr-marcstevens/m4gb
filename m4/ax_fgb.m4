@@ -84,12 +84,12 @@ if test "x$want_fgb" != "xno"; then
 	AC_LANG_PUSH(C++)
 	AC_CHECK_HEADER([fgb.h],[],[have_fgb=no])
 	AC_MSG_CHECKING(for usability of FGb)
-	AC_LINK_IFELSE([AC_LANG_SOURCE([
+	AC_TRY_RUN([
 		#include <fgb.h>
 		int main() {
                         return FGb_internal_version()==0;
                 }
-		])],
+		],
 		[AC_MSG_RESULT(yes)],
 		[AC_MSG_RESULT(no)
 		have_fgb=no])
