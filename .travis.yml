@@ -67,7 +67,6 @@ script:
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
   - make MAXVARS=16 FIELDSIZE=31 m4gb openf4 fgb
   - make check
-  - cat tests/gf31.16.fgb.sh.log
 
 notifications:
   on_success: change
