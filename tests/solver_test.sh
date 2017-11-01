@@ -8,8 +8,8 @@ echo "MAXVARS=$MAXVARS"
 echo "FIELDSIZE=$FIELDSIZE"
 
 SOLVER="bin/solver_${SOLVERNAME}_n${MAXVARS}_gf${FIELDSIZE}"
-INFILE="testdata/gf$FIELDSIZE/${FIELDSIZE}_${MAXVARS}_mq-sage0.in"
-SOLFILE="testdata/gf$FIELDSIZE/${FIELDSIZE}_${MAXVARS}_mq-sage0.degrevlex"
+INFILE="testdata/gf$FIELDSIZE/${FIELDSIZE}_${MAXVARS}_mq-test0.in"
+SOLFILE="testdata/gf$FIELDSIZE/${FIELDSIZE}_${MAXVARS}_mq-test0.degrevlex"
 TMPFILE="tests/${FIELDSIZE}_${MAXVARS}_mq-sage0.${SOLVERNAME}.out"
 OPTIONS="--solve --mqchallenge --nrthreads 1"
 
