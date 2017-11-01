@@ -52,7 +52,7 @@ endif
 
 
 
-if HAVE_FGBLIB
+if HAVE_FGB
 EXTRA_PROGRAMS+=bin/solver_fgb
 
 bin_solver_fgb_SOURCES=src/fgb.cpp contrib/runtime_stats.cpp
@@ -119,6 +119,6 @@ if HAVE_OPENF4
 TESTS += tests/gf31.16.openf4.sh tests/gf256.16.openf4.sh
 endif
 
-if HAVE_FGBLIB
-TESTS += tests/gf31.16.fgb.sh tests/gf256.16.fgb.sh
+if HAVE_FGB
+TESTS += tests/gf31.16.fgb.sh
 endif

@@ -89,9 +89,9 @@ if test "x$want_openf4" != "xno"; then
 		[AC_MSG_RESULT(no)
 		have_openf4=no])
 
-	AS_IF([test "x$have_openf4" = "yes"],
+	AS_IF([test "x$have_openf4" = "xyes"],
 		[AC_DEFINE(HAVE_OPENF4,1,[Define if OpenF4 is installed])],
-		[AS_IF([test "x$want_openf4" = "yes"],[AC_MSG_ERROR(error: see log)],[])])
+		[AS_IF([test "x$want_openf4" = "xyes"],[AC_MSG_ERROR(error: see log)],[])])
 	CPPFLAGS="$CPPFLAGS_SAVED"
 	LDFLAGS="$LDFLAGS_SAVED"
 	LIBS="$LIBS_SAVED"

@@ -25,17 +25,12 @@
 #define M4GB_FGBSOLVER_HPP
 
 #include "config.hpp"
-#include "../lib/gfelem.hpp"
+#include "../lib/gf_elem_simple.hpp"
 #include "../lib/monomial_degrevlex.hpp"
-#include "../lib/polynomial_stream.hpp"
+#include "../lib/polynomial_simple.hpp"
 #include "../lib/solver_base.hpp"
 
-#define LIBMODE 1
-#define CALL_FGB_DO_NOT_DEFINE
-
-extern "C" {
-	#include "../FGb/nv/maple/C/call_fgb.h"
-}
+#include <fgb.h>
 
 #define FGb_MAXI_BASE 100000
 #define MAX_MATRIX_ROW 10000000
