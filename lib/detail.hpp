@@ -72,10 +72,10 @@ namespace gb
 		template<std::size_t N, std::size_t K>
 		struct binomial_coefficient_detail_t
 		{
-			static const std::size_t left = binomial_coefficient_detail_t<K==0? 0 : N-1,K==0? 1 : K-1>::value;
-			static const std::size_t right = binomial_coefficient_detail_t<(K>N-1)? 0 : N-1, (K>N-1)? 1: K>::value;
-			static const std::size_t value = left + right;
-			static const bool overflow = (value < left) | (value < right);
+			typedef binomial_coefficient_detail_t<K==0? 0 : N-1,K==0? 1 : K-1> left_t;
+			typedef binomial_coefficient_detail_t<(K>N-1)? 0 : N-1, (K>N-1)? 1: K> right_t;
+			static const std::size_t value = left_t::value + right_t::value;
+			static const bool overflow = (value < left_t::value) | (value < right_t::value) | left_t::overflow | right_t::overflow;
 		};
 		template<> struct binomial_coefficient_detail_t<0,0> { static const std::size_t value = 1; static const bool overflow = false; };
 		template<std::size_t K> struct binomial_coefficient_detail_t<0, K> { static const std::size_t value = 0; static const bool overflow = false; };

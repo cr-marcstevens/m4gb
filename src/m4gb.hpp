@@ -1621,6 +1621,8 @@ namespace gb
 		// update basis, CP, matrix with poly p
 		void update(dense_poly_t& p)
 		{
+			if (p.empty())
+				return;
 			// check leading term
 			term_t plt = matrix.get_lt(p);
 			if (plt.first == 0)
@@ -1688,8 +1690,8 @@ namespace gb
 				{
 #ifdef USE_CP_SIMPLIFY
 					cp_simplify_add(*it);
-					it = CP.erase(it);
 #endif
+					it = CP.erase(it);
 				}
 				else
 					++it;

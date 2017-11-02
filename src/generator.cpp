@@ -11,8 +11,8 @@ namespace po = boost::program_options;
 
 typedef gb::myfield_t field_t;
 typedef field_t::gfelm_t coefficient_t;
-typedef gb::monomial_degrevlex_traits_uint32<MAXVARS> monomial_int_traits_t;
-static_assert(monomial_int_traits_t::max_deg >= DEG, "Number of monomials too large >= 2^32")
+typedef gb::monomial_degrevlex_traits_uint64<MAXVARS> monomial_int_traits_t;
+static_assert(monomial_int_traits_t::max_deg >= DEG, "Number of monomials too large >= 2^64");
 
 typedef monomial_int_traits_t::int_monomial_t monomial_int_t;
 typedef monomial_int_traits_t::static_monomial_t monomial_static_t;

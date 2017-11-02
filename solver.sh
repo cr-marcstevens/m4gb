@@ -18,6 +18,9 @@ display_help()
     echo "  <outputfile>        : the output file"
     exit 0
 }
+if [ -z "$1" ]; then
+	display_help
+fi
 
 OPTIONS=""
 while getopts :f:n:s:t:v:h option

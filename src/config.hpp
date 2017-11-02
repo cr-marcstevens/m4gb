@@ -87,7 +87,7 @@ namespace gb
 		template<>
 		struct getfield<2,0>
 		{
-			typedef ::gb::gf_2n_simple<1, 2> type;
+			typedef ::gb::gf_p_simple<2> type;
 		};
 	}
 

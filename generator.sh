@@ -17,6 +17,9 @@ display_help()
     echo "  -r                    : (optional) force a random root of the system (file ext=.ans)"
     exit 0
 }
+if [ -z "$1" ]; then
+	display_help
+fi
 
 OPTIONS=""
 while getopts :f:n:m:d:o:s:rh option
