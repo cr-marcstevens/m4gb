@@ -61,11 +61,10 @@ install:
 
 script:
   - ./install_openf4.sh
-  - ./install_fgb.sh
   - autoreconf --install
   - ./configure
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
-  - make MAXVARS=16 FIELDSIZE=31 m4gb openf4 fgb
+  - make MAXVARS=16 FIELDSIZE=31 m4gb openf4
   - make check
 
 notifications:
