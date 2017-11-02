@@ -40,6 +40,11 @@
 #define INT_MONOMIAL_SIZE 8
 #endif
 
+// also defined in lib/monomial_degrevlex.hpp, can override here
+#ifndef M4GB_MAX_INT_DEGREE
+#define M4GB_MAX_INT_DEGREE 255
+#endif
+
 #if FIELDSIZE <= 256
 #define GF_USE_MUL_TABLE
 #endif
@@ -49,16 +54,10 @@
 #endif
 
 #if FIELDSIZE == 2
-#define MONOMIAL_ALLOW_FIELDEQUATIONS
 #define GB_ADD_FIELDEQUATIONS
-#define MONOMIAL_NO_WRAPCHECK
 #endif
 
-#if FIELDSIZE >= 31
-#define MONOMIAL_NO_WRAPCHECK
-#endif
-
-#define MQ_NO_TRY_CATCH
+#define SOLVER_NO_TRY_CATCH
 
 #include "../lib/gf_p_simple.hpp"
 #include "../lib/gf_2n_simple.hpp"
@@ -99,7 +98,8 @@ namespace gb
 	};
 
 	typedef getfield<FIELDSIZE>::type myfield_t;
-	typedef polynomial_simple_t<monomial_degrevlex_traits<MAXVARS, FIELDSIZE>, myfield_t> mypolynomial_t;
+	// limit max degree by FIELDSIZE and M4GB_MAX_INT_DEGREE (default 255)
+	typedef polynomial_simple_t<monomial_degrevlex_traits<MAXVARS, FIELDSIZE<M4GB_MAX_INT_DEGREE?FIELDSIZE:M4GB_MAX_INT_DEGREE>, myfield_t> mypolynomial_t;
 }
 
 #endif

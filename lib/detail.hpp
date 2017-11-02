@@ -114,28 +114,28 @@ namespace gb
 			static const bool overflow = false;
 		};
 
-		template<std::size_t N, std::size_t D, typename Int, std::size_t step, bool ignore>
+		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int, std::size_t step, bool ignore>
 		struct max_degree_fits_int_helper_t {
-			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+step>::overflow;
+			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+step>::overflow | (D+step>MAXD);
 			static const std::size_t value = 
-				max_degree_fits_int_helper_t<N,D+step,Int,step,next_has_overflow>::value
-				+ max_degree_fits_int_helper_t<N,D,Int,step/2,!next_has_overflow>::value;
+				max_degree_fits_int_helper_t<N,MAXD,D+step,Int,step,next_has_overflow>::value
+				+ max_degree_fits_int_helper_t<N,MAXD,D,Int,step/2,!next_has_overflow>::value;
 		};
-		template<std::size_t N, std::size_t D, typename Int>
-		struct max_degree_fits_int_helper_t<N,D,Int,1,false> {
-			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+1>::overflow;
+		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int>
+		struct max_degree_fits_int_helper_t<N,MAXD,D,Int,1,false> {
+			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+1>::overflow | (D+1>MAXD);
 			static const std::size_t value =
 				!next_has_overflow
-				? max_degree_fits_int_helper_t<N,D+1,Int,1,next_has_overflow>::value
+				? max_degree_fits_int_helper_t<N,MAXD,D+1,Int,1,next_has_overflow>::value
 				: D;
 		};
-		template<std::size_t N, std::size_t D, typename Int, std::size_t step>
-		struct max_degree_fits_int_helper_t<N,D,Int,step,true> {
+		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int, std::size_t step>
+		struct max_degree_fits_int_helper_t<N,MAXD,D,Int,step,true> {
 			static const std::size_t value = 0;
 		};
-		template<std::size_t N, typename Int>
+		template<std::size_t N, std::size_t MAXD, typename Int>
 		struct max_degree_fits_int_t {
-			static const std::size_t value = max_degree_fits_int_helper_t<N,0,Int,(1<<3),false>::value;
+			static const std::size_t value = max_degree_fits_int_helper_t<N,MAXD,0,Int,(1<<3),false>::value;
 		};
 
 		// # bits needed to store value N

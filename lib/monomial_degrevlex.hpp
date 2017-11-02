@@ -35,6 +35,10 @@
 #include <iostream>
 #include <stdlib.h>
 
+#ifndef M4GB_MAX_INT_DEGREE
+#define M4GB_MAX_INT_DEGREE 255
+#endif
+
 namespace gb
 {
 
@@ -841,7 +845,7 @@ namespace gb
 	struct monomial_degrevlex_traits_int_helper
 	{
 		typedef typename detail::least_unsigned_integer_t<IntSize>::type int_type;
-		static const std::size_t D = detail::max_degree_fits_int_t<N,int_type>::value;
+		static const std::size_t D = detail::max_degree_fits_int_t<N,M4GB_MAX_INT_DEGREE,int_type>::value;
 		typedef monomial_degrevlex_traits<N, D> base_traits;
 		typedef monomial_int_t<N, D, typename monomial_traits<N, D>::var_greater, monomial_degrevlex_less<N, D>,  int_type> int_monomial_t;
 	};
