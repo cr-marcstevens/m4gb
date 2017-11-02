@@ -57,18 +57,13 @@ AC_ARG_WITH([fgb], AS_HELP_STRING([--with-fgb@<:@=yes|no|DIR@:>@],[prefix where 
 )
 
 have_fgb=no
-if test "x$want_fgb" != "xno"; then
+if test "x$want_fgb" != "xno" && test -f "$FGBDIR/nv/maple/C/call_fgb.h"; then
 	CPPFLAGS_SAVED="$CPPFLAGS"
 	LDFLAGS_SAVED="$LDFLAGS"
 	LIBS_SAVED="$LIBS"
 
-	if test "x$FGBDIR" != "x" && test -d $FGBDIR/nv; then
-		FGB_CPPFLAGS="-I$FGBDIR/nv/maple/C -I$FGBDIR/nv/int -I$FGBDIR/nv/protocol -fopenmp"
-		FGB_LDFLAGS="-L$FGBDIR/nv/maple/C/x64 -fopenmp"
-	else
-		FGB_CPPFLAGS=""
-		FGB_LDFLAGS=""
-	fi
+	FGB_CPPFLAGS="-I$FGBDIR/nv/maple/C -I$FGBDIR/nv/int -I$FGBDIR/nv/protocol -fopenmp"
+	FGB_LDFLAGS="-L$FGBDIR/nv/maple/C/x64 -fopenmp"
 	FGB_LIB="-lfgb -lfgbexp -lgb -lgbexp -lminpoly -lminpolyvgf -lfgbdef -lgmp -lm"
 
 	CPPFLAGS="$FGB_CPPFLAGS $CPPFLAGS"
@@ -94,13 +89,14 @@ if test "x$want_fgb" != "xno"; then
 		[AC_MSG_RESULT(no)
 		have_fgb=no])
 	AC_LANG_POP
-
-	AS_IF([test "x$have_fgb" = "xyes"],
-		[AC_DEFINE(HAVE_FGB,1,[Define if FGb is installed])],
-		[AS_IF([test "x$want_fgb" = "xyes"],[AC_MSG_ERROR(error: see log)],[])])
 	CPPFLAGS="$CPPFLAGS_SAVED"
 	LDFLAGS="$LDFLAGS_SAVED"
 	LIBS="$LIBS_SAVED"
+fi
+if test "x$want_fgb" != "xno"; then
+	AS_IF([test "x$have_fgb" = "xyes"],
+		[AC_DEFINE(HAVE_FGB,1,[Define if FGb is installed])],
+		[AS_IF([test "x$want_fgb" = "xyes"],[AC_MSG_ERROR(error: see log)],[])])
 fi
 
 AM_CONDITIONAL(HAVE_FGB, test "x${have_fgb}" = "xyes")
