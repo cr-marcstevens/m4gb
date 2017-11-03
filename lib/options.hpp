@@ -76,4 +76,4 @@ namespace gb {
 
 } // namespace gb
 
-#endif // M4GB_LOGGER_HPP
+#endif // M4GB_OPTIONS_HPP

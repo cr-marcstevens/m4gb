@@ -316,4 +316,4 @@ namespace gb
 
 } // namespace gb
 
-#endif // M4GB_GF_HPP
+#endif // M4GB_GF2N_HPP
