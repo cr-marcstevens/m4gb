@@ -65,6 +65,7 @@ int test_P()
 
 int test()
 {
+	CHECK( test_P<2>() == 0 );
 	CHECK( test_P<3>() == 0 );
 	CHECK( test_P<31>() == 0 );
 	CHECK( test_P<521>() == 0 );

@@ -129,7 +129,7 @@ namespace gb
 				std::vector<std::size_t> factors = detail::factor_int(gfsize - 1);
 				std::sort(factors.begin(), factors.end());
 				factors.erase(std::unique(factors.begin(), factors.end()), factors.end());
-				for (prim_elem = 2;; ++prim_elem)
+				for (prim_elem = 1;; ++prim_elem)
 				{
 					bool ok = true;
 					for (auto it = factors.begin(); it != factors.end(); ++it)
