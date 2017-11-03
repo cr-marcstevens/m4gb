@@ -38,7 +38,7 @@ namespace gb
 		template<typename Int = std::size_t>
 		Int binomial_coefficient(std::size_t N, std::size_t K)
 		{
-			static std::vector< std::vector<Int> > table(1, std::vector<Int>(1, Int(1)));
+			static std::vector< std::vector< std::pair<Int,bool> > > table(1, std::vector<std::pair<Int,bool> >(1, std::make_pair<Int,bool>(Int(1),false)));
 			if (K > N)
 				return Int(0);
 			if (N >= table.size())
@@ -46,18 +46,22 @@ namespace gb
 				table.reserve(N+1);
 				for (std::size_t i = table.size(); i <= N; ++i)
 				{
-					table.emplace_back(i+1, Int(0));
-					table[i][0] = table[i][i] = Int(1);
+					table.emplace_back(i+1, std::make_pair<Int,bool>(Int(0),false));
+					table[i][0].first = table[i][i].first = Int(1);
 					for (std::size_t j = 1; j < i; ++j)
-						table[i][j] = table[i-1][j-1] + table[i-1][j];
+					{
+						table[i][j].first = table[i-1][j-1].first + table[i-1][j].first;
+						// determine  if an overflow happened somewhere
+						table[i][j].second = table[i-1][j-1].second | table[i-1][j].second | (table[i][j].first < table[i-1][j-1].first);
+					}
 				}
 			}
-			if (N>0 && K>0 && table[N][K] < table[N-1][K-1])
+			if (N>0 && K>0 && table[N][K].second == true)
 			{
-				std::cerr << "N=" << N << " K=" << K << " v1=" << table[N][K] << " v2=" << table[N-1][K-1] << std::endl;
+				std::cerr << "N=" << N << " K=" << K << " v1=" << table[N][K].first << " v2=" << table[N-1][K-1].first << " v3=" << table[N-1][K].first << std::endl;
 				throw std::runtime_error("binomial_coefficient(): integer addition overflow");
 			}
-			return table[N][K];
+			return table[N][K].first;
 		}
 
 		template<typename Int = std::size_t>
