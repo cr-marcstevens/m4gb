@@ -57,9 +57,9 @@ int main(int argc, char** argv)
 	{
 #endif
 		std::string inputfile, outputfile;
+		std::vector<std::string> options;
 		unsigned loglevel;
-
-		gb::mysolver_t solver;
+		unsigned nrthreads;
 
 		po::options_description
 			opt_cmds("Allowed commands"),
@@ -83,13 +83,24 @@ int main(int argc, char** argv)
 			("mqchallenge", "Read inputfile in mqchallenge format")
 			("default", "Read inputfile in default format")
 			("loglevel", po::value<unsigned>(&loglevel)->default_value( (int)(gb::lg_info) ), "Set log level:\n\t0=abort, 1=error, 2=warning, 3=info, 4-7=verbose")
-			("nrthreads", po::value<unsigned>(&solver.nrthreads)->default_value(boost::thread::hardware_concurrency()), "Maximum number of threads to use")
+			("nrthreads", po::value<unsigned>(&nrthreads)->default_value(boost::thread::hardware_concurrency()), "Maximum number of threads to use")
 			;
 		all.add(opt_cmds).add(opt_opts);
 
 		po::variables_map vm;
-		po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
+		po::parsed_options parsed = po::command_line_parser(argc, argv).options(all).allow_unregistered().run();
+		po::store(parsed, vm);
 		po::notify(vm);
+
+		for (auto opt : collect_unrecognized(parsed.options, po::include_positional))
+		{
+			std::size_t pos = opt.find_first_not_of('-');
+			opt.erase(0, pos);
+			if (opt.empty())
+				continue;
+			gb::get_options().set(opt);
+			std::cout << "Passing module option: " << opt << std::endl;
+		}
 
 		gb::get_logger().set_log_level((gb::log_level)(loglevel));
 
@@ -123,6 +134,9 @@ int main(int argc, char** argv)
 			std::cout << opt_cmds << opt_opts << std::endl;
 			return 0;
 		}
+
+		gb::mysolver_t solver;
+		solver.nrthreads = nrthreads;
 
 		if (vm.count("mqchallenge"))
 			solver.read_file(inputfile, gb::pf_mqchallenge);

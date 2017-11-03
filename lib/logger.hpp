@@ -31,6 +31,8 @@
 #include <map>
 #include <stdexcept>
 
+#include "options.hpp"
+
 // set default loglevel to output on construction of logger (needed for logging during construction of global/static variables)
 #ifndef DEFAULT_LOGLEVEL
 #define DEFAULT_LOGLEVEL lg_info
