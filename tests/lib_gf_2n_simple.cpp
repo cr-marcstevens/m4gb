@@ -64,6 +64,7 @@ int test_2N()
 
 int test()
 {
+	CHECK( test_2N<1>() == 0 );
 	CHECK( test_2N<2>() == 0 );
 	CHECK( test_2N<3>() == 0 );
 	CHECK( test_2N<4>() == 0 );
