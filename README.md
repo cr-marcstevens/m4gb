@@ -6,7 +6,7 @@ Rusydi Makarim, Marc Stevens, *M4GB: An efficient Groebner-basis algorithm*, ISS
 
 https://marc-stevens.nl/research/papers/ISSAC17-MS-M4GB.pdf
 
-## Abstract ##
+## Paper Abstract ##
 
 We introduce a new efficient algorithm for computing Groebner-bases named M4GB.
 Like Faugere's algorithm F4 it is an extension of Buchberger's algorithm that describes:
@@ -23,12 +23,18 @@ i.e., polynomials of which all terms except the leading term are non-reducible.
 This allows it to perform full-reduction directly in the computation of a term polynomial multiplication,
 where all computations are done over coefficient vectors over the non-reducible monomials.
 
-We have implemented a version of our new algorithm tailored for dense overdefined polynomial systems as a proof of concept and made our source code publicly available. 
+We have implemented a version of our new algorithm tailored for dense overdefined polynomial systems as a proof of concept and made our source code publicly available here.
 We have made a comparison of our implementation against the implementations of FGBlib, Magma and OpenF4 on various dense Fukuoka MQ challenge problems that we were able to compute in reasonable time and memory.
 We observed that M4GB uses the least total CPU time *and* the least memory of all these implementations for those MQ problems, often by a significant factor.
 
-In the Fukuoka MQ challenges, the starting challenges of Type V and Type VI have 16 equations which was chosen based on an extrapolated computational runtime of more than a month using Magma.
-M4GB allowed us to set new records for these Fukuoka MQ challenges breaking Type V (GF(256)) up to 18 equations and Type VI (GF(31)) up to 19 equations, each can be computed within up to 11 days on our dual Xeon system.
+### Benchmarking M4GB, Magma, FGBlib & OpenF4 ###
+
+<img src="https://raw.github.com/cr-marcstevens/m4gb/cr-marcstevens/cr-marcstevens-readme/testdata/graphs/type3-cpu_x_memory.svg" width="33%">
+<img src="https://raw.github.com/cr-marcstevens/m4gb/cr-marcstevens/cr-marcstevens-readme/testdata/graphs/type6-cpu_x_memory.svg" width="33%">
+
+See our paper for more benchmark information
+Benchmarks were performed on an Intel Xeon E5-2650v3 system with 64GiB RAM.
+
 
 ## Requirements ##
 
