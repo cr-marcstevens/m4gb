@@ -29,12 +29,15 @@ We observed that M4GB uses the least total CPU time *and* the least memory of al
 
 ### Benchmarking M4GB, Magma, FGBlib & OpenF4 ###
 
-<img src="https://raw.github.com/cr-marcstevens/m4gb/cr-marcstevens/cr-marcstevens-readme/testdata/graphs/type3-cpu_x_memory.svg" width="33%">
-<img src="https://raw.github.com/cr-marcstevens/m4gb/cr-marcstevens/cr-marcstevens-readme/testdata/graphs/type6-cpu_x_memory.svg" width="33%">
+Benchmarks of M4GB, Magma, FGBLib & OpenF4 over random dense quadratic polynomial systems over GF(31) with *#equations = 2 * #variables*:
 
-See our paper for more benchmark information
-Benchmarks were performed on an Intel Xeon E5-2650v3 system with 64GiB RAM.
+<img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type3-cputime.svg?sanitize=true" width="30%"><img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type3-memory.svg?sanitize=true" width="30%"><img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type3-cpu_x_memory.svg?sanitize=true" width="30%">
 
+Benchmarks of M4GB, Magma, FGBLib & OpenF4 over random dense quadratic polynomial systems over GF(31) with *#equations = #variables + 1*:
+
+<img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type6-cputime.svg?sanitize=true" width="30%"><img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type6-memory.svg?sanitize=true" width="30%"><img src="https://raw.github.com/cr-marcstevens/m4gb/master/testdata/graphs/type6-cpu_x_memory.svg?sanitize=true" width="30%">
+
+See our paper for more benchmark information.
 
 ## Requirements ##
 
