@@ -27,10 +27,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
-#include <boost/thread.hpp>
+#include <thread>
 
 #include "config.hpp"
 
@@ -38,7 +35,9 @@
 #include "../contrib/runtime_stats.hpp"
 #endif
 
-namespace po = boost::program_options;
+#include "../contrib/program_options.hpp"
+
+namespace po = program_options;
 
 template<typename ordering_tag>
 struct ordering_name { };
@@ -82,8 +81,8 @@ int main(int argc, char** argv)
 			("outputfile,o", po::value<std::string>(&outputfile), "Output file")
 			("mqchallenge", "Read inputfile in mqchallenge format")
 			("default", "Read inputfile in default format")
-			("loglevel", po::value<unsigned>(&loglevel)->default_value( (int)(gb::lg_info) ), "Set log level:\n\t0=abort, 1=error, 2=warning, 3=info, 4-7=verbose")
-			("nrthreads", po::value<unsigned>(&nrthreads)->default_value(boost::thread::hardware_concurrency()), "Maximum number of threads to use")
+			("loglevel", po::value<unsigned>(&loglevel)->default_value( (int)(gb::lg_info) ), "Set log level:\n\t0=abort, 1=error, 2=warning, 3=info, \n\t4-7=verbose")
+			("nrthreads", po::value<unsigned>(&nrthreads)->default_value(std::thread::hardware_concurrency()), "Maximum number of threads to use")
 			;
 		all.add(opt_cmds).add(opt_opts);
 
@@ -92,7 +91,7 @@ int main(int argc, char** argv)
 		po::store(parsed, vm);
 		po::notify(vm);
 
-		for (auto opt : collect_unrecognized(parsed.options, po::include_positional))
+		for (auto opt : parsed.unrecognized())
 		{
 			std::size_t pos = opt.find_first_not_of('-');
 			opt.erase(0, pos);
