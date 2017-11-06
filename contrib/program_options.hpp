@@ -36,6 +36,62 @@
 #include <vector>
 #include <map>
 
+/* example usage *\
+grep "^int main" program_options.hpp -B3 -A45 > test.cpp
+g++ -std=c++11 -o test test.cpp
+
+test.cpp:
+#include "program_options.hpp"
+namespace po = program_options;
+
+int main(int argc, char** argv)
+{
+	std::vector<std::string> inputfiles;
+	std::string outputfile;
+	unsigned param1 = 0;
+	int param2 = 0;
+	std::size_t param3 = 0;
+
+	po::options_description opts("Allowed options");
+	opts.add_options()
+		("help,h", "Show options")
+		("dowork", "Do work")
+		("v", "Verbose")
+		("inputfile,i", po::value<std::vector<std::string>>(&inputfiles), "Add input file")
+		("outputfile,o", po::value<std::string>(&outputfile)->default_value("file.tmp"), "Set outputfile")
+		("param1", po::value<unsigned>(), "Param 1")
+		("param2", po::value<int>(&param2)->default_value(-1), "Param 2")
+		("param3", po::value<std::size_t>()->default_value(5), "Param 3")
+		;
+	po::variables_map vm;
+	po::parsed_options parsed = po::command_line_parser(argc, argv).options(opts).allow_unregistered().allow_positional().run();
+	po::store(parsed, vm);
+	if (vm.count("h") || (inputfiles.size() == 0 && vm.count("dowork") == 0))
+	{
+		std::cout << opts;
+		return 0;
+	}
+	if (vm.count("dowork"))
+		std::cout << "Do work!" << std::endl;
+	if (vm.count("v"))
+		std::cout << "Be verbose!" << std::endl;
+	if (vm.count("param1"))
+		param1 = vm["param1"].as<unsigned>();
+	if (vm.count("param3"))
+		param3 = vm["param3"].as<std::size_t>();
+	for (auto& inputfile : inputfiles)
+		std::cout << "in: " << inputfile << std::endl;
+	std::cout << "out: " << outputfile << std::endl;
+	std::cout << "params: " << param1 << " " << param2 << " " << param3 << std::endl;
+	for (auto& other_option : parsed.unrecognized())
+		std::cout << "unrecognized option: " << other_option << std::endl;
+	for (auto& positional_argument : parsed.positional())
+		std::cout << "positional argument: " << positional_argument.as<std::string>() << std::endl;
+	return 0;
+}
+
+*/
+
 namespace program_options {
 
 	namespace detail {
@@ -122,8 +178,8 @@ namespace program_options {
 	class value_base {
 	public:
 		virtual ~value_base() {}
-		virtual std::string defaultvaluestr() = 0;
-		virtual void parse(const std::string& arg) = 0;
+		virtual std::string _defaultvaluestr() = 0;
+		virtual void _parse(const std::string& arg) = 0;
 	};
 
 	/* wrapper around variables and default values */
@@ -146,15 +202,14 @@ namespace program_options {
 			return *this;
 		}
 
-		virtual std::string defaultvaluestr()
+		virtual std::string _defaultvaluestr()
 		{
 			if (_defaultvalue.get() != nullptr)
-				return " (=" + detail::to_string(*_defaultvalue) + ")";
+				return detail::to_string(*_defaultvalue);
 			return std::string();
 		}
 
-		/* distinguish between parsing into Type and vector<Type> */
-		virtual void parse(const std::string& arg)
+		virtual void _parse(const std::string& arg)
 		{
 			if (_target != nullptr)
 			{
@@ -273,7 +328,11 @@ namespace program_options {
 				}
 				if (_options[i].value.get() != nullptr)
 				{
-					left[i] = left[i] + " arg" + _options[i].value->defaultvaluestr();
+					std::string defval = _options[i].value->_defaultvaluestr();
+					if (defval.empty())
+						left[i] = left[i] + " arg";
+					else
+						left[i] = left[i] + " arg (=" + defval + ")";
 				}
 				if (left[i].size() > maxleft)
 					maxleft = left[i].size();
@@ -420,7 +479,7 @@ namespace program_options {
 					if (i+1 >= _argv.size())
 						throw std::runtime_error("Program option missing argument: " + _argv[i]);
 					_vm[o->longopt] = parser(_argv[i+1]);
-					o->value->parse(_argv[i+1]);
+					o->value->_parse(_argv[i+1]);
 					++i; 
 					continue;
 				} else
@@ -430,7 +489,14 @@ namespace program_options {
 				throw std::runtime_error("Unrecognized program option: " + _unrecognized[0]);
 			if (!_allow_positional && !_positional.empty())
 				throw std::runtime_error("Unrecognized program option: " + _positional[0].val());
-				
+			for (auto& o : _options)
+			{
+				if (_vm.count(o.longopt) != 0 || o.value.get() == nullptr)
+					continue;
+				std::string defval = o.value->_defaultvaluestr();
+				if (!defval.empty())
+					_vm[o.longopt] = parser(defval);
+			}
 			return *this;
 		}		
 
