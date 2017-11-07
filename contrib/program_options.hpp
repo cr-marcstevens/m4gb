@@ -647,7 +647,7 @@ namespace program_options {
 	class config_file_parser {
 	public:
 		config_file_parser(std::istream& is, bool allow_unregistered = false)
-			: _is(is), _allow_unregistered(allow_unregistered)
+			: _allow_unregistered(allow_unregistered), _is(is)
 		{
 		}
 

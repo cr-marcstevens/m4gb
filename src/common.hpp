@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 		po::store(parsed, vm);
 		po::notify(vm);
 
-		for (auto opt : parsed.unrecognized())
+		for (auto opt : vm.unrecognized)
 		{
 			std::size_t pos = opt.find_first_not_of('-');
 			opt.erase(0, pos);
