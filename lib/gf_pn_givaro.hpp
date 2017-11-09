@@ -52,7 +52,7 @@ namespace gb
 		static_assert(N > 1, "template parameter N must be > 1");
 	public:
 		static const std::size_t gfchar = P;
-		static const std::size_t gfsize = static_cast<std::size_t>( std::pow(P, N) );
+		static const std::size_t gfsize = detail::pow<P, N>::value;
 		static const std::size_t _qm1 = gfsize - 1;
 
 		typedef GivaroField givaro_field_t;

@@ -275,6 +275,17 @@ namespace gb
 			static const bool value = (P >= 2) & ! has_divisor_in_range<P, 2, P-1, (2<=P-1)>::value;
 		};
 
+		template<std::size_t N, std::size_t E>
+		struct pow
+		{
+			static const std::size_t value = N*pow<N, E-1>::value;
+		};
+
+		template<std::size_t N>
+		struct pow<N, 0>
+		{
+			static const std::size_t value = 1;
+		};
 	} // namespace detail
 
 } // namespace gb

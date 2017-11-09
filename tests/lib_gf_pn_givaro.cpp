@@ -1,3 +1,4 @@
+
 /***************************************************************************** \
 *                                                                             *
 *   M4GB - an efficient Groebner-basis algorithm                              *
@@ -71,8 +72,8 @@ int test_field(const Field & Fq)
 	std::cout << e0 << " > " << 7 << "	: " << (e0 > 7) << std::endl;
 	std::cout << e0 << " >= " << 7 << " : " << (e0 >= 7) << std::endl;
 
-	std::array<elem_t, 4> L = {1, 1, 1, 1};
-	std::array<elem_t, 4> R = {4, 3, 2, 1};
+	std::array<elem_t, 4> L = {{1, 1, 1, 1}};
+	std::array<elem_t, 4> R = {{4, 3, 2, 1}};
 
 	gb::mul_to(&L[0], e0, 4);
 	std::cout << L[0] << " " << L[1] << " " << L[2] << " " << L[3] << std::endl;
@@ -91,8 +92,8 @@ int test_field(const Field & Fq)
 
 int test()
 {
-	const std::array<int32_t, 3> F9modulus = {2, 2, 1};// x^2 + 2x + 2
-	const std::array<int32_t, 3> F9generator = {0, 1, 0};
+	const std::array<int32_t, 3> F9modulus = {{2, 2, 1}};// x^2 + 2x + 2
+	const std::array<int32_t, 3> F9generator = {{0, 1, 0}};
 	Givaro::GFqDom<int32_t> GFDom(FIELDCHAR, EXTDEG,
 		F9modulus, F9generator);
 	test_field(GFDom);
