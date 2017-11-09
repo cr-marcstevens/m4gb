@@ -61,6 +61,7 @@ install:
 
 script:
   - ./install_openf4.sh
+  - ./install_givaro.sh
   - autoreconf --install
   - ./configure
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
