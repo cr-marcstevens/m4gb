@@ -106,6 +106,16 @@ tests_test_polynomial_SOURCES           = tests/lib_polynomial.cpp
 tests_test_parser_SOURCES               = tests/lib_parser.cpp
 tests_test_runtime_stats_SOURCES        = tests/contrib_runtime_stats.cpp
 
+
+if HAVE_GIVARO
+check_PROGRAMS+=tests/test_gf_pn_givaro
+tests_test_gf_pn_givaro_SOURCES=tests/lib_gf_pn_givaro.cpp
+tests_test_gf_pn_givaro_CPPFLAGS=${GIVARO_CPPFLAGS}
+tests_test_gf_pn_givaro_LDFLAGS=${GIVARO_LDFLAGS}
+tests_test_gf_pn_givaro_LDADD=${GIVARO_LIB} ${GMP_LIB} ${GMPXX_LIB}
+endif
+
+
 tests/gf%.sh:
 	cd tests && $(LN_S) solver_test.sh $(notdir $@)
 

@@ -48,6 +48,9 @@ AX_OPENF4
 AX_FGB
 
 
+AX_GIVARO
+
+
 AC_CONFIG_FILES([
  Makefile
 ])
