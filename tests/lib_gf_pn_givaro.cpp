@@ -1,4 +1,5 @@
 
+
 /***************************************************************************** \
 *                                                                             *
 *   M4GB - an efficient Groebner-basis algorithm                              *
@@ -30,73 +31,109 @@
 const std::size_t FIELDCHAR = 3;
 const std::size_t EXTDEG = 2;
 
-template<class Field>
-int test_field(const Field & Fq)
+template<class givfield_t>
+int test_field()
 {
-	std::cout << "exponent = " << Fq.exponent() << std::endl;
-	std::cout << "size     = " << Fq.size() << std::endl;
-	std::cout << "irred    = " << Fq.irreducible() << std::endl;
+	typedef typename givfield_t::gfelm_t elem_t;
 
+	static const auto & givfield = givfield_t::givaro_field;
 
-	/* test operation in gf::gfelm */
-	typedef gb::gfelm<gb::gf_pn_givaro<FIELDCHAR, EXTDEG, Field>> elem_t;
-	elem_t gen, e0, e1;
+	CHECK((givfield_t::gfchar == givfield.characteristic()));
+	CHECK((givfield_t::extdeg == givfield.exponent()));
+	CHECK((givfield_t::gfsize == givfield.size()));
+	CHECK((givfield_t::_qm1   == givfield.size() - 1));
+	CHECK((givfield.irreducible() == 17));
+	CHECK((givfield.generator() == 3));
 
+	CHECK((givfield.zech2padic(1) == 3));
+	CHECK((givfield.zech2padic(2) == 4));
+	CHECK((givfield.zech2padic(3) == 7));
+	CHECK((givfield.zech2padic(4) == 2));
+	CHECK((givfield.zech2padic(5) == 6));
+	CHECK((givfield.zech2padic(6) == 8));
+	CHECK((givfield.zech2padic(7) == 5));
+	CHECK((givfield.zech2padic(8) == 1));
 
-	gen = Fq.generator();
+	elem_t gen = givfield.padic2zech( givfield.generator() );
+	elem_t e = givfield.one;
+	e *= gen; CHECK((e == (elem_t) 1));
+	e *= gen; CHECK((e == (elem_t) 2));
+	e *= gen; CHECK((e == (elem_t) 3));
+	e *= gen; CHECK((e == (elem_t) 4));
+	e *= gen; CHECK((e == (elem_t) 5));
+	e *= gen; CHECK((e == (elem_t) 6));
+	e *= gen; CHECK((e == (elem_t) 7));
+	e *= gen; CHECK((e == (elem_t) 8));
 
-	e0 = 2;
-	e1 = 7;
+	CHECK(( (elem_t) 1 + (elem_t) 3 == (elem_t) 8 ));
+	CHECK(( (elem_t) 1 - (elem_t) 3 == (elem_t) 6 ));
+	CHECK(( (elem_t) 1 * (elem_t) 3 == (elem_t) 4 ));
+	CHECK(( (elem_t) 1 / (elem_t) 3 == (elem_t) 6 ));
+	CHECK(( gb::mul((elem_t)1, (elem_t)3) == (elem_t) 4 ));
+	CHECK(( gb::div((elem_t)1, (elem_t)3) == (elem_t) 6 ));
+	CHECK(( gb::mul_nonzero((elem_t)1, (elem_t)3) == (elem_t) 4 ));
+	CHECK(( gb::div_nonzero((elem_t)1, (elem_t)3) == (elem_t) 6 ));
 
-	std::cout << "generator = " << gen << std::endl;
-	std::cout << e0 << " + " << e1 << " = " << e0 + e1 << std::endl;
-	std::cout << e0 << " - " << e1 << " = " << e0 - e1 << std::endl;
-	std::cout << e0 << " * " << e1 << " = " << e0 * e1 << std::endl;
-	std::cout << e0 << " / " << e1 << " = " << e0 / e1 << std::endl;
-	std::cout << e0 << " mul " << e1 << " = " << gb::mul(e0, e1) << std::endl;
-	std::cout << e0 << " div " << e1 << " = " << gb::div(e0, e1) << std::endl;
-	std::cout << e0 << " mul_nonzero " << e1 << " = " << gb::mul_nonzero(e0, e1) << std::endl;
-	std::cout << e0 << " div_nonzero " << e1 << " = " << gb::div_nonzero(e0, e1) << std::endl;
+	CHECK(( (elem_t) 1 == (elem_t) 1 ));
+	CHECK(( (elem_t) 1 != (elem_t) 0 ));
 
-	std::cout << e0 << " == " << e1 << " : " << (e0 == e1) << std::endl;
-	std::cout << e0 << " != " << e1 << " : " << (e0 != e1) << std::endl;
-	std::cout << e0 << " < " << e1 << "  : " << (e0 < e1) << std::endl;
-	std::cout << e0 << " <= " << e1 << " : " << (e0 <= e1) << std::endl;
-	std::cout << e0 << " > " << e1 << "  : " << (e0 > e1) << std::endl;
-	std::cout << e0 << " >= " << e1 << " : " << (e0 >= e1) << std::endl;
+	std::array<elem_t, 9> L = {{1, 2, 3, 4, 5, 6, 7, 8, 0}};
+	std::array<elem_t, 9> R = {{0, 1, 2, 3, 4, 5, 6, 7, 8}};
 
-	std::cout << e0 << " == " << 7 << " : " << (e0 == 7) << std::endl;
-	std::cout << e0 << " != " << 7 << " : " << (e0 != 7) << std::endl;
-	std::cout << e0 << " < " << 7 << "	: " << (e0 < 7) << std::endl;
-	std::cout << e0 << " <= " << 7 << " : " << (e0 <= 7) << std::endl;
-	std::cout << e0 << " > " << 7 << "	: " << (e0 > 7) << std::endl;
-	std::cout << e0 << " >= " << 7 << " : " << (e0 >= 7) << std::endl;
+	gb::mul_to(&L[0], (elem_t) 1, L.size()); //multiply with generator
+	CHECK(( L[0] == (elem_t) 2));
+	CHECK(( L[1] == (elem_t) 3));
+	CHECK(( L[2] == (elem_t) 4));
+	CHECK(( L[3] == (elem_t) 5));
+	CHECK(( L[4] == (elem_t) 6));
+	CHECK(( L[5] == (elem_t) 7));
+	CHECK(( L[6] == (elem_t) 8));
+	CHECK(( L[7] == (elem_t) 1));
+	CHECK(( L[8] == (elem_t) 0));
 
-	std::array<elem_t, 4> L = {{1, 1, 1, 1}};
-	std::array<elem_t, 4> R = {{4, 3, 2, 1}};
+	gb::add_to(&L[0], &R[0], L.size());
+	CHECK(( L[0] == (elem_t) 2));
+	CHECK(( L[1] == (elem_t) 8));
+	CHECK(( L[2] == (elem_t) 1));
+	CHECK(( L[3] == (elem_t) 2));
+	CHECK(( L[4] == (elem_t) 3));
+	CHECK(( L[5] == (elem_t) 4));
+	CHECK(( L[6] == (elem_t) 5));
+	CHECK(( L[7] == (elem_t) 6));
+	CHECK(( L[8] == (elem_t) 8));
 
-	gb::mul_to(&L[0], e0, 4);
-	std::cout << L[0] << " " << L[1] << " " << L[2] << " " << L[3] << std::endl;
+	gb::substract_to(&L[0], &R[0], L.size());
+	CHECK(( L[0] == (elem_t) 2));
+	CHECK(( L[1] == (elem_t) 3));
+	CHECK(( L[2] == (elem_t) 4));
+	CHECK(( L[3] == (elem_t) 5));
+	CHECK(( L[4] == (elem_t) 6));
+	CHECK(( L[5] == (elem_t) 7));
+	CHECK(( L[6] == (elem_t) 8));
+	CHECK(( L[7] == (elem_t) 1));
+	CHECK(( L[8] == (elem_t) 0));
 
-	gb::add_to(&L[0], e0, &R[0], 4);
-	std::cout << L[0] << " " << L[1] << " " << L[2] << " " << L[3] << std::endl;
-
-	gb::add_to(&L[0], &R[0], 4);
-	std::cout << L[0] << " " << L[1] << " " << L[2] << " " << L[3] << std::endl;
-
-	gb::substract_to(&L[0], &R[0], 4);
-	std::cout << L[0] << " " << L[1] << " " << L[2] << " " << L[3] << std::endl;
+	gb::add_to(&L[0], (elem_t) 1, &R[0], L.size());
+	CHECK(( L[0] == (elem_t) 2));
+	CHECK(( L[1] == (elem_t) 4));
+	CHECK(( L[2] == (elem_t) 5));
+	CHECK(( L[3] == (elem_t) 6));
+	CHECK(( L[4] == (elem_t) 7));
+	CHECK(( L[5] == (elem_t) 8));
+	CHECK(( L[6] == (elem_t) 1));
+	CHECK(( L[7] == (elem_t) 2));
+	CHECK(( L[8] == (elem_t) 1));
 
 	return 0;
 }
 
 int test()
 {
-	const std::array<int32_t, 3> F9modulus = {{2, 2, 1}};// x^2 + 2x + 2
-	const std::array<int32_t, 3> F9generator = {{0, 1, 0}};
-	Givaro::GFqDom<int32_t> GFDom(FIELDCHAR, EXTDEG,
-		F9modulus, F9generator);
-	test_field(GFDom);
+	typedef gb::giv_modpoly<2, 2, 1> modpoly; //x^2 + 2x + 1
+	typedef gb::giv_genpoly<0, 1> genpoly; //x
+	typedef gb::gf_pn_givaro<FIELDCHAR, EXTDEG, modpoly, genpoly> givfield_t;
+
+	test_field<givfield_t>();
 
 	return 0;
 }
