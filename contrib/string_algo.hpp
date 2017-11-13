@@ -1009,7 +1009,7 @@ namespace string_algo {
 	}
 
 	template<typename Container, typename String, typename Pred>
-	void split(Container& cont, const String& str, Pred pred)
+	void split_pred(Container& cont, const String& str, Pred pred)
 	{
 		cont = Container();
 		auto itbeg = str.begin(), it = itbeg, itend = str.end();
