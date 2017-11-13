@@ -43,15 +43,10 @@ See our paper for more benchmark information.
 
 - autotools
 - C++11 compatible compiler
-- Boost C++ libraries (program_options, thread, system)
 - Optional: OpenF4 (can be used as another backend instead of the M4GB algorithm, facilitating benchmarking)
 - Optional: FGbLib (can also be used as another backend, only works with prime fields)
 
 ## Building ##
-
-Optional: install boost locally (e.g., in your home directory, default prefix: $(pwd)/boost-VERSION):
-
-	BOOST_VERSION=1.65.1 BOOST_INSTALL_PREFIX=$HOME/boost/boost-1.65.1 ./install_boost.sh
 
 Optional: install openf4 locally (default prefix: $(pwd)/openf4):
 
@@ -64,7 +59,7 @@ Optional: install fgb locally:
 Configuring:
 
 	autoreconf --install
-	./configure [--with-boost=$HOME/boost/boost-1.65.1] [--with-openf4=$(pwd)/openf4]
+	./configure
 
 Run tests:
 

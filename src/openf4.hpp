@@ -24,14 +24,12 @@
 #ifndef M4GB_SOLVER_OPENF4_HPP
 #define M4GB_SOLVER_OPENF4_HPP
 
-#include <boost/range/algorithm_ext/erase.hpp>
-#include <boost/algorithm/string.hpp>
-
 #include "config.hpp"
 #include "../lib/gf_elem_simple.hpp"
 #include "../lib/monomial_degrevlex.hpp"
 #include "../lib/polynomial_simple.hpp"
 #include "../lib/solver_base.hpp"
+#include "../contrib/string_algo.hpp"
 
 #include <libopenf4.h>
 
@@ -43,6 +41,8 @@
 
 namespace gb
 {
+	namespace sa = ::string_algo;
+
 	template<typename polynomial_t>
 	class openf4solver : public solver_base_t<polynomial_t>
 	{
@@ -90,7 +90,7 @@ namespace gb
 
 				std::vector<std::string> terms;
 
-				boost::split(terms, temp, boost::is_any_of("+"));
+				sa::split(terms, temp, '+');
 				for(auto term : terms)
 				{
 					if (term == "1")
@@ -115,7 +115,7 @@ namespace gb
 			bool _is_var_name(const std::string & s) const
 			{
 				std::vector<std::string> var_exp_str;
-				boost::split(var_exp_str, s, boost::is_any_of("^"));
+				sa::split(var_exp_str, s, '^');
 
 				return (std::find(this->var_names.begin(), this->var_names.end(), var_exp_str[0]) \
 						!= this->var_names.end()) ? true : false;
@@ -144,7 +144,7 @@ namespace gb
 						if (temp != "+")
 						{
 							std::vector<std::string> term_str;
-							boost::split(term_str, temp, boost::is_any_of("*"));
+							sa::split(term_str, temp, '*');
 
 							if (term_str.size() > 1)
 							{
@@ -199,7 +199,7 @@ namespace gb
 					{
 						std::vector<std::string> cvstr;
 						std::stringstream _ss;
-						boost::split(cvstr, termstrs, boost::is_any_of("*"));
+						sa::split(cvstr, termstrs, '*');
 
 						cvstr[0] = _poly_to_int_repr(cvstr[0]);
 
@@ -217,7 +217,7 @@ namespace gb
 #else
 				for(auto f : basis)
 				{
-					boost::remove_erase_if(f, boost::is_any_of("()"));
+					sa::erase_pred(f, sa::is_any_of("()"));
 					for(unsigned i=0; i < f.length(); ++i)
 					{
 						if (f[i] == '-')
