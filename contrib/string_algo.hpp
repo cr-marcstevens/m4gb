@@ -39,29 +39,71 @@
 #include <functional>
 
 /****************************** example usage ************************************\
-grep "^//test.cpp" string_algo.hpp -A13 > test.cpp
+grep "^//test.cpp" string_algo.hpp -A55 > test.cpp
 g++ -std=c++11 -o test test.cpp -g -ggdb
 
 //test.cpp:
 #include "string_algo.hpp"
 #include <iostream>
+#include <array>
 namespace sa = string_algo;
 
 int main(int argc, char** argv)
 {
-	std::string test = " a+b +c+d=1 "; sa::to_upper(test);
-	std::cout << "!" << test << "!" << std::endl;
-	test = sa::trim_copy(test);
-	std::cout << "!" << test << "!" << std::endl;
-	std::vector<std::string> tmp = sa::split(test, std::string("+"));
-	std::cout << tmp.size() << "!" << sa::to_upper_copy(tmp[0]) << "!" << sa::to_lower_copy(tmp[1]) << "!" << tmp[2] << "!" << tmp[3] << "!" << !sa::any_lower(test) << "!" << sa::join(tmp, std::string("+")) << std::endl;
+	std::array<std::string,3> tests = { " a b c d e ", " aA09zZ.!-+", " a + x * f - h = 0 " };
+	std::string blah = "blah";
+	for (auto& test : tests)
+	{
+		std::cout << std::endl << "================== Test string: '" << test << "'" << std::endl;
+		std::cout << "Count ' ': " << sa::count_pred(test, sa::is_equal(' ')) << " = " << sa::count(test, ' ') << std::endl;
+		std::cout << "Counts: lower=" << sa::count_pred(test, sa::is_lower()) << " upper=" << sa::count_pred(test, sa::is_upper()) << " digit=" << sa::count_pred(test,sa::is_digit()) << " punct=" << sa::count_pred(test,sa::is_punct()) << " print=" << sa::count_pred(test,sa::is_print()) << std::endl;
+		std::cout << "Modified: " << sa::modify_copy(test, [](char& c){ ++c; }) << std::endl;
+		sa::modify(test, [](char& c){c+=0;}); // no op
+		std::cout << "Pred: alllower=" << sa::all_lower(test) << " noupper=" << !sa::any_upper(test) << "=" << sa::all_not_pred(test,sa::is_upper()) << std::endl;
+		std::cout << "Split+join: '" << sa::join(sa::split(test, ' '),'#') << "', '" << sa::join(sa::split(test, std::string(" +"))) << "'" << std::endl;
+		std::cout << "Erased: a='" << sa::erase_pred_copy(test, sa::is_lessequal('a')) << "'" << std::endl;
+		std::cout << "tolower='" << sa::to_lower_copy(test) << "' toupper='" << sa::to_upper_copy(test) << "'" << std::endl;
+		std::cout << "left='" << sa::left_copy(test,2) << "' mid='" << sa::mid_copy(test,2,2) << "' right='" << sa::right_copy(test,2) << "'" << std::endl;
+		auto i1 = sa::find(test, 'a'), i2 = sa::find(test, 'a',test.begin());
+		auto i3 = sa::find(test, "a"), i4 = sa::find(test, "a",test.begin());
+		if (i1 != i2 || i1 != i3 || i1 != i4) throw;
+		auto i5 = sa::ifind(test, 'A'), i6 = sa::ifind(test, 'A',test.begin());
+		auto i7 = sa::ifind(test, "A"), i8 = sa::ifind(test, "A",test.begin());
+		if (i5 != i6 || i5 != i7 || i5 != i8) throw;
+		std::cout << ((i5 == i1) ? "First a/A is a" : "First a/A is A") << std::endl;
+		auto il1 = sa::find_last(test, 'a'), il2 = sa::find_last(test, 'a',test.end());
+		auto il3 = sa::find_last(test, "a"), il4 = sa::find_last(test, "a",test.end());
+		if (il1 != il2 || il1 != il3 || il1 != il4) throw;
+		auto il5 = sa::ifind_last(test, 'A'), il6 = sa::ifind_last(test, 'A',test.end());
+		auto il7 = sa::ifind_last(test, "A"), il8 = sa::ifind_last(test, "A",test.end());
+		if (il5 != il6 || il5 != il7 || il5 != il8) throw;
+		std::cout << ((il5 == il1) ? "Last a/A is a" : "Last a/A is A") << std::endl;
+		std::cout << sa::starts_with(test, " a ") << " " << sa::istarts_with(test, " A ") << std::endl;
+		std::cout << sa::ends_with(test, " e ") << " " << sa::iends_with(test, " E ") << std::endl;
+		std::cout << sa::contains(test, "aa") << " " << sa::icontains(test, "aa") << " " << sa::icontains(test, "AA") << std::endl;
+		std::cout << sa::equals(test, sa::to_upper_copy(test)) << " " << sa::iequals(test, sa::to_upper_copy(test)) << std::endl;
+		std::cout << "Trim: left='" << sa::trim_left_copy(test) << "' right='" << sa::trim_right_copy(test) << "' both='" << sa::trim_copy(test) << "'" << std::endl;
+		std::cout << "Trim: left='" << sa::trim_left_copy(test, ' ') << "' right='" << sa::trim_right_copy(test, ' ') << "' both='" << sa::trim_copy(test, ' ') << "'" << std::endl;
+		std::cout << "Trim: left='" << sa::trim_left_copy(test, " ") << "' right='" << sa::trim_right_copy(test, " ") << "' both='" << sa::trim_copy(test, " ") << "'" << std::endl;
+		std::cout << "Trim ' ae': left='" << sa::trim_left_copy(test, " ae") << "' right='" << sa::trim_right_copy(test, " ae") << "' both='" << sa::trim_copy(test, " ae") << "'" << std::endl;
+		std::cout << "Trim: left='" << sa::trim_left_copy(test, ' ') << "' right='" << sa::trim_right_copy(test, ' ') << "' both='" << sa::trim_copy(test, ' ') << "'" << std::endl;
+		std::cout << "Replacehead: '" << sa::replace_head_copy(test, 2, blah) << "'" << std::endl;
+		std::cout << "Replacetail: '" << sa::replace_tail_copy(test, 2, blah) << "'" << std::endl;
+		std::cout << "Insert: '" << sa::insert_copy(test, 1, blah) << "'" << std::endl;
+		std::cout << "Erase: '" << sa::erase_copy(test, 1, 2) << "'" << std::endl;
+		std::cout << "Erasepred ' ': '" << sa::erase_pred_copy(test, sa::is_equal(' ')) << "'" << std::endl;
+		std::cout << "Replacefirst: '" << sa::replace_first_copy(test, std::string("a"), blah) << "'" << std::endl;
+		std::cout << "Replacelast: '" << sa::replace_last_copy(test, std::string("a"), blah) << "'" << std::endl;
+		std::cout << "Ireplacefirst: '" << sa::ireplace_first_copy(test, std::string("A"), blah) << "'" << std::endl;
+		std::cout << "Replaceall: '" << sa::replace_all_copy(test, std::string(" "), std::string()) << "'" << std::endl;
+	}
 }
 
 \**************************** end example usage **********************************/
 
-#define STRING_ALGO_CAT(a,b) a ## b
-
 namespace string_algo {
+
+	namespace sa = ::string_algo;
 
 	/* ADVANCE COPY */
 
@@ -69,11 +111,33 @@ namespace string_algo {
 	Iterator advance_copy(const Iterator& it, Distance n)
 	{
 		Iterator ret(it);
-		std::advance(it, n);
+		std::advance(ret, n);
 		return ret;
 	}
 
 	/* COUNT */
+
+	template<typename String>
+	std::size_t count(const String& str, const typename String::value_type& c)
+	{
+		std::size_t ret = 0;
+		auto it = str.begin(), end = str.end();
+		for (; it != end; ++it)
+			if (*it == c)
+				++ret;
+		return ret;
+	}
+
+	template<typename String>
+	std::size_t count_not(const String& str, const typename String::value_type& c)
+	{
+		std::size_t ret = 0;
+		auto it = str.begin(), end = str.end();
+		for (; it != end; ++it)
+			if (!*it != c)
+				++ret;
+		return ret;
+	}
 
 	template<typename String, typename Pred>
 	std::size_t count_pred(const String& str, Pred pred)
@@ -176,6 +240,22 @@ namespace string_algo {
 	STRING_ALGO_IS_COMP(is_lessequal,<=)
 	STRING_ALGO_IS_COMP(is_greaterequal,>=)
 
+	/* IS RANGE */
+
+	template<typename Type>
+	struct is_range_impl {
+		is_range_impl(const Type& minval, const Type& maxval): _minval(minval), _maxval(maxval) {}
+		template<typename Type2> bool operator()(const Type2& r) const { return _minval <= r && r <= _maxval; }
+	private:
+		const Type& _minval;
+		const Type& _maxval;
+	};
+	template<typename Type>
+	is_range_impl<Type> is_range(const Type& minval, const Type& maxval)
+	{
+		return is_range_impl<Type>(minval, maxval);
+	}
+
 	/* IS ANY OF */
 
 	template<typename Container>
@@ -193,6 +273,7 @@ namespace string_algo {
 	template<typename Container> is_any_of_impl<Container> is_any_of(Container&& cont) { return is_any_of_impl<Container>(std::move(cont)); }
 
 	is_any_of_impl<std::string> is_any_of(const char* str) { return is_any_of_impl<std::string>(std::string(str)); }
+	is_any_of_impl<std::wstring> is_any_of(const wchar_t* str) { return is_any_of_impl<std::wstring>(std::wstring(str)); }
 
 	/* ALL/ANY CHARACTER CLASS */
 
@@ -203,12 +284,13 @@ namespace string_algo {
 			, _mask(mask)
 		{}
 
-		template<typename String> 
-		bool operator()(const String& str) const 
+		template<typename String>
+		decltype(String().begin(),bool())
+		/*bool*/ operator()(const String& str) const
 		{
-			return all_pred(str, *this); 
+			return sa::all_pred(str, *this);
 		}
-		bool operator()(const char& c) const 
+		bool operator()(const char& c) const
 		{
 			return _charfacet.is(_mask,c);
 		}
@@ -229,12 +311,13 @@ namespace string_algo {
 			, _mask(mask)
 		{}
 
-		template<typename String> 
-		bool operator()(const String& str) const 
+		template<typename String>
+		decltype(String().begin(),bool())
+		/*bool*/ operator()(const String& str) const
 		{
-			return any_pred(str, *this); 
+			return sa::any_pred(str, *this);
 		}
-		bool operator()(const char& c) const 
+		bool operator()(const char& c) const
 		{
 			return _charfacet.is(_mask,c);
 		}
@@ -301,7 +384,7 @@ namespace string_algo {
 	STRING_ALGO_ANY_CLASS(any_graph,std::ctype_base::graph)
 
 #ifdef STRING_ALGO_NEED_BLANK
-	/* 
+	/*
 	   std::isblank<CharT>(CharT,const std::locale&) is not properly defined in g++-4.8.5.
 	   As isblank is not a common use-case, it is disabled by default here.
 	   It can be enabled by the application when desired using '#define STRING_ALGO_NEED_BLANK'.
@@ -317,14 +400,14 @@ namespace string_algo {
 	void to_lower(String& str, const std::locale& loc = std::locale())
 	{
 		typedef typename String::value_type CharT;
-		modify(str, [&loc](CharT& c){ to_lower(c, loc); });
+		sa::modify(str, [&loc](CharT& c){ sa::to_lower(c, loc); });
 	}
 
 	template<typename String>
 	String to_lower_copy(const String& str, const std::locale& loc = std::locale())
 	{
 		typedef typename String::value_type CharT;
-		return modify_copy(str, [&loc](CharT& c){ to_lower(c, loc); });
+		return sa::modify_copy(str, [&loc](CharT& c){ sa::to_lower(c, loc); });
 	}
 
 	template<> void to_lower<char>(char& c, const std::locale& loc) { c = std::tolower(c, loc); }
@@ -336,14 +419,14 @@ namespace string_algo {
 	void to_upper(String& str, const std::locale& loc = std::locale())
 	{
 		typedef typename String::value_type CharT;
-		modify(str, [&loc](CharT& c){ to_upper(c, loc); });
+		sa::modify(str, [&loc](CharT& c){ sa::to_upper(c, loc); });
 	}
 
 	template<typename String>
 	String to_upper_copy(const String& str, const std::locale& loc = std::locale())
 	{
 		typedef typename String::value_type CharT;
-		return modify_copy(str, [&loc](CharT& c){ to_upper(c, loc); });
+		return sa::modify_copy(str, [&loc](CharT& c){ sa::to_upper(c, loc); });
 	}
 
 	template<> void to_upper<char>(char& c, const std::locale& loc) { c = std::toupper(c, loc); }
@@ -376,52 +459,52 @@ namespace string_algo {
 	{
 		if (count > str.size())
 			count = str.size();
-		auto beg = str.begin();
 		return String(advance_copy(str.begin(),str.size()-count),str.end());
 	}
 
 	/* FIND FIRST ELEM */
 
-	template<typename String, typename CharT, typename StringIterator>
-	StringIterator find(String& str, const CharT& c, StringIterator pos)
+	template<typename String, typename StringIterator>
+	StringIterator find(String& str, const typename String::value_type& c, StringIterator pos)
 	{
 		auto end = str.end();
 		for (; pos != end && *pos != c; ++pos)
 			;
 		return pos;
 	}
-	template<typename String, typename CharT>
-	auto find(String& str, const CharT& c) -> decltype(str.begin())
+	template<typename String>
+	auto find(String& str, const typename String::value_type& c) -> decltype(str.begin())
 	{
-		return find(str, c, str.begin());
+		return sa::find(str, c, str.begin());
 	}
 
 	/* IFIND FIRST ELEM */
 
-	template<typename String, typename CharT, typename StringIterator>
-	StringIterator ifind(String& str, const CharT& c, StringIterator pos, const std::locale& loc = std::locale())
+	template<typename String, typename StringIterator>
+	StringIterator ifind(String& str, const typename String::value_type& c, StringIterator pos, const std::locale& loc = std::locale())
 	{
-		CharT clower = to_lower_copy(c, loc);
+		auto clower = sa::to_lower_copy(c, loc);
 		auto end = str.end();
-		for (; pos != end && to_lower_copy(*pos, loc) != c; ++pos)
+		for (; pos != end && sa::to_lower_copy(*pos, loc) != clower; ++pos)
 			;
 		return pos;
 	}
-	template<typename String, typename CharT>
-	auto ifind(String& str, const CharT& c, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	template<typename String>
+	auto ifind(String& str, const typename String::value_type& c, const std::locale& loc = std::locale()) -> decltype(str.begin())
 	{
-		return ifind(str, c, str.begin(), loc);
+		return sa::ifind(str, c, str.begin(), loc);
 	}
 
 	/* FIND FIRST SUBSTRING */
 
-	template<typename String, typename StringIterator>
-	StringIterator find(String& str, const String& substr, StringIterator pos)
+	template<typename String, typename String2, typename StringIterator>
+	decltype(String().begin(),String2().begin(),StringIterator())
+	/*StringIterator*/ find(String& str, const String2& substr, StringIterator pos)
 	{
 		if (substr.empty())
 			return pos;
 		auto subpos = substr.begin();
-		while ((pos = find(str, *subpos, pos)) != str.end())
+		while ((pos = sa::find(str, *subpos, pos)) != str.end())
 		{
 			auto pos2 = pos;
 			auto subpos2 = subpos;
@@ -434,27 +517,48 @@ namespace string_algo {
 		}
 		return pos;
 	}
-	template<typename String>
-	auto find(String& str, const String& substr) -> decltype(str.begin())
+	template<typename String, typename String2>
+	auto find(String& str, const String2& substr) -> decltype(substr.begin(),str.begin())
 	{
-		return find(str, substr, str.begin());
+		return sa::find(str, substr, str.begin());
+	}
+	template<typename String, typename StringIterator>
+	StringIterator find(String& str, const char* csubstr, StringIterator pos)
+	{
+		return sa::find(str, String(csubstr), str.begin());
+	}
+	template<typename String>
+	auto find(String& str, const char* substr) -> decltype(str.begin())
+	{
+		return sa::find(str, String(substr), str.begin());
+	}
+	template<typename String, typename StringIterator>
+	StringIterator find(String& str, const wchar_t* csubstr, StringIterator pos)
+	{
+		return sa::find(str, String(csubstr), str.begin());
+	}
+	template<typename String>
+	auto find(String& str, const wchar_t* substr) -> decltype(str.begin())
+	{
+		return sa::find(str, String(substr), str.begin());
 	}
 
 	/* IFIND FIRST SUBSTRING */
 
-	template<typename String, typename StringIterator>
-	StringIterator ifind(String& str, const String& substr, StringIterator pos, const std::locale& loc = std::locale())
+	template<typename String, typename String2, typename StringIterator>
+	decltype(String().begin(),String2().begin(),StringIterator())
+	/*StringIterator*/ ifind(String& str, const String2& substr, StringIterator pos, const std::locale& loc = std::locale())
 	{
 		if (substr.empty())
 			return pos;
-		String substrlower = to_lower_copy(substr, loc);
+		String substrlower = sa::to_lower_copy(substr, loc);
 		auto subpos = substrlower.begin();
-		while ((pos = ifind(str, *subpos, pos)) != str.end())
+		while ((pos = sa::ifind(str, *subpos, pos)) != str.end())
 		{
 			auto pos2 = pos;
 			auto subpos2 = subpos;
 			++pos2; ++subpos2;
-			for (; pos2 != str.end() && subpos2 != substrlower.end() && to_lower_copy(*pos2, loc) == *subpos2; ++pos2, ++subpos2)
+			for (; pos2 != str.end() && subpos2 != substrlower.end() && sa::to_lower_copy(*pos2, loc) == *subpos2; ++pos2, ++subpos2)
 				;
 			if (subpos2  == substrlower.end())
 				return pos;
@@ -462,16 +566,36 @@ namespace string_algo {
 		}
 		return pos;
 	}
-	template<typename String>
-	auto ifind(String& str, const String& substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	template<typename String, typename String2>
+	auto ifind(String& str, const String2& substr, const std::locale& loc = std::locale()) -> decltype(substr.begin(),str.begin())
 	{
-		return ifind(str, substr, str.begin(), loc);
+		return sa::ifind(str, substr, str.begin(), loc);
+	}
+	template<typename String, typename StringIterator>
+	StringIterator ifind(String& str, const char* substr, StringIterator pos, const std::locale& loc = std::locale())
+	{
+		return sa::ifind(str, String(substr), pos, loc);
+	}
+	template<typename String>
+	auto ifind(String& str, const char* substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	{
+		return sa::ifind(str, String(substr), str.begin(), loc);
+	}
+	template<typename String, typename StringIterator>
+	StringIterator ifind(String& str, const wchar_t* substr, StringIterator pos, const std::locale& loc = std::locale())
+	{
+		return sa::ifind(str, String(substr), pos, loc);
+	}
+	template<typename String>
+	auto ifind(String& str, const wchar_t* substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	{
+		return sa::ifind(str, String(substr), str.begin(), loc);
 	}
 
 	/* FIND LAST ELEM */
 
-	template<typename String, typename CharT, typename StringIterator>
-	StringIterator find_last(String& str, const CharT& c, StringIterator pos)
+	template<typename String, typename StringIterator>
+	StringIterator find_last(String& str, const typename String::value_type& c, StringIterator pos)
 	{
 		if (pos != str.end() && *pos == c)
 			return pos;
@@ -482,42 +606,43 @@ namespace string_algo {
 			return str.end();
 		return pos;
 	}
-	template<typename String, typename CharT>
-	auto find_last(String& str, const CharT& c) -> decltype(str.begin())
+	template<typename String>
+	auto find_last(String& str, const typename String::value_type& c) -> decltype(str.begin())
 	{
-		return find_last(str, c, str.end());
+		return sa::find_last(str, c, str.end());
 	}
 
 	/* IFIND LAST ELEM */
 
-	template<typename String, typename CharT, typename StringIterator>
-	StringIterator ifind_last(String& str, const CharT& c, StringIterator pos, const std::locale& loc = std::locale())
+	template<typename String, typename StringIterator>
+	StringIterator ifind_last(String& str, const typename String::value_type& c, StringIterator pos, const std::locale& loc = std::locale())
 	{
-		CharT clower = to_lower_copy(c, loc);
-		if (pos != str.end() && to_lower_copy(*pos, loc) == c)
+		auto clower = sa::to_lower_copy(c, loc);
+		if (pos != str.end() && sa::to_lower_copy(*pos, loc) == clower)
 			return pos;
 		auto beg = str.begin();
-		while (pos != beg && to_lower_copy(*--pos, loc) != c)
+		while (pos != beg && sa::to_lower_copy(*--pos, loc) != clower)
 			;
-		if (pos == beg && to_lower_copy(*pos, loc) != c)
+		if (pos == beg && sa::to_lower_copy(*pos, loc) != clower)
 			return str.end();
 		return pos;
 	}
-	template<typename String, typename CharT>
-	auto ifind_last(String& str, const CharT& c, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	template<typename String>
+	auto ifind_last(String& str, const typename String::value_type& c, const std::locale& loc = std::locale()) -> decltype(str.begin())
 	{
-		return ifind_last(str, c, str.end(), loc);
+		return sa::ifind_last(str, c, str.end(), loc);
 	}
 
 	/* FIND LAST SUBSTRING */
 
-	template<typename String, typename StringIterator>
-	StringIterator find_last(String& str, const String& substr, StringIterator pos)
+	template<typename String, typename String2, typename StringIterator>
+	decltype(String().begin(),String2().begin(),StringIterator())
+	/*StringIterator*/ find_last(String& str, const String2& substr, StringIterator pos)
 	{
 		if (substr.empty())
 			return pos;
 		auto subpos = substr.begin();
-		while ((pos = find_last(str, *subpos, pos)) != str.end())
+		while ((pos = sa::find_last(str, *subpos, pos)) != str.end())
 		{
 			auto pos2 = pos;
 			auto subpos2 = subpos;
@@ -532,27 +657,48 @@ namespace string_algo {
 		}
 		return str.end();
 	}
-	template<typename String>
-	auto find_last(String& str, const String& substr) -> decltype(str.begin())
+	template<typename String, typename String2>
+	auto find_last(String& str, const String2& substr) -> decltype(substr.begin(),str.begin())
 	{
-		return find_last(str, substr, str.end());
+		return sa::find_last(str, substr, str.end());
+	}
+	template<typename String, typename StringIterator>
+	StringIterator find_last(String& str, const char* substr, StringIterator pos)
+	{
+		return sa::find_last(str, String(substr), pos);
+	}
+	template<typename String>
+	auto find_last(String& str, const char* substr) -> decltype(str.begin())
+	{
+		return sa::find_last(str, String(substr), str.end());
+	}
+	template<typename String, typename StringIterator>
+	StringIterator find_last(String& str, const wchar_t* substr, StringIterator pos)
+	{
+		return sa::find_last(str, String(substr), pos);
+	}
+	template<typename String>
+	auto find_last(String& str, const wchar_t* substr) -> decltype(str.begin())
+	{
+		return sa::find_last(str, String(substr), str.end());
 	}
 
 	/* IFIND LAST SUBSTRING */
 
-	template<typename String, typename StringIterator>
-	StringIterator ifind_last(String& str, const String& substr, StringIterator pos, const std::locale& loc = std::locale())
+	template<typename String, typename String2, typename StringIterator>
+	decltype(String().begin(),String2().begin(),StringIterator())
+	/*StringIterator*/ ifind_last(String& str, const String2& substr, StringIterator pos, const std::locale& loc = std::locale())
 	{
 		if (substr.empty())
 			return pos;
-		String substrlower = to_lower_copy(substr, loc);
+		String substrlower = sa::to_lower_copy(substr, loc);
 		auto subpos = substrlower.begin();
 		while ((pos = ifind_last(str, *subpos, pos)) != str.end())
 		{
 			auto pos2 = pos;
 			auto subpos2 = subpos;
 			++pos2; ++subpos2;
-			for (; pos2 != str.end() && subpos2 != substrlower.end() && to_lower_copy(*pos2, loc) == *subpos2; ++pos2, ++subpos2)
+			for (; pos2 != str.end() && subpos2 != substrlower.end() && sa::to_lower_copy(*pos2, loc) == *subpos2; ++pos2, ++subpos2)
 				;
 			if (subpos2  == substrlower.end())
 				return pos;
@@ -562,10 +708,30 @@ namespace string_algo {
 		}
 		return str.end();
 	}
-	template<typename String>
-	auto ifind_last(String& str, const String& substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	template<typename String, typename String2>
+	auto ifind_last(String& str, const String2& substr, const std::locale& loc = std::locale()) -> decltype(substr.begin(),str.begin())
 	{
-		return ifind_last(str, substr, str.end(), loc);
+		return sa::ifind_last(str, substr, str.end(), loc);
+	}
+	template<typename String, typename StringIterator>
+	StringIterator ifind_last(String& str, const char* substr, StringIterator pos, const std::locale& loc = std::locale())
+	{
+		return sa::ifind_last(str, String(substr), pos, loc);
+	}
+	template<typename String>
+	auto ifind_last(String& str, const char* substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	{
+		return sa::ifind_last(str, String(substr), str.end(), loc);
+	}
+	template<typename String, typename StringIterator>
+	StringIterator ifind_last(String& str, const wchar_t* substr, StringIterator pos, const std::locale& loc = std::locale())
+	{
+		return sa::ifind_last(str, String(substr), pos, loc);
+	}
+	template<typename String>
+	auto ifind_last(String& str, const wchar_t* substr, const std::locale& loc = std::locale()) -> decltype(str.begin())
+	{
+		return sa::ifind_last(str, String(substr), str.end(), loc);
 	}
 
 	/* FIND FIRST PRED */
@@ -581,7 +747,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	auto find_pred(String& str, Pred pred) -> decltype(str.begin())
 	{
-		return find_pred(str, pred, str.begin());
+		return sa::find_pred(str, pred, str.begin());
 	}
 
 	/* FIND FIRST NOT PRED */
@@ -597,7 +763,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	auto find_not_pred(String& str, Pred pred) -> decltype(str.begin())
 	{
-		return find_not_pred(str, pred, str.begin());
+		return sa::find_not_pred(str, pred, str.begin());
 	}
 
 	/* FIND LAST PRED */
@@ -617,7 +783,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	auto find_last_pred(String& str, Pred pred) -> decltype(str.begin())
 	{
-		return find_last_pred(str, pred, str.end());
+		return sa::find_last_pred(str, pred, str.end());
 	}
 
 	/* FIND LAST NOT PRED */
@@ -637,7 +803,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	auto find_last_not_pred(String& str, Pred pred) -> decltype(str.begin())
 	{
-		return find_last_not_pred(str, pred, str.end());
+		return sa::find_last_not_pred(str, pred, str.end());
 	}
 
 	/* STARTS_WITH */
@@ -651,15 +817,35 @@ namespace string_algo {
 			;
 		return it2 == it2end;
 	}
+	template<typename String>
+	bool starts_with(const String& str, const char* pre)
+	{
+		return sa::starts_with(str, String(pre));
+	}
+	template<typename String>
+	bool starts_with(const String& str, const wchar_t* pre)
+	{
+		return sa::starts_with(str, String(pre));
+	}
 
 	template<typename String>
 	bool istarts_with(const String& str, const String& pre, const std::locale& loc = std::locale())
 	{
 		auto it1 = str.begin(), it1end = str.end();
 		auto it2 = pre.begin(), it2end = pre.end();
-		for (; it1 != it1end && it2 != it2end && to_lower_copy(*it1,loc) == to_lower_copy(*it2,loc); ++it1,++it2)
+		for (; it1 != it1end && it2 != it2end && sa::to_lower_copy(*it1,loc) == sa::to_lower_copy(*it2,loc); ++it1,++it2)
 			;
 		return it2 == it2end;
+	}
+	template<typename String>
+	bool istarts_with(const String& str, const char* pre)
+	{
+		return sa::istarts_with(str, String(pre));
+	}
+	template<typename String>
+	bool istarts_with(const String& str, const wchar_t* pre)
+	{
+		return sa::istarts_with(str, String(pre));
 	}
 
 	/* ENDS_WITH */
@@ -669,11 +855,21 @@ namespace string_algo {
 	{
 		if (pre.size() > str.size())
 			return false;
-		auto it1 = advance_copy(str.begin(),str.size()-pre.size()), it1end = str.end();
+		auto it1 = sa::advance_copy(str.begin(),str.size()-pre.size()), it1end = str.end();
 		auto it2 = pre.begin(), it2end = pre.end();
 		for (; it1 != it1end && it2 != it2end && (*it1) == (*it2);  ++it1,++it2)
 			;
 		return it2 == it2end;
+	}
+	template<typename String>
+	bool ends_with(const String& str, const char* pre)
+	{
+		return sa::ends_with(str, String(pre));
+	}
+	template<typename String>
+	bool ends_with(const String& str, const wchar_t* pre)
+	{
+		return sa::ends_with(str, String(pre));
 	}
 
 	template<typename String>
@@ -681,11 +877,21 @@ namespace string_algo {
 	{
 		if (pre.size() > str.size())
 			return false;
-		auto it1 = advance_copy(str.begin(),str.size()-pre.size()), it1end = str.end();
+		auto it1 = sa::advance_copy(str.begin(),str.size()-pre.size()), it1end = str.end();
 		auto it2 = pre.begin(), it2end = pre.end();
-		for (; it1 != it1end && it2 != it2end && to_lower_copy(*it1,loc) == to_lower_copy(*it2,loc); ++it1,++it2)
+		for (; it1 != it1end && it2 != it2end && sa::to_lower_copy(*it1,loc) == sa::to_lower_copy(*it2,loc); ++it1,++it2)
 			;
 		return it2 == it2end;
+	}
+	template<typename String>
+	bool iends_with(const String& str, const char* pre)
+	{
+		return sa::iends_with(str, String(pre));
+	}
+	template<typename String>
+	bool iends_with(const String& str, const wchar_t* pre)
+	{
+		return sa::iends_with(str, String(pre));
 	}
 
 	/* CONTAINS */
@@ -693,13 +899,33 @@ namespace string_algo {
 	template<typename String>
 	bool contains(const String& str, const String& pre)
 	{
-		return find(str, pre) != str.end();
+		return sa::find(str, pre) != str.end();
+	}
+	template<typename String>
+	bool contains(const String& str, const char* pre)
+	{
+		return sa::contains(str, String(pre));
+	}
+	template<typename String>
+	bool contains(const String& str, const wchar_t* pre)
+	{
+		return sa::contains(str, String(pre));
 	}
 
 	template<typename String>
 	bool icontains(const String& str, const String& pre, const std::locale& loc = std::locale())
 	{
-		return ifind(str, pre, loc) != str.end();
+		return sa::ifind(str, pre, loc) != str.end();
+	}
+	template<typename String>
+	bool icontains(const String& str, const char* pre)
+	{
+		return sa::icontains(str, String(pre));
+	}
+	template<typename String>
+	bool icontains(const String& str, const wchar_t* pre)
+	{
+		return sa::icontains(str, String(pre));
 	}
 
 	/* EQUALS */
@@ -709,11 +935,31 @@ namespace string_algo {
 	{
 		return str == pre;
 	}
+	template<typename String>
+	bool equals(const String& str, const char* pre)
+	{
+		return sa::equals(str, String(pre));
+	}
+	template<typename String>
+	bool equals(const String& str, const wchar_t* pre)
+	{
+		return sa::equals(str, String(pre));
+	}
 
 	template<typename String>
 	bool iequals(const String& str, const String& pre, const std::locale& loc = std::locale())
 	{
-		return str.size() == pre.size() && istart_with(str, pre, loc);
+		return str.size() == pre.size() && sa::istarts_with(str, pre, loc);
+	}
+	template<typename String>
+	bool iequals(const String& str, const char* pre)
+	{
+		return sa::iequals(str, String(pre));
+	}
+	template<typename String>
+	bool iequals(const String& str, const wchar_t* pre)
+	{
+		return sa::iequals(str, String(pre));
 	}
 
 	/* LEX_LESS */
@@ -737,24 +983,23 @@ namespace string_algo {
 	{
 		auto it1 = str.begin(), it1end = str.end();
 		auto it2 = pre.begin(), it2end = pre.end();
-		for (; it1 != it1end && it2 != it2end && to_lower_copy(*it1,loc) == to_lower_copy(*it2,loc);  ++it1,++it2)
+		for (; it1 != it1end && it2 != it2end && sa::to_lower_copy(*it1,loc) == sa::to_lower_copy(*it2,loc);  ++it1,++it2)
 			;
 		if (it1 == it1end)
 			return it2 != it2end;
 		if (it2 == it2end)
 			return false;
-		return to_lower_copy(*it1,loc) < to_lower_copy(*it2,loc);
+		return sa::to_lower_copy(*it1,loc) < sa::to_lower_copy(*it2,loc);
 	}
 
 	/* SPLIT */
 
-	// SFINAE check whether Pred is a predicate
 	template<typename String, typename Pred>
-	auto split(const String& str, Pred pred) -> decltype(pred(str[0]), std::vector<String>())
+	std::vector<String> split_pred(const String& str, Pred pred)
 	{
 		std::vector<String> ret;
 		auto itbeg = str.begin(), it = itbeg, itend = str.end();
-		while ((it = find_pred(str, pred, itbeg)) != itend)
+		while ((it = sa::find_pred(str, pred, itbeg)) != itend)
 		{
 			ret.emplace_back(itbeg, it);
 			itbeg = ++it;
@@ -763,13 +1008,12 @@ namespace string_algo {
 		return ret;
 	}
 
-	// SFINAE check whether Pred is a predicate
 	template<typename Container, typename String, typename Pred>
-	auto split(Container& cont, const String& str, Pred pred) -> decltype(pred(str[0]), void())
+	void split(Container& cont, const String& str, Pred pred)
 	{
 		cont = Container();
 		auto itbeg = str.begin(), it = itbeg, itend = str.end();
-		while ((it = find_pred(str, pred, itbeg)) != itend)
+		while ((it = sa::find_pred(str, pred, itbeg)) != itend)
 		{
 			cont.emplace_back(itbeg, it);
 			itbeg = ++it;
@@ -780,40 +1024,29 @@ namespace string_algo {
 	template<typename String>
 	std::vector<String> split(const String& str, const typename String::value_type& delim)
 	{
-		return split(str, is_equal(delim));
+		return sa::split_pred(str, is_equal(delim));
 	}
 
 	template<typename Container, typename String>
 	void split(Container& cont, const String& str, const typename String::value_type& delim)
 	{
-		split(cont, str, is_equal(delim));
+		sa::split_pred(cont, str, is_equal(delim));
 	}
 
 	template<typename String>
 	std::vector<String> split(const String& str, const String& delims)
 	{
-		typedef typename String::value_type CharT;
-		return split(str, 
-			[&delims](const CharT& c){return find(delims,c)!=delims.end();}
-			);
+		return sa::split_pred(str, is_any_of(delims));
 	}
 
 	template<typename Container, typename String>
 	void split(Container& cont, const String& str, const String& delims)
 	{
-		typedef typename String::value_type CharT;
-		split(cont, str, 
-			[&delims](const CharT& c){return find(delims,c)!=delims.end();}
-			);
+		sa::split_pred(cont, str, is_any_of(delims));
 	}
 
 	/* APPEND */
 
-	template<typename String>
-	void append(String& dest, const String& suffix)
-	{
-		std::copy(suffix.begin(), suffix.end(), std::back_inserter(dest));
-	}
 	template<typename String, typename Iterator>
 	void append(String& dest, Iterator first, Iterator last)
 	{
@@ -824,51 +1057,139 @@ namespace string_algo {
 	{
 		*std::back_inserter(dest) = c;
 	}
+	template<typename String, typename String2>
+	decltype(String2().begin(), void()) // SFINAE
+	/*void*/ append(String& dest, const String2& suffix)
+	{
+		std::copy(suffix.begin(), suffix.end(), std::back_inserter(dest));
+	}
+	template<typename String>
+	void append(String& dest, const char* src)
+	{
+		sa::append(dest,String(src));
+	}
+	template<typename String>
+	void append(String& dest, const wchar_t* src)
+	{
+		sa::append(dest,String(src));
+	}
+
+	/* JOIN */
+
+	template<typename Container, typename Separator = typename Container::value_type>
+	auto join(const Container& container, const Separator& separator = Separator()) -> typename Container::value_type
+	{
+		typename Container::value_type ret;
+		auto it = container.begin(), itend = container.end();
+		if (it == itend)
+			return ret;
+		sa::append(ret, *it);
+		for (++it; it != itend; ++it)
+		{
+			sa::append(ret, separator);
+			sa::append(ret, *it);
+		}
+		return ret;
+	}
+
+	template<typename Container, typename Pred, typename Separator = typename Container::value_type>
+	auto join_pred(const Container& container, Pred pred, const Separator& separator = Separator()) -> typename Container::value_type
+	{
+		typename Container::value_type ret;
+		auto it = container.begin(), itend = container.end();
+		for (; it != itend && !pred(*it); ++it)
+			;
+		if (it == itend)
+			return ret;
+		sa::append(ret, *it);
+		for (++it; it != itend; ++it)
+		{
+			if (pred(*it))
+			{
+				sa::append(ret, separator);
+				sa::append(ret, *it);
+			}
+		}
+		return ret;
+	}
 
 	/* TRIM LEFT */
 
 	template<typename String, typename Pred>
 	void trim_left_pred(String& str, Pred pred)
 	{
-		auto pos = find_not_pred(str, pred);
+		auto pos = sa::find_not_pred(str, pred);
 		str.erase(str.begin(), pos);
 	}
 
 	template<typename String, typename Pred>
 	String trim_left_copy_pred(const String& str, Pred pred)
 	{
-		auto pos = find_not_pred(str, pred);
+		auto pos = sa::find_not_pred(str, pred);
 		return String(pos, str.end());
 	}
 
 	template<typename String>
 	void trim_left(String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		trim_left_pred(str,
-			[&trim_chars](CharT& c){return find(trim_chars,c) != trim_chars.end();}
-			);
+		sa::trim_left_pred(str, sa::is_any_of(trim_chars));
 	}
-
 	template<typename String>
 	String trim_left_copy(const String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		return trim_left_copy_pred(str,
-			[&trim_chars](const CharT& c){return find(trim_chars,c) != trim_chars.end();}
-			);
+		return sa::trim_left_copy_pred(str, sa::is_any_of(trim_chars));
+	}
+	template<typename String>
+	void trim_left(String& str, const char* trim_chars)
+	{
+		sa::trim_left_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_left_copy(const String& str, const char* trim_chars)
+	{
+		return sa::trim_left_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim_left(String& str, const wchar_t* trim_chars)
+	{
+		sa::trim_left_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_left_copy(const String& str, const wchar_t* trim_chars)
+	{
+		return sa::trim_left_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim_left(String& str, char trim_char)
+	{
+		sa::trim_left_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_left_copy(const String& str, char trim_char)
+	{
+		return sa::trim_left_copy_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	void trim_left(String& str, wchar_t trim_char)
+	{
+		sa::trim_left_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_left_copy(const String& str, wchar_t trim_char)
+	{
+		return sa::trim_left_copy_pred(str, sa::is_equal(trim_char));
 	}
 
 	template<typename String>
 	void trim_left(String& str, const std::locale& loc = std::locale())
 	{
-		trim_left_pred(str, all_space<String>);
+		sa::trim_left_pred(str, sa::is_space(loc));
 	}
 
 	template<typename String>
 	String trim_left_copy(const String& str, const std::locale& loc = std::locale())
 	{
-		return trim_left_copy_pred(str, all_space<String>);
+		return sa::trim_left_copy_pred(str, sa::is_space(loc));
 	}
 
 	/* TRIM RIGHT */
@@ -876,7 +1197,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	void trim_right_pred(String& str, Pred pred)
 	{
-		auto pos = find_last_not_pred(str, pred);
+		auto pos = sa::find_last_not_pred(str, pred);
 		if (pos == str.end())
 			str.erase(str.begin(), str.end());
 		else
@@ -886,7 +1207,7 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	String trim_right_copy_pred(const String& str, Pred pred)
 	{
-		auto pos = find_last_not_pred(str, pred);
+		auto pos = sa::find_last_not_pred(str, pred);
 		if (pos == str.end())
 			return String();
 		else
@@ -896,31 +1217,64 @@ namespace string_algo {
 	template<typename String>
 	void trim_right(String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		trim_right_pred(str,
-			[&trim_chars](CharT& c){return find(trim_chars,c) != trim_chars.end();}
-			);
+		sa::trim_right_pred(str, sa::is_any_of(trim_chars));
 	}
-
 	template<typename String>
 	String trim_right_copy(const String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		return trim_right_copy_pred(str,
-			[&trim_chars](const CharT& c){return find(trim_chars,c) != trim_chars.end();}
-			);
+		return sa::trim_right_copy_pred(str, sa::is_any_of(trim_chars));
+	}
+	template<typename String>
+	void trim_right(String& str, const char* trim_chars)
+	{
+		sa::trim_right_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_right_copy(const String& str, const char* trim_chars)
+	{
+		return sa::trim_right_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim_right(String& str, const wchar_t* trim_chars)
+	{
+		sa::trim_right_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_right_copy(const String& str, const wchar_t* trim_chars)
+	{
+		return sa::trim_right_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim_right(String& str, char trim_char)
+	{
+		sa::trim_right_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_right_copy(const String& str, char trim_char)
+	{
+		return sa::trim_right_copy_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	void trim_right(String& str, wchar_t trim_char)
+	{
+		sa::trim_right_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_right_copy(const String& str, wchar_t trim_char)
+	{
+		return sa::trim_right_copy_pred(str, sa::is_equal(trim_char));
 	}
 
 	template<typename String>
 	void trim_right(String& str, const std::locale& loc = std::locale())
 	{
-		trim_right_pred(str, all_space<String>);
+		sa::trim_right_pred(str, sa::is_space(loc));
 	}
 
 	template<typename String>
 	String trim_right_copy(const String& str, const std::locale& loc = std::locale())
 	{
-		return trim_right_copy_pred(str, all_space<String>);
+		return sa::trim_right_copy_pred(str, sa::is_space(loc));
 	}
 
 	/* TRIM */
@@ -928,15 +1282,15 @@ namespace string_algo {
 	template<typename String, typename Pred>
 	void trim_pred(String& str, Pred pred)
 	{
-		trim_right_pred(str,pred);
-		trim_left_pred(str,pred);
+		sa::trim_right_pred(str,pred);
+		sa::trim_left_pred(str,pred);
 	}
 
 	template<typename String, typename Pred>
 	String trim_copy_pred(const String& str, Pred pred)
 	{
-		auto posl = find_not_pred(str, pred);
-		auto posr = find_last_not_pred(str, pred);
+		auto posl = sa::find_not_pred(str, pred);
+		auto posr = sa::find_last_not_pred(str, pred);
 		if (posr == str.end())
 			return String();
 		else
@@ -946,72 +1300,64 @@ namespace string_algo {
 	template<typename String>
 	void trim(String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		trim_pred(str,
-			[&trim_chars](const CharT& c){return find(trim_chars,c) != trim_chars.end();}
-			);
+		sa::trim_pred(str, sa::is_any_of(trim_chars));
 	}
-
 	template<typename String>
 	String trim_copy(const String& str, const String& trim_chars)
 	{
-		typedef typename String::value_type CharT;
-		return trim_copy_pred(str,
-				[&trim_chars](const CharT& c){return find(trim_chars,c) != trim_chars.end();}
-				);
+		return sa::trim_copy_pred(str, sa::is_any_of(trim_chars));
+	}
+	template<typename String>
+	void trim(String& str, const char* trim_chars)
+	{
+		sa::trim_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_copy(const String& str, const char* trim_chars)
+	{
+		return sa::trim_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim(String& str, const wchar_t* trim_chars)
+	{
+		sa::trim_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	String trim_copy(const String& str, const wchar_t* trim_chars)
+	{
+		return sa::trim_copy_pred(str, sa::is_any_of(String(trim_chars)));
+	}
+	template<typename String>
+	void trim(String& str, char trim_char)
+	{
+		sa::trim_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_copy(const String& str, char trim_char)
+	{
+		return sa::trim_copy_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	void trim(String& str, wchar_t trim_char)
+	{
+		sa::trim_pred(str, sa::is_equal(trim_char));
+	}
+	template<typename String>
+	String trim_copy(const String& str, wchar_t trim_char)
+	{
+		return sa::trim_copy_pred(str, sa::is_equal(trim_char));
 	}
 
 	template<typename String>
 	void trim(String& str, const std::locale& loc = std::locale())
 	{
-		typedef typename String::value_type CharT;
-		trim_pred(str, [&loc](const CharT& c){ return all_space(c,loc); });
+		sa::trim_pred(str, sa::is_space(loc));
 	}
 
 	template<typename String>
 	String trim_copy(const String& str, const std::locale& loc = std::locale())
 	{
-		typedef typename String::value_type CharT;
-		return trim_copy_pred(str, [&loc](const CharT& c){ return all_space(c,loc); });
-	}
-
-	/* JOIN */
-
-	template<typename Container, typename Separator>
-	auto join(const Container& container, const Separator& separator = typename Container::value_type()) -> typename Container::value_type
-	{
-		typename Container::value_type ret;
-		auto it = container.begin(), itend = container.end();
-		if (it == itend)
-			return ret;
-		append(ret, *it);
-		for (++it; it != itend; ++it)
-		{
-			append(ret, separator);
-			append(ret, *it);
-		}
-		return ret;
-	}
-
-	template<typename Container, typename Pred>
-	auto join_pred(const Container& container, Pred pred, const typename Container::value_type& separator = typename Container::value_type()) -> typename Container::value_type
-	{
-		typename Container::value_type ret;
-		auto it = container.begin(), itend = container.end();
-		for (; it != itend && !pred(*it); ++it)
-			;
-		if (it == itend)
-			return ret;
-		append(ret, *it);
-		for (++it; it != itend; ++it)
-		{
-			if (pred(*it))
-			{
-				append(ret, separator);
-				append(ret, *it);
-			}
-		}
-		return ret;
+		return sa::trim_copy_pred(str, sa::is_space(loc));
 	}
 
 	/* REPLACE */
@@ -1027,17 +1373,17 @@ namespace string_algo {
 		{
 			std::fill_n(std::back_inserter(str), replace.size()-count, typename String::value_type());
 			std::move_backward(
-				advance_copy(str.begin(), pos+count), 
-				advance_copy(str.begin(), str.size()-(replace.size()-count)), 
+				sa::advance_copy(str.begin(), pos+count),
+				sa::advance_copy(str.begin(), str.size()-(replace.size()-count)),
 				str.end());
 		}
-		std::copy(replace.begin(), replace.end(), advance_copy(str.begin(),pos));
+		std::copy(replace.begin(), replace.end(), sa::advance_copy(str.begin(),pos));
 		if (replace.size() < count)
 		{
 			auto end = std::move(
-				advance_copy(str.begin(),pos+count),
-				str.end(), 
-				advance_copy(str.begin(),pos+replace.size()));
+				sa::advance_copy(str.begin(),pos+count),
+				str.end(),
+				sa::advance_copy(str.begin(),pos+replace.size()));
 			str.erase(end, str.end());
 		}
 	}
@@ -1049,9 +1395,9 @@ namespace string_algo {
 			pos = str.size();
 		if (count > str.size() - pos)
 			count = str.size() - pos;
-		String ret(str.begin(), advance_copy(str.begin(),pos));
-		append(ret, replace);
-		append(ret, advance_copy(str.begin(),pos+count), str.end());
+		String ret(str.begin(), sa::advance_copy(str.begin(),pos));
+		sa::append(ret, replace);
+		sa::append(ret, sa::advance_copy(str.begin(),pos+count), str.end());
 		return ret;
 	}
 
@@ -1060,25 +1406,25 @@ namespace string_algo {
 	template<typename String>
 	void replace_head(String& str, std::size_t count, const String& replace)
 	{
-		replace(str, 0, count, replace);
+		sa::replace(str, 0, count, replace);
 	}
 
 	template<typename String>
 	String replace_head_copy(const String& str, std::size_t count, const String& replace)
 	{
-		return replace_copy(str, 0, count, replace);
+		return sa::replace_copy(str, 0, count, replace);
 	}
 
 	template<typename String>
 	void replace_tail(String& str, std::size_t count, const String& replace)
 	{
-		replace(str, count < str.size() ? str.size()-count : 0, count, replace);
+		sa::replace(str, count < str.size() ? str.size()-count : 0, count, replace);
 	}
 
 	template<typename String>
 	String replace_tail_copy(const String& str, std::size_t count, const String& replace)
 	{
-		return replace_copy(str, count < str.size() ? str.size()-count : 0, count, replace);
+		return sa::replace_copy(str, count < str.size() ? str.size()-count : 0, count, replace);
 	}
 
 	/* INSERT */
@@ -1088,18 +1434,18 @@ namespace string_algo {
 	{
 		if (pos >= dest.size() || src.empty())
 		{
-			append(dest, src);
+			sa::append(dest, src);
 			return;
 		}
 		std::fill_n(std::back_inserter(dest), src.size(), typename String::value_type());
-		std::move_backward(advance_copy(dest.begin(),pos), advance_copy(dest.begin(),dest.size()-src.size()), dest.end());
-		std::copy(src.begin(), src.end(), advance_copy(dest.begin(),pos));
+		std::move_backward(sa::advance_copy(dest.begin(),pos), sa::advance_copy(dest.begin(),dest.size()-src.size()), dest.end());
+		std::copy(src.begin(), src.end(), sa::advance_copy(dest.begin(),pos));
 	}
 
 	template<typename String>
 	String insert_copy(const String& dest, std::size_t pos, const String& src)
 	{
-		return replace_copy(dest, pos, 0, src);
+		return sa::replace_copy(dest, pos, 0, src);
 	}
 
 	/* ERASE */
@@ -1111,14 +1457,14 @@ namespace string_algo {
 			pos = str.size();
 		if (count > str.size()-pos)
 			count = str.size()-pos;
-		auto end = std::move(advance_copy(str.begin(),pos+count), str.end(), advance_copy(str.begin(),pos));
+		auto end = std::move(sa::advance_copy(str.begin(),pos+count), str.end(), sa::advance_copy(str.begin(),pos));
 		str.erase(end, str.end());
 	}
 
 	template<typename String>
 	String erase_copy(const String& str, std::size_t pos, std::size_t count = std::string::npos)
 	{
-		return replace_copy(str, pos, count, String());
+		return sa::replace_copy(str, pos, count, String());
 	}
 
 	/* ERASE PRED */
@@ -1136,36 +1482,51 @@ namespace string_algo {
 		}
 	}
 
+	template<typename String, typename Pred>
+	String erase_pred_copy(const String& str, Pred pred)
+	{
+		String ret;
+		auto bi = std::back_inserter(ret);
+		for (auto& c : str)
+			if (!pred(c))
+				*bi = c;
+		return ret;
+	}
+
 	/* REPLACE FIRST */
 
 	template<typename String>
 	void replace_first(String& dest, const String& search, const String& replace)
 	{
-		auto pos = find(dest, search);
+		auto pos = sa::find(dest, search);
 		if (pos != dest.end())
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	String replace_first_copy(const String& dest, const String& search, const String& replace)
 	{
-		auto pos = find(dest, search);
-		return pos==dest.end() ? dest : replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
+		auto pos = sa::find(dest, search);
+		if (pos == dest.end())
+			return dest;
+		return sa::replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	void ireplace_first(String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind(dest, search, loc);
+		auto pos = sa::ifind(dest, search, loc);
 		if (pos != dest.end())
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	String ireplace_first_copy(const String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind(dest, search, loc);
-		return pos==dest.end() ? dest : replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
+		auto pos = sa::ifind(dest, search, loc);
+		if (pos == dest.end())
+			return dest;
+		return sa::replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	/* ERASE FIRST */
@@ -1173,31 +1534,35 @@ namespace string_algo {
 	template<typename String>
 	void erase_first(String& dest, const String& search)
 	{
-		auto pos = find(dest, search);
+		auto pos = sa::find(dest, search);
 		if (pos != dest.end())
-			erase(dest, std::distance(dest.begin(), pos), search.size());
+			sa::erase(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	template<typename String>
 	String erase_first_copy(const String& dest, const String& search)
 	{
-		auto pos = find(dest, search);
-		return pos==dest.end() ? dest : erase_copy(dest, std::distance(dest.begin(), pos), search.size());
+		auto pos = sa::find(dest, search);
+		if (pos == dest.end())
+			return dest;
+		return sa::erase_copy(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	template<typename String>
 	void ierase_first(String& dest, const String& search, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind(dest, search, loc);
+		auto pos = sa::ifind(dest, search, loc);
 		if (pos != dest.end())
-			erase(dest, std::distance(dest.begin(), pos), search.size());
+			sa::erase(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	template<typename String>
 	String ierase_first_copy(const String& dest, const String& search, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind(dest, search, loc);
-		return pos==dest.end() ? dest : erase_copy(dest, std::distance(dest.begin(), pos), search.size());
+		auto pos = sa::ifind(dest, search, loc);
+		if (pos == dest.end())
+			return dest;
+		return erase_copy(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	/* REPLACE LAST */
@@ -1205,31 +1570,35 @@ namespace string_algo {
 	template<typename String>
 	void replace_last(String& dest, const String& search, const String& replace)
 	{
-		auto pos = find_last(dest, search);
+		auto pos = sa::find_last(dest, search);
 		if (pos != dest.end())
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	String replace_last_copy(const String& dest, const String& search, const String& replace)
 	{
-		auto pos = find_last(dest, search);
-		return pos==dest.end() ? dest : replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
+		auto pos = sa::find_last(dest, search);
+		if (pos == dest.end())
+			return dest;
+		return sa::replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	void ireplace_last(String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind_last(dest, search, loc);
+		auto pos = sa::ifind_last(dest, search, loc);
 		if (pos != dest.end())
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	template<typename String>
 	String ireplace_last_copy(const String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind_last(dest, search, loc);
-		return pos==dest.end() ? dest : replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
+		auto pos = sa::ifind_last(dest, search, loc);
+		if (pos == dest.end())
+			return dest;
+		return sa::replace_copy(dest, std::distance(dest.begin(), pos), search.size(), replace);
 	}
 
 	/* ERASE LAST */
@@ -1237,22 +1606,24 @@ namespace string_algo {
 	template<typename String>
 	void erase_last(String& dest, const String& search)
 	{
-		auto pos = find_last(dest, search);
+		auto pos = sa::find_last(dest, search);
 		if (pos != dest.end())
-			erase(dest, std::distance(dest.begin(), pos), search.size());
+			sa::erase(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	template<typename String>
 	String erase_last_copy(const String& dest, const String& search)
 	{
-		auto pos = find_last(dest, search);
-		return pos==dest.end() ? dest : erase_copy(dest, std::distance(dest.begin(), pos), search.size());
+		auto pos = sa::find_last(dest, search);
+		if (pos == dest.end())
+			return dest;
+		return sa::erase_copy(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	template<typename String>
 	void ierase_last(String& dest, const String& search, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind_last(dest, search, loc);
+		auto pos = sa::ifind_last(dest, search, loc);
 		if (pos != dest.end())
 			erase(dest, std::distance(dest.begin(), pos), search.size());
 	}
@@ -1260,8 +1631,10 @@ namespace string_algo {
 	template<typename String>
 	String ierase_last_copy(const String& dest, const String& search, const std::locale& loc = std::locale())
 	{
-		auto pos = ifind_last(dest, search, loc);
-		return pos==dest.end() ? dest : erase_copy(dest, std::distance(dest.begin(), pos), search.size());
+		auto pos = sa::ifind_last(dest, search, loc);
+		if (pos == dest.end())
+			return dest;
+		return sa::erase_copy(dest, std::distance(dest.begin(), pos), search.size());
 	}
 
 	/* REPLACE ALL */
@@ -1271,18 +1644,18 @@ namespace string_algo {
 	{
 		while (true)
 		{
-			auto pos = find(dest, search);
+			auto pos = sa::find(dest, search);
 			if (pos == dest.end())
 				break;
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 		}
 	}
 
 	template<typename String>
-	String replace_all_copy(String& dest, const String& search, const String& replace)
+	String replace_all_copy(const String& dest, const String& search, const String& replace)
 	{
 		String ret(dest);
-		replace_all(ret, search, replace);
+		sa::replace_all(ret, search, replace);
 		return ret;
 	}
 
@@ -1291,18 +1664,18 @@ namespace string_algo {
 	{
 		while (true)
 		{
-			auto pos = ifind(dest, search, loc);
+			auto pos = sa::ifind(dest, search, loc);
 			if (pos == dest.end())
 				break;
-			replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
+			sa::replace(dest, std::distance(dest.begin(), pos), search.size(), replace);
 		}
 	}
 
 	template<typename String>
-	String ireplace_all_copy(String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
+	String ireplace_all_copy(const String& dest, const String& search, const String& replace, const std::locale& loc = std::locale())
 	{
 		String ret(dest);
-		ireplace_all(ret, search, replace, loc);
+		sa::ireplace_all(ret, search, replace, loc);
 		return ret;
 	}
 
@@ -1313,18 +1686,18 @@ namespace string_algo {
 	{
 		while (true)
 		{
-			auto pos = find(dest, search);
+			auto pos = sa::find(dest, search);
 			if (pos == dest.end())
 				break;
-			erase(dest, std::distance(dest.begin(), pos), search.size());
+			sa::erase(dest, std::distance(dest.begin(), pos), search.size());
 		}
 	}
 
 	template<typename String>
-	String erase_all_copy(String& dest, const String& search)
+	String erase_all_copy(const String& dest, const String& search)
 	{
 		String ret(dest);
-		erase_all(ret, search);
+		sa::erase_all(ret, search);
 		return ret;
 	}
 
@@ -1333,18 +1706,18 @@ namespace string_algo {
 	{
 		while (true)
 		{
-			auto pos = ifind(dest, search, loc);
+			auto pos = sa::ifind(dest, search, loc);
 			if (pos == dest.end())
 				break;
-			erase(dest, std::distance(dest.begin(), pos), search.size());
+			sa::erase(dest, std::distance(dest.begin(), pos), search.size());
 		}
 	}
 
 	template<typename String>
-	String ierase_all_copy(String& dest, const String& search, const std::locale& loc = std::locale())
+	String ierase_all_copy(const String& dest, const String& search, const std::locale& loc = std::locale())
 	{
 		String ret(dest);
-		ierase_all(ret, search, loc);
+		sa::ierase_all(ret, search, loc);
 		return ret;
 	}
 
