@@ -24,6 +24,12 @@
 #ifndef M4GB_SOLVER_M4GB_HPP
 #define M4GB_SOLVER_M4GB_HPP
 
+#include "config.hpp"
+#include "../lib/gf_elem_simple.hpp"
+#include "../lib/monomial_degrevlex.hpp"
+#include "../lib/polynomial_int.hpp"
+#include "../lib/solver_base.hpp"
+
 #include <map>
 #include <set>
 #include <vector>
@@ -31,18 +37,8 @@
 #include <chrono>
 #include <unordered_set>
 #include <unordered_map>
-#include <boost/container/flat_set.hpp>
-#include <boost/container/flat_map.hpp>
 #include <algorithm>
-
-#include "config.hpp"
-#include "../lib/gf_elem_simple.hpp"
-#include "../lib/monomial_degrevlex.hpp"
-#include "../lib/polynomial_int.hpp"
-#include "../lib/solver_base.hpp"
-
-////// LIMITS
-//#define USE_CP_SIMPLIFY
+#include <iomanip>
 
 ///// SET VARIATIONS
 #define USETHREADS // NOT FULLY IMPLEMENTED
@@ -114,8 +110,8 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
-#include <boost/thread.hpp>
-#include "../contrib/threadpool.hpp"
+
+#include "../contrib/thread_pool.hpp"
 #endif
 
 namespace gb
@@ -268,7 +264,8 @@ namespace gb
 
 #ifdef USETHREADS
 		// threadpool for polymatrix operations
-		typedef typename ::ctpl::thread_pool                 thread_pool_t;
+		typedef thread_pool::thread_pool thread_pool_t;
+		typedef thread_pool::barrier barrier_t;
 		thread_pool_t threadpool;
 		std::mutex mut;
 		typedef std::lock_guard<std::mutex> lock_type;
@@ -277,9 +274,6 @@ namespace gb
 
 		polymatrix()
 			: upper_bound(0), generation(0)
-#ifdef USETHREADS
-			, threadpool(0, (1 << 16))
-#endif
 		{
 		}
 
@@ -932,12 +926,12 @@ namespace gb
 		{
 #ifdef USETHREADS
 			std::atomic_int_fast64_t index(0);
-			boost::barrier barrier(threadpool.size() + 1);
+			barrier_t barrier(threadpool.size() + 1);
 			struct worker_t {
-				worker_t(polymatrix& _pm, std::vector<dense_poly_t>& _mat, boost::barrier& _barrier, std::atomic_int_fast64_t& _index)
+				worker_t(polymatrix& _pm, std::vector<dense_poly_t>& _mat, barrier_t& _barrier, std::atomic_int_fast64_t& _index)
 					: pm(_pm), mat(_mat), barrier(_barrier), index(_index)
 				{}
-				void operator()(int id)
+				void operator()()
 				{
 					int pivot = 0;
 					while (pivot < (int)(mat.size()) && mat[pivot].empty())
@@ -962,12 +956,12 @@ namespace gb
 				}
 				polymatrix& pm;
 				std::vector<dense_poly_t>& mat;
-				boost::barrier& barrier;
+				barrier_t& barrier;
 				std::atomic_int_fast64_t& index;
 			};
 			for (int i = 0; i < threadpool.size() + 1; ++i)
 				threadpool.push(worker_t(*this, mat, barrier, index));
-			threadpool.wait();
+			threadpool.wait_work();
 			for (int i = 0; i < (int)(mat.size());)
 			{
 				if (mat[i].empty())
@@ -1393,83 +1387,6 @@ namespace gb
 		unsigned nremoved_cp;
 #endif
 
-#ifdef USE_CP_SIMPLIFY
-		// f.lm => ( u => (v, g.lm)   whenever u*f.lm = LCM(f.lm,g.lm) = v*g.lm and Red(Spoly(f,g))==0
-		std::unordered_map<int_monomial_t, boost::container::flat_set<int_monomial_t> > CP_simplify;
-
-		void cp_simplify_add(int_monomial_t flm, int_monomial_t glm, int_monomial_t fglcm)
-		{
-//			if (! (lcm(flm, glm) | fglcm ))
-//			{
-//				std::cout << flm << " * " << glm << " != " << fglcm << std::endl;
-//				throw;
-//			}
-			CP_simplify[flm].insert(glm);
-			CP_simplify[glm].insert(flm);
-		}
-
-		void cp_simplify_add(const crit_pair_t& cp)
-		{
-			cp_simplify_add(cp.p1, cp.p2, cp.intlcm);
-		}
-
-		std::set<int_monomial_t> cp_simplify(int_monomial_t cplcm, int_monomial_t flm)
-		{
-			std::set<int_monomial_t> ret;
-			std::vector<int_monomial_t> retnew;
-			ret.insert(flm);
-			retnew.emplace_back(flm);
-			while (!retnew.empty())
-			{
-				int_monomial_t glm = retnew.back();
-				retnew.pop_back();
-
-				auto git = CP_simplify.find(glm);
-				if (git == CP_simplify.end())
-					continue;
-				for (auto hlm : git->second)
-					if ((hlm | cplcm) && ret.insert(hlm).second)
-						retnew.emplace_back(hlm);
-			}
-			return ret;
-		}
-
-		bool cp_simplify_check_and_add(int_monomial_t flm, int_monomial_t glm, int_monomial_t fglcm)
-		{
-			bool todo = true;
-			auto fset = cp_simplify(fglcm, flm);
-			auto gset = cp_simplify(fglcm, glm);
-
-			// if intersection is nonempty then Red(Spoly(f,g)) = 0
-			for (auto& i : fset)
-				if (gset.count(i))
-				{
-					todo = false;
-					break;
-				}
-
-			if (todo)
-			{
-				unsigned lcmdeg = degree(fglcm);
-				for (auto& i : fset)
-				{
-					unsigned ideg = degree(i);
-					for (auto& j : gset)
-						if (degree(j) + ideg == lcmdeg || lcm(i, j) != fglcm)
-						{
-							todo = false;
-							break;
-						}
-					if (!todo)
-						break;
-				}
-			}
-			cp_simplify_add(flm, glm, fglcm);
-			return todo;
-		}
-
-#endif
-
 		double totalupdatetime, totalmatrixtime, totalselectiontime;
 
 		// temporaries
@@ -1688,9 +1605,6 @@ namespace gb
 					&& lcm(pLM, it->p1) != it->intlcm
 					)
 				{
-#ifdef USE_CP_SIMPLIFY
-					cp_simplify_add(*it);
-#endif
 					it = CP.erase(it);
 				}
 				else
@@ -1712,9 +1626,6 @@ namespace gb
 #endif
 				if (plmdeg + it->second == newCP.lcmdeg)
 				{
-#ifdef USE_CP_SIMPLIFY
-					cp_simplify_add(newCP);
-#endif
 					newCP_good.emplace(std::move(newCP), false); // bad
 				}
 				else
@@ -1727,10 +1638,6 @@ namespace gb
 				for (auto it2 = newCP_good.begin(); it2 != newCP_good.end() && it2->first.lcmdeg <= it->first.lcmdeg; ++it2)
 					if (it != it2 && it2->first.intlcm | it->first.intlcm)
 					{
-#ifdef USE_CP_SIMPLIFY
-//						if (it2->first.intlcm != it->first.intlcm)
-//							cp_simplify_add(it->first);
-#endif
 						it->second = false;
 						break;
 					}
@@ -1761,9 +1668,6 @@ namespace gb
 					}
 
 #ifdef IMMEDIATE_BASIS_REDUCE
-#ifdef USE_CP_SIMPLIFY
-					cp_simplify_add(it->first, plm, it->first);
-#endif
 					CP.erase(crit_pair_t(plm, it->first));
 					dense_poly_t tmp = matrix.get_g_reduced_by_f(glm, plm);
 					matrix.lead_reduce(tmp);
@@ -1805,30 +1709,10 @@ namespace gb
 			std::size_t cnt = 0;
 			while (true)
 			{
-#ifdef USE_CP_SIMPLIFY
-				const int_monomial_t intlcm = CPit->intlcm;
-
-#ifndef MATRIXSWAP
-				matrix.increase_upper_bound(intlcm);
-				auto mit = matrix.find(intlcm);
-				int_monomial_t blm = mit->second.blm;
-				if (cp_simplify_check_and_add(blm, CPit->p1, intlcm))
-					sel_lcm_lmpoly[intlcm].insert(CPit->p1);
-				if (cp_simplify_check_and_add(blm, CPit->p2, intlcm))
-					sel_lcm_lmpoly[intlcm].insert(CPit->p2);
-#else
-				if (cp_simplify_check_and_add(CPit->p1, CPit->p2, intlcm))
-				{
-					sel_lcm_lmpoly[intlcm].insert(CPit->p1);
-					sel_lcm_lmpoly[intlcm].insert(CPit->p2);
-				}
-#endif
-
-#else
 				auto& v = sel_lcm_lmpoly[CPit->intlcm];
 				v.insert(CPit->p1);
 				v.insert(CPit->p2);
-#endif
+
 				if (CPit->intlcm > lastlcm)
 					lastlcm = CPit->intlcm;
 				if (++CPit == CP.end() || lcmdegree != CPit->lcmdeg)
@@ -1894,7 +1778,7 @@ namespace gb
 					dense_poly_t& dst = submatrix.back();
 					auto& matrix2 = matrix;
 					const int_monomial_t lcm = lcm_lm.first;
-					auto f = [&dst, lcm, u, g, &matrix2](int id)
+					auto f = [&dst, lcm, u, g, &matrix2]()
 					{
 						dst = matrix2.get_u_g(u, g);
 						matrix2.substract_to(dst, matrix2.get(lcm));
@@ -1947,7 +1831,7 @@ namespace gb
 			}
 
 #ifdef USETHREADS
-			matrix.threadpool.wait();
+			matrix.threadpool.wait_work();
 #endif
 
 			get_logger()("selection", lg_verbose) << "computed matrix rows cnt=" << submatrix.size() << " s=" << std::chrono::duration<double>(std::chrono::system_clock::now() - starttime).count() << std::endl;

@@ -5,9 +5,10 @@
 #include <numeric>
 #include <random>
 #include <string>
-#include <boost/program_options.hpp>
 
-namespace po = boost::program_options;
+#include "../contrib/program_options.hpp"
+
+namespace po = program_options;
 
 typedef gb::myfield_t field_t;
 typedef field_t::gfelm_t coefficient_t;
@@ -42,13 +43,15 @@ int main(int argc, char **argv)
 	opt_opts.add_options()
 		("nrequations,m", po::value<unsigned>(&nrequations), "Number of equations")
 		("outputfile,o", po::value<std::string>(&outputname), "Output file")
-		("forceroot,r", po::bool_switch(&forcesolution), "Force one root for system")
+		("forceroot,r", "Force one root for system")
 		("seed", po::value<std::uint32_t>(&seed), "Set pseudo random generator seed")
 		;
 	all.add(opt_cmds).add(opt_opts);
 	po::variables_map vm;
 	po::store(po::command_line_parser(argc, argv).options(all).run(), vm);
 	po::notify(vm);
+
+	forcesolution = vm.count("forceroot");
 
 	if (vm.count("help"))
 	{
