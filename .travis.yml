@@ -2,10 +2,18 @@ language: cpp
 dist: trusty
 
 addons_shortcuts:
-  addons_clang: &clangdef
+  addons_clang: &clang39
     apt:
-      sources:
-      packages: [ 'libgmp-dev' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-3.9' ]
+      packages: [ 'libgmp-dev', 'clang-3.9' ]
+  addons_clang: &clang40
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0' ]
+      packages: [ 'libgmp-dev', 'clang-4.0' ]
+  addons_clang: &clang50
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0' ]
+      packages: [ 'libgmp-dev', 'clang-5.0' ]
   addons_gcc48: &gcc48
     apt:
       sources: ['ubuntu-toolchain-r-test']
@@ -31,8 +39,16 @@ matrix:
   include:
   - os: linux
     compiler: clang
-    env: COMPILER=clang++
-    addons: *clangdef
+    env: COMPILER=clang++-3.9
+    addons: *clang39
+  - os: linux
+    compiler: clang
+    env: COMPILER=clang++-4.0
+    addons: *clang40
+  - os: linux
+    compiler: clang
+    env: COMPILER=clang++-5.0
+    addons: *clang50
   - os: linux
     compiler: "gcc-4.8"
     env: COMPILER=g++-4.8
@@ -53,20 +69,43 @@ matrix:
     compiler: "gcc-7"
     env: COMPILER=g++-7
     addons: *gcc7
+  - os: linux
+    compiler: "gcc-7"
+    env: COMPILER=g++-7
+         CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
+         LDFLAGS="-fsanitize=address,undefined,integer"
+    addons: *gcc7
+  - os: osx
+    osx_image: xcode7.3
+    compiler: clang
+    env: COMPILER=clang++
+  - os: osx
+    osx_image: xcode8.3
+    compiler: clang
+    env: COMPILER=clang++
+  - os: osx
+    osx_image: xcode9.1
+    compiler: clang
+    env: COMPILER=clang++
+  allow_failure:
+  - os: osx
 
 install:
   - export CXX="$COMPILER"
-  - $CXX --version
-  - autoconf --version
+  - "$CXX --version"
+  - "autoconf --version"
 
 script:
-  - ./install_openf4.sh
-  - autoreconf --install
-  - ./configure
+  - "./install_openf4.sh"
+  - "autoreconf --install"
+  - "./configure"
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
   - make MAXVARS=16 FIELDSIZE=31 m4gb openf4
   - make check
 
 notifications:
-  on_success: change
-  on_failure: always
+  email:
+    on_success: change
+    on_failure: always
+  slack:
+    secure: hrNA5bJ+WK+lJHLJmTfCBckopt7GdpFb/RSaguPq+zz5WW3LItprL2kltfEXyRA3oem8WxKklj8jPtCwn18uKibgM8byvRmHYMl4DDJybuLiswAo6zdyv2LMR5vRuHEF7Cmbv7WVNTBJtdOWDmR+2/ylTvunJMnW1OM7goMX7pirEl4XFtokShl8m8IgQ2/nonbHfVgv90xI+6tHjbEtqQs9vlh7YCs80l4guRr9x4MMrNi7aQ7lb6Gz3kyYyT3Da8NqtjBPcSu6om2mQHSD0F+ch9VcCOdFBaTTuQLFOATCzJ8t6Fy6v9SJz5Bh3l+T0XaAESmF0chVtkcEqzMsOUgzYMTxWcOMpoD6AZUebhSDUJ/8N3+Hq/VT8U1g4YsDaTJpkbzSblT4BZwnKfP5OrU2QQarXIMHF1BIWVzE0tI7T7bjiPT6rdQS0tF1qt9Egw01XSQmfuRX0yDUBjgqz5jw7SW9+KcfVpT9wH5jwMYUnN5DsAfgRiDlB81GnfJ5DalepL2/naC4N0dODLzgeNhzFHSKH4213KDjtX3fJy7GUkh+4vSDQX07ER5Vw9HkXqpKAGfdpKsP2GJZN7c7R9BaA91jMD8N6dG28pbAbZy7cXT8YBsJkOhSEXl32/6ukoHCium+9x1UTx2fFafqBOsZJMVQmUJ0ZYC8bsGGGHk=
