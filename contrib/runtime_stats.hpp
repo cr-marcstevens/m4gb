@@ -9,6 +9,7 @@
 #define NADEAU_RUNTIME_STATS_HPP
 
 #include <cstdint>
+#include <cstddef>
 
 /**
 * Returns the peak (maximum so far) resident set size (physical
