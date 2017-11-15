@@ -131,9 +131,11 @@ int test()
 {
 	typedef gb::giv_modpoly<2, 2, 1> modpoly; //x^2 + 2x + 2
 	typedef gb::giv_genpoly<0, 1> genpoly; //x
-	typedef gb::gf_pn_givaro<FIELDCHAR, EXTDEG, modpoly, genpoly> givfield_t;
+	typedef gb::gf_pn_givaro<FIELDCHAR, EXTDEG, modpoly, genpoly, Givaro::GFqDom<int32_t>> givfield_gfqdom_int32_t;
+	typedef gb::gf_pn_givaro<FIELDCHAR, EXTDEG, modpoly, genpoly, Givaro::GFqDom<int64_t>> givfield_gfqdom_int64_t;
 
-	test_field<givfield_t>();
+	test_field<givfield_gfqdom_int32_t>();
+	test_field<givfield_gfqdom_int64_t>();
 
 	return 0;
 }
