@@ -129,7 +129,7 @@ int test_field()
 
 int test()
 {
-	typedef gb::giv_modpoly<2, 2, 1> modpoly; //x^2 + 2x + 1
+	typedef gb::giv_modpoly<2, 2, 1> modpoly; //x^2 + 2x + 2
 	typedef gb::giv_genpoly<0, 1> genpoly; //x
 	typedef gb::gf_pn_givaro<FIELDCHAR, EXTDEG, modpoly, genpoly> givfield_t;
 
