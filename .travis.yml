@@ -105,6 +105,8 @@ script:
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
   - make MAXVARS=16 FIELDSIZE=31 m4gb openf4
   - make check
+  - cat config.log
+  - cat tests/test_runtime_stats.log
 
 notifications:
   email:
