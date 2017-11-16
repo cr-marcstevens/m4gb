@@ -50,8 +50,10 @@ int test()
 
 	// buffer is deallocated, so peak should be larger than 10MiB, currentRSS smaller.
 	CHECK( getPeakRSS() >= 10*(1<<20) );
+	// when -fsanitize=address is used, memory is not actually freed
+#ifndef __SANITIZE_ADDRESS__
 	CHECK( getCurrentRSS() <= 10*(1<<20) );
-
+#endif
 	return 0;
 }
 

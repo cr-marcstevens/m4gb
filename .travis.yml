@@ -38,15 +38,15 @@ addons_shortcuts:
 matrix:
   include:
   - os: linux
-    compiler: clang
+    compiler: "clang-3.9"
     env: COMPILER=clang++-3.9
     addons: *clang39
   - os: linux
-    compiler: clang
+    compiler: "clang-4.0"
     env: COMPILER=clang++-4.0
     addons: *clang40
   - os: linux
-    compiler: clang
+    compiler: "clang-5.0"
     env: COMPILER=clang++-5.0
     addons: *clang50
   - os: linux
@@ -72,8 +72,11 @@ matrix:
   - os: linux
     compiler: "gcc-7"
     env: COMPILER=g++-7
-         CXXFLAGS="-fsanitize=address,undefined,integer -fno-sanitize-recover=all -fno-omit-frame-pointer"
-         LDFLAGS="-fsanitize=address,undefined,integer"
+         CXXFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -fuse-ld=gold"
+         CFLAGS=" "
+         LDFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -fuse-ld=gold"
+         CC=gcc-7
+         NO_OPENF4="yes"
     addons: *gcc7
   - os: osx
     osx_image: xcode7.3
@@ -96,7 +99,7 @@ install:
   - "autoconf --version"
 
 script:
-  - "./install_openf4.sh"
+  - if [ "$NO_OPENF4" != "yes" ]; then ./install_openf4.sh; fi
   - "autoreconf --install"
   - "./configure"
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
