@@ -48,6 +48,14 @@ AX_OPENF4
 AX_FGB
 
 
+AC_ARG_ENABLE([sanitize], AS_HELP_STRING([--enable-sanitize@<:@=yes|no@:>@],[Enable -fsanitize=address (default no)])
+	,[do_sanitize=$enableval],[do_sanitize=no])
+AS_IF([test "$do_sanitize" = "yes"],[
+		CXXFLAGS="$CXXFLAGS -fsanitize=address -fno-omit-frame-pointer -fuse-ld=gold"
+		LDFLAGS="$LDFLAGS -fsanitize=address -fuse-ld=gold"
+	])
+
+
 AC_CONFIG_FILES([
  Makefile
 ])

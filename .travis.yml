@@ -69,15 +69,6 @@ matrix:
     compiler: "gcc-7"
     env: COMPILER=g++-7
     addons: *gcc7
-  - os: linux
-    compiler: "gcc-7"
-    env: COMPILER=g++-7
-         CXXFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -fuse-ld=gold"
-         CFLAGS=" "
-         LDFLAGS="-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer -fuse-ld=gold"
-         CC=gcc-7
-         NO_OPENF4="yes"
-    addons: *gcc7
   - os: osx
     osx_image: xcode7.3
     compiler: clang
