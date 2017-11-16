@@ -113,6 +113,12 @@ tests_test_gf_pn_givaro_SOURCES=tests/lib_gf_pn_givaro.cpp
 tests_test_gf_pn_givaro_CPPFLAGS=${GIVARO_CPPFLAGS}
 tests_test_gf_pn_givaro_LDFLAGS=${GIVARO_LDFLAGS}
 tests_test_gf_pn_givaro_LDADD=${GIVARO_LIB} ${GMP_LIB} ${GMPXX_LIB}
+
+check_PROGRAMS+=tests/test_gf_p_givaro
+tests_test_gf_p_givaro_SOURCES=tests/lib_gf_p_givaro.cpp
+tests_test_gf_p_givaro_CPPFLAGS=${GIVARO_CPPFLAGS} -std=gnu++11
+tests_test_gf_p_givaro_LDFLAGS=${GIVARO_LDFLAGS}
+tests_test_gf_p_givaro_LDADD=${GIVARO_LIB} ${GMP_LIB} ${GMPXX_LIB}
 endif
 
 
