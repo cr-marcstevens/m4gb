@@ -394,7 +394,7 @@ namespace gb {
 					std::vector<std::string> line_substr = _split(line, ' ');
 					if (line_substr[0] == "$fieldsize")
 					{
-						if (fieldsize != std::stoi(line_substr[1]))
+						if (fieldsize != std::stoull(line_substr[1]))
 							throw std::runtime_error("field size mismatch.");
 					}
 					else if (line_substr[0] == "$vars")
@@ -459,13 +459,14 @@ namespace gb {
 
 				if (left == "Galois Field")
 				{
-					unsigned gfchar, modulo = 0;
+					unsigned long long gfchar;
+					unsigned modulo = 0;
 
 					if (right.find("/") == std::string::npos)
 					{
 						if (right.substr(0, 3) == "GF(")
 						{
-							gfchar = stoi(right.substr(3, right.find(')') - 3));
+							gfchar = stoull(right.substr(3, right.find(')') - 3));
 							_log(lg_verbose) << "mqchallenge: GF(" << gfchar << ")" << std::endl;
 							if (fieldsize != gfchar)
 							{
