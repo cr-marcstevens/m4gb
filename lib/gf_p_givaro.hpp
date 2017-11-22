@@ -36,6 +36,9 @@ namespace gb
 
 		static const std::size_t gfchar = P;
 		static const std::size_t gfsize = P;
+		static const std::size_t fieldchar = P;
+		static const std::size_t fieldsize = P;
+
 
 		typedef GivaroField givaro_field_t;
 		typedef typename givaro_field_t::Element Element;

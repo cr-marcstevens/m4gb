@@ -59,11 +59,17 @@
 
 #define SOLVER_NO_TRY_CATCH
 
+#include "../config.h"
 #include "../lib/gf_p_simple.hpp"
 #include "../lib/gf_2n_simple.hpp"
 #include "../lib/monomial_degrevlex.hpp"
 #include "../lib/polynomial_simple.hpp"
 #include "../lib/polynomial_int.hpp"
+
+#ifdef HAVE_GIVARO
+#include "../lib/gf_p_givaro.hpp"
+#include "../lib/gf_pn_givaro.hpp"
+#endif
 
 namespace gb
 {
@@ -73,7 +79,30 @@ namespace gb
 		struct getfield
 		{
 			static_assert( is_prime<fieldsize>::value, "An odd fieldsize must be a prime");
+#ifdef HAVE_GIVARO
+			static const std::size_t nrbits = nrbits_t<fieldsize>::value;
+			typedef ::Givaro::Modular<uint64_t> givmodular_uint64_t;
+
+			#ifdef __GIVARO_HAVE_INT128
+			typedef ::Givaro::Modular<uint128_t> givmodular_uint128_t;
+			typedef typename std::conditional<
+				nrbits <= 16,
+						  ::gb::gf_p_simple<fieldsize>,
+						  typename std::conditional<
+					nrbits <= 32,
+							  ::gb::gf_p_givaro<fieldsize, givmodular_uint64_t>,
+							  ::gb::gf_p_givaro<fieldsize, givmodular_uint128_t>
+							  >::type >::type type;
+			#else
+			typedef typename std::conditional<
+				nrbits <= 16,
+						  ::gb::gf_p_simple<fieldsize>,
+						  ::gb::gf_p_givaro<fieldsize, givmodular_uint64_t>
+						  >::type type;
+			#endif
+#else
 			typedef ::gb::gf_p_simple<fieldsize> type;
+#endif
 		};
 
 		template<std::size_t fieldsize>

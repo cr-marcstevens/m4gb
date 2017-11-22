@@ -15,6 +15,12 @@ EXTRA_PROGRAMS=bin/solver_m4gb
 bin_solver_m4gb_SOURCES=src/m4gb.cpp contrib/runtime_stats.cpp
 bin_solver_m4gb_CPPFLAGS=${M4GB_CPPFLAGS} ${EXTRA_CPPFLAGS}
 
+if HAVE_GIVARO
+bin_solver_m4gb_CPPFLAGS+=${GIVARO_CPPFLAGS} -std=gnu++11
+bin_solver_m4gb_LDFLAGS=${GIVARO_LDFLAGS}
+bin_solver_m4gb_LDADD=${GIVARO_LIB} ${GMP_LIB} ${GMPXX_LIB}
+endif
+
 m4gb: bin/solver_m4gb${SOLVERSUFFIX}
 	@echo "Executable: $<"
 
@@ -129,7 +135,7 @@ tests/gf%.sh:
 
 TESTS = $(check_PROGRAMS)
 
-TESTS += tests/gf31.16.m4gb.sh tests/gf256.16.m4gb.sh
+TESTS += tests/gf31.16.m4gb.sh tests/gf256.16.m4gb.sh tests/gf4294967291.16.m4gb.sh
 
 if HAVE_OPENF4
 TESTS += tests/gf31.16.openf4.sh tests/gf256.16.openf4.sh
