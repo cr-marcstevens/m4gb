@@ -43,6 +43,12 @@ bin_solver_openf4_CPPFLAGS=${OPENF4_CPPFLAGS} ${EXTRA_CPPFLAGS}
 bin_solver_openf4_LDFLAGS=${OPENF4_LDFLAGS}
 bin_solver_openf4_LDADD=${OPENF4_LIB}
 
+if HAVE_GIVARO
+bin_solver_openf4_CPPFLAGS+=${GIVARO_CPPFLAGS} -std=gnu++11
+bin_solver_openf4_LDFLAGS+=${GIVARO_LDFLAGS}
+bin_solver_openf4_LDADD+=${GIVARO_LIB} ${GMP_LIB} ${GMPXX_LIB}
+endif
+
 openf4: bin/solver_openf4${SOLVERSUFFIX}
 	@echo "Executable: $<"
 

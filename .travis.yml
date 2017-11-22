@@ -66,6 +66,7 @@ script:
   - ./configure
   - make MAXVARS=16 FIELDSIZE=256 m4gb openf4
   - make MAXVARS=16 FIELDSIZE=31 m4gb openf4
+  - make MAXVARS=16 FIELDSIZE=4294967291 m4gb
   - make check
 
 notifications:
