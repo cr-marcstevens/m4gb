@@ -124,6 +124,64 @@ namespace gb
 	template<std::size_t P, typename GivaroField>
 	typename gf_p_givaro<P, GivaroField>::givaro_field_t
 	gf_p_givaro<P, GivaroField>::givaro_field = GivaroField(P);
+
+#ifdef __GIVARO_HAVE_INT128
+	static const std::string digits = "0123456789";
+
+	std::ostream& operator<<(std::ostream & os, int128_t value)
+	{
+		std::ostream::sentry s(os);
+		if (s)
+		{
+			uint128_t temp = value < 0 ? -value : value;
+			std::array<char, 128> buffer;
+			auto it = buffer.end();
+			do
+			{
+				--it;
+				*it = digits[temp % 10];
+				temp /= 10;
+			} while(temp != 0);
+			if (value < 0)
+			{
+				--it;
+				*it = '-';
+			}
+			int len = buffer.end() - it;
+			if ( os.rdbuf()->sputn(it, len) != len )
+			{
+				os.setstate( std::ios_base::badbit );
+			}
+		}
+
+		return os;
+	}
+
+	std::ostream& operator<<(std::ostream & os, uint128_t value)
+	{
+		std::ostream::sentry s(os);
+		if (s)
+		{
+			uint128_t temp = value;
+			std::array<char, 128> buffer;
+			auto it = buffer.end();
+			do
+			{
+				--it;
+				*it = digits[temp % 10];
+				temp /= 10;
+			} while(temp != 0);
+			int len = buffer.end() - it;
+			if ( os.rdbuf()->sputn(it, len) != len )
+			{
+				os.setstate( std::ios_base::badbit );
+			}
+		}
+
+		return os;
+	}
+#endif
+
 }
 
 #endif
