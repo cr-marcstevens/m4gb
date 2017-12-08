@@ -80,25 +80,33 @@ namespace gb
 		{
 			static_assert( is_prime<fieldsize>::value, "An odd fieldsize must be a prime");
 #ifdef HAVE_GIVARO
-			static const std::size_t nrbits = nrbits_t<fieldsize>::value;
-			typedef ::Givaro::Modular<uint64_t> givmodular_uint64_t;
+			typedef ::Givaro::Modular<uint32_t, uint64_t> givmodular_uint32_uint64_t; // fieldsize <= 2^31 - 1
+			typedef ::Givaro::Modular<uint64_t, uint64_t> givmodular_uint64_uint64_t; // fieldsize <= 2^32 - 1
 
 			#ifdef __GIVARO_HAVE_INT128
-			typedef ::Givaro::Modular<uint128_t> givmodular_uint128_t;
+			static_assert(fieldsize <= 9223372036854775807u, "fieldsize must be <= 9223372036854775807");
+			typedef ::Givaro::Modular<uint64_t, uint128_t> givmodular_uint64_uint128_t; //fieldsize <= 2^63 - 1
 			typedef typename std::conditional<
-				nrbits <= 16,
-						  ::gb::gf_p_simple<fieldsize>,
-						  typename std::conditional<
-					nrbits <= 32,
-							  ::gb::gf_p_givaro<fieldsize, givmodular_uint64_t>,
-							  ::gb::gf_p_givaro<fieldsize, givmodular_uint128_t>
-							  >::type >::type type;
+				fieldsize <= 65535,
+						::gb::gf_p_simple<fieldsize>,
+						typename std::conditional<
+					fieldsize <= 2147483647,
+							::gb::gf_p_givaro<fieldsize, givmodular_uint32_uint64_t>,
+							typename std::conditional<
+						fieldsize <= 4294967295,
+								::gb::gf_p_givaro<fieldsize, givmodular_uint64_uint64_t>,
+								::gb::gf_p_givaro<fieldsize, givmodular_uint64_uint128_t>
+				>::type >::type >::type type;
 			#else
+			static_assert(fieldsize <= 4294967295, "fieldsize must be <= 4294967295");
 			typedef typename std::conditional<
-				nrbits <= 16,
-						  ::gb::gf_p_simple<fieldsize>,
-						  ::gb::gf_p_givaro<fieldsize, givmodular_uint64_t>
-						  >::type type;
+				fieldsize <= 65535,
+						::gb::gf_p_simple<fieldsize>,
+						typename std::conditional<
+					fieldsize <= 2147483647,
+							::gb::gf_p_givaro<fieldsize, givmodular_uint32_uint64_t>,
+							::gb::gf_p_givaro<fieldsize, givmodular_uint64_uint64_t>
+				>::type >::type type;
 			#endif
 #else
 			typedef ::gb::gf_p_simple<fieldsize> type;
