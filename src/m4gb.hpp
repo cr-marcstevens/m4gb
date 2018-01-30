@@ -925,22 +925,22 @@ namespace gb
 		void rowreduce(std::vector<dense_poly_t>& mat, bool nopostprocessing = false)
 		{
 #ifdef USETHREADS
-			std::atomic_int_fast64_t index(0);
+			std::atomic_size_t index(0);
 			barrier_t barrier(threadpool.size() + 1);
 			struct worker_t {
-				worker_t(polymatrix& _pm, std::vector<dense_poly_t>& _mat, barrier_t& _barrier, std::atomic_int_fast64_t& _index)
+				worker_t(polymatrix& _pm, std::vector<dense_poly_t>& _mat, barrier_t& _barrier, std::atomic_size_t& _index)
 					: pm(_pm), mat(_mat), barrier(_barrier), index(_index)
 				{}
 				void operator()()
 				{
-					int pivot = 0;
-					while (pivot < (int)(mat.size()) && mat[pivot].empty())
+					std::size_t pivot = 0;
+					while (pivot < mat.size() && mat[pivot].empty())
 						++pivot;
-					int idx = index++;
-					int sub = 0;
-					while (pivot < (int)(mat.size()))
+					std::size_t idx = index++;
+					std::size_t sub = 0;
+					while (pivot < mat.size())
 					{
-						while (idx < (int)(mat.size()))
+						while (idx < mat.size())
 						{
 							if (idx != pivot && mat[idx].size() >= mat[pivot].size() && mat[idx][mat[pivot].size() - 1] != 0)
 								pm.add_to(mat[idx], (-mat[idx][mat[pivot].size() - 1]) / mat[pivot].back(), mat[pivot]);
@@ -950,14 +950,14 @@ namespace gb
 						idx -= mat.size();
 						barrier.wait();
 						++pivot;
-						while (pivot < (int)(mat.size()) && mat[pivot].empty())
+						while (pivot < mat.size() && mat[pivot].empty())
 							++pivot;
 					}
 				}
 				polymatrix& pm;
 				std::vector<dense_poly_t>& mat;
 				barrier_t& barrier;
-				std::atomic_int_fast64_t& index;
+				std::atomic_size_t& index;
 			};
 			for (int i = 0; i < threadpool.size() + 1; ++i)
 				threadpool.push(worker_t(*this, mat, barrier, index));

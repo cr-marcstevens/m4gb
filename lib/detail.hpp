@@ -35,19 +35,19 @@ namespace gb
 	namespace detail
 	{
 
-		template<typename Int = std::size_t>
-		Int binomial_coefficient(std::size_t N, std::size_t K)
+		template<typename UInt = std::size_t>
+		UInt binomial_coefficient(std::size_t N, std::size_t K)
 		{
-			static std::vector< std::vector< std::pair<Int,bool> > > table(1, std::vector<std::pair<Int,bool> >(1, std::make_pair<Int,bool>(Int(1),false)));
+			static std::vector< std::vector< std::pair<UInt,bool> > > table(1, std::vector<std::pair<UInt,bool> >(1, std::make_pair<UInt,bool>(UInt(1),false)));
 			if (K > N)
-				return Int(0);
+				return UInt(0);
 			if (N >= table.size())
 			{
 				table.reserve(N+1);
 				for (std::size_t i = table.size(); i <= N; ++i)
 				{
-					table.emplace_back(i+1, std::make_pair<Int,bool>(Int(0),false));
-					table[i][0].first = table[i][i].first = Int(1);
+					table.emplace_back(i+1, std::make_pair<UInt,bool>(UInt(0),false));
+					table[i][0].first = table[i][i].first = UInt(1);
 					for (std::size_t j = 1; j < i; ++j)
 					{
 						table[i][j].first = table[i-1][j-1].first + table[i-1][j].first;
@@ -64,73 +64,78 @@ namespace gb
 			return table[N][K].first;
 		}
 
-		template<typename Int = std::size_t>
-		Int multiset_coefficient(std::size_t N, std::size_t K)
+		template<typename UInt = std::size_t>
+		UInt multiset_coefficient(std::size_t N, std::size_t K)
 		{
 			if (N == 0)
-				return (K == 0) ? Int(1) : Int(0);
-			return binomial_coefficient<Int>(N + K - 1, K);
+				return (K == 0) ? UInt(1) : UInt(0);
+			return binomial_coefficient<UInt>(N + K - 1, K);
 		}
 
 
-		template<std::size_t N, std::size_t K>
+		template<std::size_t N, std::size_t K, typename UInt = std::size_t>
 		struct binomial_coefficient_detail_t
 		{
-			typedef binomial_coefficient_detail_t<K==0? 0 : N-1,K==0? 1 : K-1> left_t;
-			typedef binomial_coefficient_detail_t<(K>N-1)? 0 : N-1, (K>N-1)? 1: K> right_t;
-			static const std::size_t value = left_t::value + right_t::value;
+			typedef binomial_coefficient_detail_t<K==0? 0 : N-1,K==0? 1 : K-1, UInt> left_t;
+			typedef binomial_coefficient_detail_t<(K>N-1)? 0 : N-1, (K>N-1)? 1: K, UInt> right_t;
+#ifdef _MSC_VER
+#pragma warning(suppress: 4307)
+			static const UInt value = left_t::value + right_t::value;
+#else
+			static const UInt value = left_t::value + right_t::value;
+#endif
 			static const bool overflow = (value < left_t::value) | (value < right_t::value) | left_t::overflow | right_t::overflow;
 		};
-		template<> struct binomial_coefficient_detail_t<0,0> { static const std::size_t value = 1; static const bool overflow = false; };
-		template<std::size_t K> struct binomial_coefficient_detail_t<0, K> { static const std::size_t value = 0; static const bool overflow = false; };
+		template<typename UInt> struct binomial_coefficient_detail_t<0,0,UInt> { static const UInt value = 1; static const bool overflow = false; };
+		template<std::size_t K, typename UInt> struct binomial_coefficient_detail_t<0, K, UInt> { static const UInt value = 0; static const bool overflow = false; };
 
-		template<std::size_t N, std::size_t K>
+		template<std::size_t N, std::size_t K, typename UInt = std::size_t>
 		struct binomial_coefficient_t
 		{
 			static const std::size_t N2 = (K <= N) ? N : 0;
 			static const std::size_t K2 = (N - K) < K ? (N - K) : K;
-			static const std::size_t value = binomial_coefficient_detail_t<N2, K2>::value;
-			static const bool overflow = binomial_coefficient_detail_t<N2, K2>::overflow;
+			static const UInt value = binomial_coefficient_detail_t<N2, K2, UInt>::value;
+			static const bool overflow = binomial_coefficient_detail_t<N2, K2, UInt>::overflow;
 		};
-		template<std::size_t K>
-		struct binomial_coefficient_t<0, K>
+		template<std::size_t K, typename UInt>
+		struct binomial_coefficient_t<0, K, UInt>
 		{
-			static const std::size_t value = K==0 ? 1 : 0;
+			static const UInt value = K==0 ? 1 : 0;
 			static const bool overflow = false;
 		};
 
-		template<std::size_t N, std::size_t K>
+		template<std::size_t N, std::size_t K, typename UInt = std::size_t>
 		struct multiset_coefficient_t
 		{
-			static const std::size_t value = binomial_coefficient_t<N + K - 1, K>::value;
-			static const std::size_t overflow = binomial_coefficient_t<N + K - 1, K>::overflow;
+			static const UInt value = binomial_coefficient_t<N + K - 1, K, UInt>::value;
+			static const bool overflow = binomial_coefficient_t<N + K - 1, K, UInt>::overflow;
 		};
-		template<std::size_t K>
-		struct multiset_coefficient_t<0, K>
+		template<std::size_t K, typename UInt>
+		struct multiset_coefficient_t<0, K, UInt>
 		{
-			static const std::size_t value = 0;
+			static const UInt value = 0;
 			static const bool overflow = false;
 		};
-		template<>
-		struct multiset_coefficient_t<0, 0>
+		template<typename UInt>
+		struct multiset_coefficient_t<0, 0, UInt>
 		{
-			static const std::size_t value = 1;
+			static const UInt value = 1;
 			static const bool overflow = false;
 		};
 
-		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int, std::size_t step, bool ignore>
+		template<std::size_t N, std::size_t MAXD, std::size_t D, typename UInt, std::size_t step, bool ignore>
 		struct max_degree_fits_int_helper_t {
-			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+step>::overflow | (D+step>MAXD);
+			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+step, UInt>::overflow || (D+step>MAXD);
 			static const std::size_t value = 
-				max_degree_fits_int_helper_t<N,MAXD,D+step,Int,step,next_has_overflow>::value
-				+ max_degree_fits_int_helper_t<N,MAXD,D,Int,step/2,!next_has_overflow>::value;
+				max_degree_fits_int_helper_t<N,MAXD,D+step,UInt,step,next_has_overflow>::value
+				+ max_degree_fits_int_helper_t<N,MAXD,D,UInt,step/2,!next_has_overflow>::value;
 		};
-		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int>
-		struct max_degree_fits_int_helper_t<N,MAXD,D,Int,1,false> {
-			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+1>::overflow | (D+1>MAXD);
+		template<std::size_t N, std::size_t MAXD, std::size_t D, typename UInt>
+		struct max_degree_fits_int_helper_t<N,MAXD,D,UInt,1,false> {
+			static const bool next_has_overflow = multiset_coefficient_t<N+1, D+1, UInt>::overflow || (D+1>MAXD);
 			static const std::size_t value =
 				!next_has_overflow
-				? max_degree_fits_int_helper_t<N,MAXD,D+1,Int,1,next_has_overflow>::value
+				? max_degree_fits_int_helper_t<N,MAXD,D+1,UInt,1,next_has_overflow>::value
 				: D;
 		};
 		template<std::size_t N, std::size_t MAXD, std::size_t D, typename Int, std::size_t step>
