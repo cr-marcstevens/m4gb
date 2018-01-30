@@ -51,7 +51,9 @@ int main(int argc, char** argv)
 	const std::size_t fieldsize = gb::mysolver_t::fieldsize;
 	const std::size_t fieldchar = gb::mysolver_t::fieldchar;
 	const std::size_t max_vars = gb::mysolver_t::max_vars;
-#ifndef MQ_NO_TRY_CATCH
+	const std::size_t max_deg = gb::mysolver_t::max_deg;
+
+#ifndef SOLVER_NO_TRY_CATCH
 	try 
 	{
 #endif
@@ -70,8 +72,10 @@ int main(int argc, char** argv)
 			("fieldsize", "Return Galois Field size")
 			("fieldchar", "Return Galois Field characteristic")
 			("maxvars", "Return maximum number of variables")
+			("maxdegree", "Return maximum monomial degree supported")
 			("solvername", "Returns solver name")
 			("ordering", "Return monomial ordering")
+			("showconfig", "Show compile configuration")
 			("solve,s", "Solve input system of equations")
 			("showinput", "Print input system")
 			("showoutput", "Print output system")
@@ -118,6 +122,11 @@ int main(int argc, char** argv)
 			std::cout << max_vars << std::endl;
 			return 0;
 		}
+		if (vm.count("maxdegree"))
+		{
+			std::cout << max_deg << std::endl;
+			return 0;
+		}
 		if (vm.count("solvername"))
 		{
 			std::cout << SOLVERNAME << std::endl;
@@ -126,6 +135,17 @@ int main(int argc, char** argv)
 		if (vm.count("ordering"))
 		{
 			std::cout << ordering_name<gb::mysolver_t::monomial_t::order_tag_t>::name() << std::endl;
+			return 0;
+		}
+		if (vm.count("showconfig"))
+		{
+			std::cout
+				<< "solver   : " << SOLVERNAME << std::endl
+				<< "maxvars  : " << max_vars << std::endl
+				<< "maxdegree: " << max_deg << std::endl
+				<< "fieldsize: " << fieldsize << std::endl
+				<< "fieldchar: " << fieldchar << std::endl
+				<< "ordering : " << ordering_name<gb::mysolver_t::monomial_t::order_tag_t>::name() << std::endl;
 			return 0;
 		}
 		if (vm.count("help") || vm.count("solve")+vm.count("showinput") == 0 || inputfile.empty())
@@ -152,7 +172,7 @@ int main(int argc, char** argv)
 		{
 			solver.save_solution(outputfile);
 		}
-#ifndef MQ_NO_TRY_CATCH
+#ifndef SOLVER_NO_TRY_CATCH
 	}
 	catch (std::exception& e)
 	{

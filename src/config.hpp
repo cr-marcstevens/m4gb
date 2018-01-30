@@ -24,12 +24,14 @@
 #ifndef M4GB_SOLVER_CONFIG_HPP
 #define M4GB_SOLVER_CONFIG_HPP
 
+#ifndef _MSC_VER
 #include "../lib/config.h"
+#endif
 
 #define PRINT_PROCESS_STATISTICS
 
 #ifndef MAXVARS
-#define MAXVARS   20
+#define MAXVARS   16
 #endif
 
 #ifndef FIELDSIZE
@@ -57,7 +59,8 @@
 #define GB_ADD_FIELDEQUATIONS
 #endif
 
-#define SOLVER_NO_TRY_CATCH
+// uncomment for debugging
+//#define SOLVER_NO_TRY_CATCH
 
 #include "../lib/gf_p_simple.hpp"
 #include "../lib/gf_2n_simple.hpp"

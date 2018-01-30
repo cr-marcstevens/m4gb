@@ -106,6 +106,7 @@ namespace gb {
 		typedef typename polynomial_t::term_t  term_t;
 
 		static const std::size_t max_vars = polynomial_t::max_vars;
+		static const std::size_t max_deg = polynomial_t::max_deg;
 		static const std::size_t fieldsize = field_t::fieldsize;
 		static const std::size_t fieldchar = field_t::fieldchar;
 
