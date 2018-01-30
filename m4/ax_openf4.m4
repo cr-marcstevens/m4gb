@@ -41,7 +41,7 @@
 AC_DEFUN([AX_OPENF4],
 [
 OPENF4DIR=${OPENF4DIR:-$(pwd)/openf4}
-AC_ARG_WITH([openf4], AS_HELP_STRING([--with-openf4@<:@=yes|no|DIR@:>@],[prefix where openf4 is installed (default=yes)]),
+AC_ARG_WITH([openf4], AS_HELP_STRING([--with-openf4@<:@=yes|no|DIR@:>@],[prefix where openf4 is installed (default=autodetect)]),
 [
 	if test "$withval" = "no"; then
 		want_openf4="no"

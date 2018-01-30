@@ -41,7 +41,7 @@
 AC_DEFUN([AX_FGB],
 [
 FGBDIR=${FGBDIR:-$(pwd)/fgb/call_FGb}
-AC_ARG_WITH([fgb], AS_HELP_STRING([--with-fgb@<:@=yes|no|DIR@:>@],[prefix where fgb is installed (default=yes)]),
+AC_ARG_WITH([fgb], AS_HELP_STRING([--with-fgb@<:@=yes|no|DIR@:>@],[prefix where fgb is installed (default=autodetect)]),
 [
 	if test "$withval" = "no"; then
 		want_fgb="no"
