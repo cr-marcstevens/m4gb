@@ -427,7 +427,7 @@ namespace program_options {
 			if (!_description.empty())
 				o << _description << ":" << std::endl;
 			std::vector<std::string> left(_options.size()), right(_options.size());
-			unsigned maxleft = 0;
+			std::size_t maxleft = 0;
 			for (std::size_t i = 0; i < _options.size(); ++i)
 			{
 				right[i] = _options[i]->description;

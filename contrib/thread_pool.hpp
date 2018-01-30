@@ -110,7 +110,7 @@ namespace thread_pool {
 	class barrier {
 	public:
 		barrier(std::size_t count);
-		~barrier();
+		~barrier() noexcept(false);
 
 		void wait();
 	private:
@@ -261,7 +261,7 @@ namespace thread_pool {
 	{
 	}
 
-	inline barrier::~barrier()
+	inline barrier::~barrier() noexcept(false)
 	{
 		if (_i != 0)
 			throw std::runtime_error("barrier::~barrier: threads are still waiting on barrier");
