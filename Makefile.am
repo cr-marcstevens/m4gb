@@ -113,7 +113,7 @@ tests/gf%.sh:
 
 TESTS = $(check_PROGRAMS)
 
-TESTS += tests/gf31.16.m4gb.sh tests/gf256.16.m4gb.sh
+TESTS += tests/gf16.16.m4gb.sh tests/gf31.16.m4gb.sh tests/gf256.16.m4gb.sh
 
 if HAVE_OPENF4
 TESTS += tests/gf31.16.openf4.sh tests/gf256.16.openf4.sh
