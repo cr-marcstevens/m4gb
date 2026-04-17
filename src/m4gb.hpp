@@ -959,7 +959,7 @@ namespace gb
 				barrier_t& barrier;
 				std::atomic_size_t& index;
 			};
-			for (int i = 0; i < threadpool.size() + 1; ++i)
+			for (std::size_t i = 0; i < threadpool.size() + 1; ++i)
 				threadpool.push(worker_t(*this, mat, barrier, index));
 			threadpool.wait_work();
 			for (int i = 0; i < (int)(mat.size());)

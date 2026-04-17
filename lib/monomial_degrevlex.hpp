@@ -532,12 +532,19 @@ namespace gb
 
 		struct const_iterator_end {};
 		class const_iterator
-			: public std::iterator<std::forward_iterator_tag, pair_t>
 		{
-			int _d;
-			unsigned _li;
-			int_type _v;
-			pair_t _ve;
+		public:
+		    using iterator_category = std::forward_iterator_tag;
+		    using value_type        = pair_t;
+		    using difference_type   = std::ptrdiff_t;
+		    using pointer           = const pair_t*;
+		    using reference         = const pair_t&;
+
+		private:
+		    int _d;
+		    unsigned _li;
+		    int_type _v;
+		    pair_t _ve;
 		public:
 			const_iterator()
 				: _d(-1)
