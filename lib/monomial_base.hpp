@@ -219,15 +219,15 @@ namespace gb
 		{}
 
 		monomial_static_t(const monomial_static& m)
+		    	: _size(m._size)
 		{
-			_size = m.size();
-			memcpy(_data, m._data, (std::size_t)(_size)*sizeof(pair_t));
+		    	std::copy(m._data, m._data + _size, _data);
 		}
 
 		monomial_static_t(const monomial_dynamic& m)
+		    	: _size(m.data()._size)
 		{
-			_size = m.size();
-			memcpy(_data, m.data()._data, (std::size_t)(_size)*sizeof(pair_t));
+		    	std::copy(m.data()._data, m.data()._data + _size, _data);
 		}
 
 		template<typename int_type>
@@ -264,15 +264,15 @@ namespace gb
 
 		monomial_static_t& operator=(const monomial_static& m)
 		{
-			_size = m.size();
-			memcpy(_data, m._data, (std::size_t)(_size)*sizeof(pair_t));
-			return *this;
+		    	_size = m._size;
+		    	std::copy(m._data, m._data + _size, _data);
+		    	return *this;
 		}
 
 		monomial_static_t& operator=(const monomial_dynamic& m)
 		{
 			_size = m.size();
-			memcpy(_data, m.data()._data, (std::size_t)(_size)*sizeof(pair_t));
+			std::copy(m.data()._data, m.data()._data + _size, _data);
 			return *this;
 		}
 
