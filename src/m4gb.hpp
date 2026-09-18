@@ -1631,16 +1631,35 @@ namespace gb
 				else
 					newCP_good.emplace(std::move(newCP), true); // good
 			}
-			for (auto it = newCP_good.begin(); it != newCP_good.end(); ++it)
+			// Gebauer-Moeller, corrected:
+			//  (M) drop a pair if another new pair has an lcm that PROPERLY divides its lcm;
+			//  (F) among new pairs with EQUAL lcm keep exactly one -- none if one of them is coprime.
+			// (original code used non-strict divisibility, so equal-lcm pairs discarded each other)
 			{
-				if (!it->second)
-					continue;
-				for (auto it2 = newCP_good.begin(); it2 != newCP_good.end() && it2->first.lcmdeg <= it->first.lcmdeg; ++it2)
-					if (it != it2 && it2->first.intlcm | it->first.intlcm)
+				std::set<int_monomial_t> lcm_coprime, lcm_kept;
+				for (auto it = newCP_good.begin(); it != newCP_good.end(); ++it)
+					if (!it->second)
+						lcm_coprime.insert(it->first.intlcm);
+				for (auto it = newCP_good.begin(); it != newCP_good.end(); ++it)
+				{
+					if (!it->second)
+						continue;
+					if (lcm_coprime.count(it->first.intlcm) != 0)
 					{
 						it->second = false;
-						break;
+						continue;
 					}
+					for (auto it2 = newCP_good.begin(); it2 != newCP_good.end() && it2->first.lcmdeg <= it->first.lcmdeg; ++it2)
+						if (it != it2 && it2->first.intlcm != it->first.intlcm && it2->first.intlcm | it->first.intlcm)
+						{
+							it->second = false;
+							break;
+						}
+					if (!it->second)
+						continue;
+					if (!lcm_kept.insert(it->first.intlcm).second)
+						it->second = false; // an earlier pair with the same lcm is already kept
+				}
 			}
 			for (auto cp : newCP_good)
 				if (cp.second)
