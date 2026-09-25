@@ -1635,6 +1635,50 @@ namespace gb
 				else
 					newCP_good.emplace(std::move(newCP), true); // good
 			}
+#if 1
+			std::vector<int_monomial_t> minimal_lcms;
+			for (auto it = newCP_good.begin(); it != newCP_good.end(); )
+			{
+				// process equal lcm new pairs together: [it,it2) range
+				// isgood = [it,it2) are all *not* coprime
+				const int_monomial_t& L = it->first.intlcm;
+				bool isgood = true;
+				auto it2 = it;
+				while (it2 != newCP_good.end() && it2->first.intlcm == L)
+				{
+					isgood &= it2->second;
+					++it2;
+				}
+				// check if there is a proper divisor among lower lcms kept
+				bool isminimal = true;
+				for (auto it3 = minimal_lcms.begin(); it3 != minimal_lcms.end() && *it3 < L; ++it3)
+				{
+					if (*it3 | L)
+					{
+						isminimal = false;
+						break;
+					}
+				}
+				// if isminimal then remember its lcm, it can act as proper divisor
+				// otherwise set isgood = false
+				if (isminimal)
+					minimal_lcms.push_back(L);
+				else
+					isgood = false;
+				// isgood = [isminimal] && [all are *not* coprime]
+				// so if isgood then keep one, otherwise keep none
+				for (; it != it2; ++it)
+				{
+					if (it->second)
+					{
+						if (isgood)
+							isgood = false;
+						else
+							it->second = false;
+					}
+				}
+			}
+#else
 			// Gebauer-Moeller, corrected:
 			//  (M) drop a pair if another new pair has an lcm that PROPERLY divides its lcm;
 			//  (F) among new pairs with EQUAL lcm keep exactly one -- none if one of them is coprime.
@@ -1665,6 +1709,7 @@ namespace gb
 						it->second = false; // an earlier pair with the same lcm is already kept
 				}
 			}
+#endif
 			for (auto cp : newCP_good)
 				if (cp.second)
 					CP.emplace(std::move(cp.first));
