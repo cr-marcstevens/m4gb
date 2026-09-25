@@ -200,12 +200,12 @@ namespace thread_pool {
 			std::unique_lock<std::mutex> _lock(_mutex);
 			for (std::size_t i = nrthreads; i < _threads.size(); ++i)
 				*(_threads_stop[i]) = true;
-			lock.unlock();
+			_lock.unlock();
 			_condition.notify_all();
 			for (std::size_t i = nrthreads; i < _threads.size(); ++i)
 				_threads[i]->join();
 
-			std::unique_lock<std::mutex> lock(_mutex);
+			_lock.lock();
 			_threads_stop.resize(nrthreads);
 			_threads.resize(nrthreads);
 		} 
@@ -272,6 +272,7 @@ namespace thread_pool {
 	inline void barrier::wait()
 	{
 		std::unique_lock<std::mutex> lock(_mutex);
+		const std::size_t generation = _generation;
 		if (++_i >= _count)
 		{
 			_i = 0;
