@@ -536,7 +536,7 @@ namespace gb
 				else
 				{
 					const std::vector<int_monomial_t>& gdi = dense_index_generation[it->second.generation];
-					if (!(it->second.tail.size() <= dense_index.size() && gdi[it->second.tail.size() - 1] == dense_index[it->second.tail.size() - 1].intm))
+					if (!it->second.tail.empty() && !(it->second.tail.size() <= dense_index.size() && gdi[it->second.tail.size() - 1] == dense_index[it->second.tail.size() - 1].intm))
 					{
 						// poly was computed, but needs to be updated
 						// TODO: check if recomputing is not faster
@@ -726,6 +726,8 @@ namespace gb
 		dense_poly_t get_u_g(const static_monomial_t& u, const dense_poly_t& g, bool immediate_reduce = false)
 		{
 			dense_poly_t ret;
+			if (g.empty())
+				return ret;
 			int_monomial_t maxm = u * dense_index[g.size() - 1].intm;
 			auto ubit = std::lower_bound(dense_index.begin(), dense_index.end(), maxm, [](const monorep_t& l, const int_monomial_t& r) { return l.intm < r; });
 			ret.reserve(ubit - dense_index.begin());
