@@ -114,7 +114,7 @@ namespace thread_pool {
 
 		void wait();
 	private:
-		std::size_t _i, _count;
+		std::size_t _i, _count, _generation;
 		std::mutex _mutex;
 		std::condition_variable _condition;
 	};
@@ -197,8 +197,10 @@ namespace thread_pool {
 		if (nrthreads < _threads.size())
 		{
 			// decreasing number of active threads
+			std::unique_lock<std::mutex> _lock(_mutex);
 			for (std::size_t i = nrthreads; i < _threads.size(); ++i)
 				*(_threads_stop[i]) = true;
+			lock.unlock();
 			_condition.notify_all();
 			for (std::size_t i = nrthreads; i < _threads.size(); ++i)
 				_threads[i]->join();
@@ -257,7 +259,7 @@ namespace thread_pool {
 
 
 	inline barrier::barrier(std::size_t count)
-		: _i(0), _count(count)
+		: _i(0), _count(count), _generation(0)
 	{
 	}
 
@@ -273,11 +275,12 @@ namespace thread_pool {
 		if (++_i >= _count)
 		{
 			_i = 0;
+			++_generation;
 			_condition.notify_all();
 		}
 		else
 		{
-			_condition.wait(lock);
+			_condition.wait(lock, [this, generation]() { return _generation != generation; });
 		}
 	}
 
