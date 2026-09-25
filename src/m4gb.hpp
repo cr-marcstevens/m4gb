@@ -1733,6 +1733,7 @@ namespace gb
 				auto& v = sel_lcm_lmpoly[CPit->intlcm];
 				v.insert(CPit->p1);
 				v.insert(CPit->p2);
+				++cnt;
 
 				if (CPit->intlcm > lastlcm)
 					lastlcm = CPit->intlcm;
@@ -1740,7 +1741,7 @@ namespace gb
 					break;
 
 #ifdef MAXSELECTION
-				if (++cnt == MAXSELECTION)
+				if (cnt == MAXSELECTION)
 					break;
 #endif
 			}
