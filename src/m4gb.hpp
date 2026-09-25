@@ -562,6 +562,8 @@ namespace gb
 							{
 #ifdef USETHREADS
 								auto rit = find(gdi[i]);
+								if (rit == end())
+									throw std::runtime_error("matrix::_update_matrix_entry: polynomial not found!");
 								dense_poly_t* ritptr = get_try(rit, immediate_reduce);
 								if (ritptr == nullptr)
 									todo.emplace_back(-it->second.tail[i], rit);
